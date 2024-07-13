@@ -1,0 +1,26 @@
+/* @import './base.css'; */
+
+#app {
+  width: 100%;
+  /* margin: 0 auto; */
+  /* padding: 2rem; */
+  font-weight: normal;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+  transition: 0.4s;
+  padding: 10px;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.active-link {
+  color: blue;
+  font-weight: bold;
+}
+
+
