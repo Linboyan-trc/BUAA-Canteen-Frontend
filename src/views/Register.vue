@@ -19,6 +19,10 @@
       </div>
       <button type="submit">注册</button>
     </form>
+    <p>
+      已有账号？
+      <router-link to="/login">立即登录</router-link>
+    </p>
   </div>
 </template>
 

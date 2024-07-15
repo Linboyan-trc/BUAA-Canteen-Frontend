@@ -1,18 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
+import All from '@/views/All.vue';
 import Cafeteria from '@/views/Cafeteria.vue';
 import Counter from '@/views/Counter.vue';
 import Dish from '@/views/Dish.vue';
 import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
+import User from '@/views/User.vue';
+import Admin from '@/views/Admin.vue'
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Login },
+  { path: '/admin', component: Admin },
+  { path: '/home', component: Home },
+  { path: '/all', component: All },
   { path: '/cafeteria/:cafeteria', component: Cafeteria },
   { path: '/cafeteria/:cafeteria/counter/:counterId', component: Counter },
   { path: '/dish/:dishId', component: Dish },
   { path: '/register', component: Register },
   { path: '/login', component: Login },
+  { path: '/user', component: User },
 ];
 
 const router = createRouter({

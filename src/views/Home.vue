@@ -1,63 +1,83 @@
 <template>
-    <div class="sidebar">
-        <h1>欢迎来到北航食堂</h1>
-        
-        <ul>
-            <li v-for="cafeteria in cafeterias">
-                <router-link :to="`/cafeteria/${cafeteria.name_en}`">
-                    {{ cafeteria.name_zh }}食堂 
-                </router-link>
-            </li>
-        </ul>
+    <div class="app-container">
+        <div class="search-container">
+            <input type="text" v-model="searchQuery" placeholder="搜索菜品..." />
+            <button @click="fetchRecommendedDishes">搜索</button>
+        </div>
+        <div class="recommendations-container">
+            <h2>随机推荐菜品</h2>
+            <ul>
+                <li v-for="dish in recommendedDishes" :key="dish.id">{{ dish.name }}</li>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script>
-    export default {
-        name: 'Home',
-        data() {
-            return {
-                cafeterias: [
-                    { name_en: 'student1', name_zh: '学一' },
-                    { name_en: 'student2', name_zh: '学二' },
-                    { name_en: 'student3', name_zh: '学三' },
-                    { name_en: 'student4', name_zh: '学四' },
-                    { name_en: 'student5', name_zh: '学五' },
-                    { name_en: 'student6', name_zh: '学六' },
-                    { name_en: 'teacher', name_zh: '教工' },
-                    { name_en: 'halal', name_zh: '清真' },
-                    { name_en: 'heyi', name_zh: '合一' },
-                ]
-            };
+export default {
+    name: 'Home',
+    data() {
+        return {
+            searchQuery: '',
+            recommendedDishes: [
+                { id: 1, name: '宫保鸡丁' },
+                { id: 2, name: '鱼香肉丝' },
+                { id: 3, name: '麻婆豆腐' },
+                { id: 4, name: '糖醋排骨' },
+                { id: 5, name: '红烧肉' }
+            ]
+        };
+    },
+    created() {
+        // 模拟从服务器获取随机推荐的菜品
+        this.fetchRecommendedDishes();
+    },
+    methods: {
+        fetchRecommendedDishes() {
+            // 这里可以添加从服务器获取数据的逻辑
+            // 例如：axios.get('/api/dishes/recommended').then(response => { this.recommendedDishes = response.data; });
         }
     }
+};
 </script>
 
 <style scoped>
-.sidebar {
-    position: fixed;
-    left: 0;
-    width: 200px;
-    height: 100%;
-    overflow: auto;
-    background-color: #f0f0f0;
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
 }
 
-ul {
-    list-style-type: none;
-    padding: 5px;
-}
-
-li {
-    left: 0;
+.search-container {
     width: 100%;
-    font-size: x-large;
+    margin-bottom: 20px;
 }
 
-@media (hover: hover) {
-    li:hover {
-        background-color: bisque;
-    }
+.search-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.recommendations-container {
+    width: 100%;
+}
+
+.recommendations-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.recommendations-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.recommendations-container li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
 }
 </style>

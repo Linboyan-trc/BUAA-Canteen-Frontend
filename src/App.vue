@@ -1,54 +1,71 @@
 <script setup>
-
+import router from './router';
 </script>
 
 <template>
-  <header>
-    <img alt="buaa emoji" class="logo" src="./assets/emoji.png" width="50" height="50" />
-    <nav>
-      <router-link to="/">首页</router-link> 
-      <router-link to="/cafeteria/student1">学一食堂</router-link> 
-      <router-link to="/cafeteria/student2">学二食堂</router-link> 
-      <router-link to="/cafeteria/student3">学三食堂</router-link> 
-      <router-link to="/cafeteria/student4">学四食堂</router-link> 
-      <router-link to="/cafeteria/student5">学五食堂</router-link> 
-      <router-link to="/cafeteria/student6">学六食堂</router-link> 
-      <router-link to="/cafeteria/teacher">教工食堂</router-link> 
-      <router-link to="/cafeteria/halal">清真食堂</router-link> 
-      <router-link to="/cafeteria/heyi">合一厅食堂</router-link> 
+  <div class="app-container">
+    <aside class = "sidebar">
+      <img alt="buaa emoji" class="logo" src="./assets/emoji.png" width="50" height="50" />
+      <!-- <router-link to="/">首页</router-link> -->
+      <router-link to="/Home">浏览（首页）</router-link>
+      <router-link to="/All">全部</router-link>
+      <router-link to="/Admin">管理员</router-link>
       <router-link to="/login">登录</router-link> 
       <router-link to="/register">注册</router-link>
-    </nav>
-  </header>
-
-  <main>
-    <router-view />
-  </main>
+      <router-link to="/User" id="user-link">用户中心</router-link>
+    </aside>
+    <main>
+      <router-view />
+    </main>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  background-color: darkorange;
+.app-container {
+  position: relative;
 }
 
-nav {
-  font-size: 1.2rem;
-  gap: 5px;
+.sidebar {
+    position: fixed;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    overflow: auto;
+    background-color: #04379d;
+    padding: 4px;
+}
+
+main {
+  margin-left: 200px; 
+  /* 设置左边距，使其不被侧边栏遮挡 */
+  flex-grow: 1; 
+  /* 使主内容区域占据剩余空间 */
+  /* padding: 20px;  */
+  /* 添加内边距，使内容不紧贴边缘 */
 }
 
 a {
+  display: block;
+  width: 100%;
   color: white;
 }
 
 .logo {
   display: block;
-  margin: 0 auto 2rem;
+  margin: 0 2rem;
+}
+
+#user-link {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: rgb(249, 218, 77);
+    background-color: rgb(77, 146, 249);
+    width: 100%;
     /* border-style: outset; */
   }
 }

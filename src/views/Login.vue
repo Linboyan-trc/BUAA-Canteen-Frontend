@@ -1,5 +1,6 @@
 <template>
     <div class="login-container">
+        <h1>请先登录</h1>
         <form @submit.prevent="handleLogin">
             <div>
                 <label for="username">用户名:</label>
@@ -11,6 +12,10 @@
             </div>
             <button type="submit">登录</button>
         </form>
+        <p>
+            还没有账号？
+            <router-link to="/register">立即注册</router-link>
+        </p>
     </div>
 </template>
 
