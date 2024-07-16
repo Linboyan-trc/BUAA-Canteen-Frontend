@@ -12,7 +12,7 @@ import router from './router';
         <li><router-link to="/admin">管理员</router-link></li>
         <li><router-link to="/login">登录</router-link></li> 
         <li><router-link to="/register">注册</router-link></li>
-        <li id="user-item"><router-link to="/User">用户中心</router-link></li>
+        <li id="user-item"><router-link to="/User">我的</router-link></li>
       </ul>
     </aside>
     <main>

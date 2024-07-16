@@ -1,5 +1,8 @@
 <template>
     <div>
+      <header>
+        <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
+      </header>
       <h1>{{ dish.name }}</h1>
       <p>{{ dish.description }}</p>
       <p>价格：{{ dish.price }}元</p>
@@ -8,8 +11,13 @@
   </template>
   
   <script>
+import CafeteriaHeader from '@/components/CafeteriaHeader.vue';
+
   export default {
     name: 'Dish',
+    components: {
+      CafeteriaHeader,
+    },
     data() {
       return {
         dish: {}
@@ -18,11 +26,14 @@
     computed: {
       dishId() {
         return this.$route.params.dishId;
+      },
+      cafeteria() {
+        return this.$route.params.cafeteria;
       }
     },
     created() {
       // 从后端 API 获取指定菜肴的详细信息
-      // 例：axios.get(`/api/dish/${this.dishId}`).then(response => {
+      // axios.get(`/api/dish/${this.dishId}`).then(response => {
       //   this.dish = response.data;
       // });
     },
