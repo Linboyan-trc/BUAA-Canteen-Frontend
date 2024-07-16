@@ -84,5 +84,12 @@ a {
   .sidebar {
     width: 120px;
   }
+
+  main {
+  margin-left: 120px; 
+  /* 设置左边距，使其不被侧边栏遮挡 */
+  flex-grow: 1; 
+  /* 使主内容区域占据剩余空间 */
+}
 }
 </style>
