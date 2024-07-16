@@ -6,13 +6,14 @@ import router from './router';
   <div class="app-container">
     <aside class = "sidebar">
       <img alt="buaa emoji" class="logo" src="./assets/emoji.png" width="50" height="50" />
-      <!-- <router-link to="/">首页</router-link> -->
-      <router-link to="/Home">浏览（首页）</router-link>
-      <router-link to="/All">全部</router-link>
-      <router-link to="/Admin">管理员</router-link>
-      <router-link to="/login">登录</router-link> 
-      <router-link to="/register">注册</router-link>
-      <router-link to="/User" id="user-link">用户中心</router-link>
+      <ul>
+        <li><router-link to="/home">浏览（首页）</router-link></li>
+        <li><router-link to="/all">所有食堂</router-link></li>
+        <li><router-link to="/admin">管理员</router-link></li>
+        <li><router-link to="/login">登录</router-link></li> 
+        <li><router-link to="/register">注册</router-link></li>
+        <li id="user-item"><router-link to="/User">用户中心</router-link></li>
+      </ul>
     </aside>
     <main>
       <router-view />
@@ -21,6 +22,12 @@ import router from './router';
 </template>
 
 <style scoped>
+header {
+	margin:0;
+	padding:0;
+	border:0
+}
+
 .app-container {
   position: relative;
 }
@@ -29,10 +36,15 @@ import router from './router';
     position: fixed;
     left: 0;
     width: 200px;
-    height: 100vh;
-    overflow: auto;
+    min-height: 100vh;
+    /* overflow: auto; */
     background-color: #04379d;
-    padding: 4px;
+    padding-left: 2px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
 }
 
 main {
@@ -40,22 +52,22 @@ main {
   /* 设置左边距，使其不被侧边栏遮挡 */
   flex-grow: 1; 
   /* 使主内容区域占据剩余空间 */
-  /* padding: 20px;  */
+  /* padding: 20px; */
   /* 添加内边距，使内容不紧贴边缘 */
 }
 
 a {
   display: block;
-  width: 100%;
+  /* width: 100%; */
   color: white;
 }
 
 .logo {
   display: block;
-  margin: 0 2rem;
+  margin: 0 2rem 0 0;
 }
 
-#user-link {
+#user-item {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -65,26 +77,12 @@ a {
 @media (hover: hover) {
   a:hover {
     background-color: rgb(77, 146, 249);
-    width: 100%;
-    /* border-style: outset; */
   }
 }
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 120px;
   }
 }
 </style>

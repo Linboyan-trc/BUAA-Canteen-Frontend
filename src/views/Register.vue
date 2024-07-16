@@ -1,5 +1,6 @@
 <template>
   <div class="register-container">
+    <h1>请先注册</h1>
     <form @submit.prevent="handleRegister">
       <div>
         <label for="username">用户名:</label>

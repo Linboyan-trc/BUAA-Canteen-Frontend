@@ -1,12 +1,15 @@
 <template>
     <div>
-        <h1>欢迎来到北航食堂</h1>
-        
-        <nav v-for="cafeteria in cafeterias">
-            <router-link :to="`/cafeteria/${cafeteria.name_en}`">
-                {{ cafeteria.name_zh }}食堂 
-            </router-link>
-        </nav>
+        <header>
+            <h3>所有食堂</h3>
+            <ul>
+                <li v-for="cafeteria in cafeterias">
+                    <router-link :to="`/cafeteria/${cafeteria.name_en}`">
+                        {{ cafeteria.name_zh }}食堂 
+                    </router-link>
+                </li>
+            </ul>
+        </header>
     </div>
 </template>
 
@@ -33,13 +36,34 @@
 
 <style scoped>
 
-nav {
-  font-size: 1.2rem;
-  gap: 5px;
+h3 {
+    margin: 0;
+    padding: 10px;
+    background-color: #4274b9;
+    color: white;
+    text-align: center;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+li {
+    display: inline-block;
+    margin-right: 0px;
+}
+
+a {
+    display: block;
+    /* width: 100px; */
 }
 
 @media (hover: hover) {
-    li:hover {
+    a:hover {
         background-color: bisque;
     }
 }
