@@ -20,39 +20,45 @@
 </template>
 
 <script>
-import axios from 'axios'; // 引入axios进行API调用
+import { reactive } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
-    name: 'LoginComponent',
-    data() {
-        return {
-            loginForm: {
-                username: '',
-                password: '',
-            },
-        };
-    },
-    methods: {
-        async handleLogin() {
-            try {
-                // 调用登录方法
-                await this.login(this.loginForm.username, this.loginForm.password);
-                this.$router.push({ name: 'home' }); // 登录成功后重定向到首页
-            } catch (error) {
-                console.error('登录失败:', error);
-                // 处理登录失败，例如显示错误消息
-            }
-        },
-        async login(username, password) {
-            // 在这里实现登录逻辑，例如通过调用后端API
-            const response = await axios.post('/api/login', {
-                username: username,
-                password: password,
-            });
-            console.log(`登录用户 ${username}`);
-            // 根据实际情况处理响应
-        },
-    },
+  name: 'Login',
+  setup() {
+    const router = useRouter();
+    const loginForm = reactive({
+      username: '',
+      password: '',
+    });
+
+    const handleLogin = async () => {
+      try {
+        // 调用登录方法
+        await login(loginForm.username, loginForm.password);
+        router.push({ name: 'home' }); // 登录成功后重定向到首页
+      } catch (error) {
+        console.error('登录失败:', error);
+        // 处理登录失败，例如显示错误消息
+      }
+    };
+
+    const login = async (username, password) => {
+      // 在这里实现登录逻辑，例如通过调用后端API
+      const response = await axios.post('/api/login', {
+        username: username,
+        password: password,
+      });
+      console.log(`登录用户 ${username}`);
+      // 根据实际情况处理响应
+    };
+
+    return {
+      loginForm,
+      handleLogin,
+    };
+  },
 };
 </script>
 
