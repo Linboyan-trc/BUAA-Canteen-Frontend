@@ -28,43 +28,48 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios'; // 确保已经安装并导入axios
 
 export default {
-  name: 'RegisterComponent',
-  data() {
-    return {
-      registerForm: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      },
-    };
-  },
-  methods: {
-    async handleRegister() {
-      if (this.registerForm.password !== this.registerForm.confirmPassword) {
+  name: 'Register',
+  setup() {
+    const router = useRouter();
+    const registerForm = reactive({
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    });
+
+    const handleRegister = async() => {
+      if (registerForm.password !== registerForm.confirmPassword) {
         alert("密码不匹配。");
         return;
       }
       try {
-        // 调用注册方法
-        await this.register(this.registerForm);
+        await register(registerForm);
         alert("注册成功！");
-        this.$router.push({ name: 'login' }); // 注册成功后重定向到登录页面
+        router.push({ name: 'login' });// 注册成功后重定向到登录页面
       } catch (error) {
         console.error('注册失败:', error);
         // 处理注册失败，例如显示错误消息
       }
-    },
-    async register(formData) {
+    };
+
+    const register = async (formData) => {
       // 在这里通常会向后端API发送注册用户的请求
       // 例如使用axios向Django后端发送请求:
       await axios.post('/api/register', formData);
       console.log('正在注册', formData);
       // 已替换为实际的实现
-    },
+    };
+
+    return {
+      registerForm,
+      handleRegister,
+    };
   },
 };
 </script>

@@ -12,7 +12,7 @@ import router from './router';
         <li><router-link to="/admin">管理员</router-link></li>
         <li><router-link to="/login">登录</router-link></li> 
         <li><router-link to="/register">注册</router-link></li>
-        <li id="user-item"><router-link to="/User">用户中心</router-link></li>
+        <li id="user-item"><router-link to="/User">我的</router-link></li>
       </ul>
     </aside>
     <main>
@@ -90,6 +90,6 @@ a {
   /* 设置左边距，使其不被侧边栏遮挡 */
   flex-grow: 1; 
   /* 使主内容区域占据剩余空间 */
-}
+  }
 }
 </style>
