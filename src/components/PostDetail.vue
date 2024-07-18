@@ -1,9 +1,9 @@
 <script>
 import { ChatRound, Edit } from "@element-plus/icons-vue";
 import { onMounted, ref } from "vue";         // 引入 Vue 的生命周期钩子和响应式 API
-import { doComment, doCollect, cancelCollect, doAte, cancelAte, removeFocus, loadReplies, getComment } from "@/apis/index";   // 引入 API 方法
+import { doComment, doCollect, cancelCollect, doAte, cancelAte, loadReplies, getComment } from "@/api/index";   // 引入 API 方法
 import { ElMessage } from "element-plus";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
 
 export default {

@@ -127,3 +127,12 @@ export const postDetail = ({id}) => {
         }
     })
 }
+
+// 主页帖子
+export const queryPost = ({offset, query}) => {
+    return http({
+        url: '/post/',
+        method: 'POST',
+        data: {offset, query}
+    })
+}
