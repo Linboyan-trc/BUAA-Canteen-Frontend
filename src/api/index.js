@@ -1,4 +1,4 @@
-import http from "@/utils/https";
+import http from "@/utils/http";
 
 // 获取某食堂的全部柜台
 export const getCounters = ({cafeteria}) => {
@@ -25,6 +25,20 @@ export const getDishes = ({cafeteria, counterId}) => {
         data: {
             cafeteria,
             counterId
+        }
+    })
+}
+
+//获取所有窗口和菜肴
+export const getAllDishes = () => {
+    return http({
+        url: '/cafeteria/get-all-dishes',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            
         }
     })
 }

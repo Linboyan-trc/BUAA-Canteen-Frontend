@@ -31,6 +31,7 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // 确保已经安装并导入axios
+import { Register } from '@/api';
 
 export default {
   name: 'Register',
@@ -49,21 +50,17 @@ export default {
         return;
       }
       try {
-        await register(registerForm);
+        console.log('正在注册', formData);
+        await Register({
+          usrname: registerForm.username, 
+          email: registerForm.email, 
+          password: registerForm.password});
         alert("注册成功！");
         router.push({ name: 'login' });// 注册成功后重定向到登录页面
       } catch (error) {
         console.error('注册失败:', error);
         // 处理注册失败，例如显示错误消息
       }
-    };
-
-    const register = async (formData) => {
-      // 在这里通常会向后端API发送注册用户的请求
-      // 例如使用axios向Django后端发送请求:
-      await axios.post('/api/register', formData);
-      console.log('正在注册', formData);
-      // 已替换为实际的实现
     };
 
     return {

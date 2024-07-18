@@ -8,23 +8,35 @@ import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
 import Admin from '@/views/Admin.vue'
+import store from '@/store';
 
 const routes = [
   { path: '/', component: Login },
   { path: '/admin', component: Admin },
   { path: '/home', component: Home },
-  { path: '/all', component: All },
+  { path: '/cafeteria', component: All },
   { path: '/cafeteria/:cafeteria', component: Cafeteria },
   { path: '/cafeteria/:cafeteria/counter/:counterId', component: Counter },
   { path: '/dish/:dishId', component: Dish },
   { path: '/register', component: Register },
   { path: '/login', component: Login },
-  { path: '/user', component: User },
+  { path: '/user', component: User/*, meta: { requiresAuth: true }*/ },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const isAuthenticated = store.state.isAuthenticated; // 假设你在Vuex中存储了登录状态
+
+  if (requiresAuth && !isAuthenticated) {
+    next('/login');
+  } else {
+    next();
+  }
 });
 
 export default router;
