@@ -22,7 +22,7 @@ import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
 import CounterPreview from '@/components/CounterPreview.vue'
 import { useRoute } from 'vue-router'
-import { getCounters } from '@/api'
+import { getCounters } from '@/api/index'
 
 export default {
   name: 'Cafeteria',
