@@ -15,6 +15,7 @@ const routes = [
   { path: '/admin', component: Admin },
   { path: '/home', component: Home },
   { path: '/cafeteria', component: All },
+  { path: '/all', component: All },
   { path: '/cafeteria/:cafeteria', component: Cafeteria },
   { path: '/cafeteria/:cafeteria/counter/:counterId', component: Counter },
   { path: '/dish/:dishId', component: Dish },
