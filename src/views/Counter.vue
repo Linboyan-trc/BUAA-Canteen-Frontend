@@ -4,23 +4,29 @@
       <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
       <h1>{{ counterName }}</h1>
     </header>
-    <ul>
-      <li v-for="dish in dishes" :key="dish.id">
-        <router-link :to="`/dish/${dish.id}`">{{ dish.name }}</router-link>
-      </li>
-    </ul>
+
+    <body>
+      <div class="dishes-preview">
+        <router-link v-for="dish in dishes" :key="dish.id" :to="`/dish/${dish.id}`">
+          <DishPreview :name="dish.name" :img="dish.img" :collectCount="dish.collectCount" :ateCount="dish.ateCount" />
+        </router-link>
+      </div>
+    </body>
   </div>
 </template>
 
 <script>
 import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
+import DishPreview from '@/components/DishPreview.vue'
 import { useRoute } from 'vue-router';
+import { getDishes } from '@/api';
 
 export default {
   name: 'Counter',
   components: {
-    CafeteriaHeader
+    CafeteriaHeader,
+    DishPreview,
   },
   setup() {
     const route = useRoute()
@@ -31,19 +37,17 @@ export default {
     const cafeteria = computed(() => route.params.cafeteria)
 
     onMounted(() => {
-      // 从后端 API 获取指定窗口的菜肴数据和窗口名称
-      // axios.get(`/api/counter/${counterId.value}`).then(response => {
-      //   counterName.value = response.data.name
-      //   dishes.value = response.data.dishes
-      // })
-      // temp
-      counterName.value = '基本伙'
-      dishes.value = [
-        { id: 1, name: '红烧肉' },
-        { id: 2, name: '鱼香肉丝' },
-        { id: 3, name: '宫保鸡丁' }
-      ]
+      getDishesOf({ cafeteria: cafeteria.value, counterId: counterId.value })
     })
+    const getDishesOf = async ({ cafeteria, counterId }) => {
+      try {
+        const response = getDishes({ cafeteria, counterId })
+        dishes.value = response.data
+      } catch (error) {
+        console.error('获取', cafeteria, '的', counterId, '窗口菜肴失败:', error)
+      }
+    }
+
 
     return {
       counterName,
@@ -54,3 +58,17 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.dishes-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  /* 调整间距 */
+}
+
+.dishes-preview a {
+  text-decoration: none;
+  color: inherit;
+}
+</style>

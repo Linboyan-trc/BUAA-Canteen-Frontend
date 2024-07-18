@@ -1,12 +1,15 @@
 <template>
-    <div class="counter-item">
-        <div class="counter-image">
+    <div class="dish-item">
+        <div class="dish-img">
             <img :src="img" alt="窗口图片" />
         </div>
-        <div class="counter-floor">
-            <p>{{ name }}: {{ floor }}层</p>
-            <div class="counter-likes">
+        <div class="dish-info">
+            <p>{{ name }}</p>
+            <div class="dish-collectCount">
                 <span>{{ collectCount }} 收藏</span>
+            </div>
+            <div class="dish-ateCount">
+                <span>{{ ateCount }} 吃过</span>
             </div>
         </div>
     </div>
@@ -26,14 +29,14 @@ export default defineComponent({
             type: String,
             required: true
         },
-        floor: {
-            type: Number,
-            required: true
-        },
         collectCount: {
             type: Number,
             required: true
-        }
+        },
+        ateCount: {
+            type: Number,
+            required: true
+        },
     },
     setup(props) {
         return {};
@@ -43,7 +46,7 @@ export default defineComponent({
 
 
 <style scoped>
-.counter-item {
+.dish-item {
     width: 200px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -51,24 +54,24 @@ export default defineComponent({
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.counter-image img {
+.dish-img img {
     width: 100%;
     height: 100px;
     object-fit: cover;
 }
 
-.counter-floor {
+.dish-info {
     padding: 10px;
     background-color: #f9f9f9;
 }
 
-.counter-floor p {
+.dish-info p {
     margin: 0;
     font-size: 14px;
     color: #333;
 }
 
-.counter-likes {
+.dish-collectCount, .dish-ateCount {
     text-align: right;
     font-size: 12px;
     color: #666;

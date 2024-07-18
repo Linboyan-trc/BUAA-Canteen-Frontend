@@ -10,7 +10,7 @@
     <body>
       <div class="counter-preview">
         <router-link v-for="counter in counters" :key="counter.id" :to="`/cafeteria/${cafeteria}/counter/${counter.id}`">
-          <CounterPreview :image="counter.image" :description="counter.description" :likes="counter.likes" />
+          <CounterPreview :name="counter.name" :img="counter.img" :floor="counter.floor" :collectCount="counter.collectCount" />
         </router-link>
       </div>
     </body>
@@ -22,6 +22,7 @@ import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
 import CounterPreview from '@/components/CounterPreview.vue'
 import { useRoute } from 'vue-router'
+import { getCounters } from '@/api'
 
 export default {
   name: 'Cafeteria',
@@ -33,45 +34,50 @@ export default {
     const route = useRoute()
     const counters = ref([])
     const cafeteria = computed(() => route.params.cafeteria)
-
     const cafeteriaName = computed(() => {
-      const cafeteriaMap = {
-        student1: '学一',
-        student2: '学二',
-        student3: '学三',
-        student4: '学四',
-        student5: '学五',
-        student6: '学六',
-        teacher: '教工',
-        halal: '清真',
-        heyi: '合一'
-      }
-      return cafeteriaMap[cafeteria.value]
+      const cafeteriaMap = ref([
+        {'name_en': 'student1', 'name_zh': '学一'},
+        {'name_en': 'student2', 'name_zh': '学二'},
+        {'name_en': 'student3', 'name_zh': '学三'},
+        {'name_en': 'student4', 'name_zh': '学四'},
+        {'name_en': 'student5', 'name_zh': '学五'},
+        {'name_en': 'student6', 'name_zh': '学六'},
+        {'name_en': 'teacher', 'name_zh': '教工'},
+        {'name_en': 'halal', 'name_zh': '清真'},
+        {'name_en': 'heyi', 'name_zh': '合一厅'},
+      ])
+      return cafeteriaMap.value.find(c => c.name_en === cafeteria.value).name_zh
     })
-
-    onMounted(() => {
-      // 从后端 API 获取指定食堂的窗口数据
-      // axios.get(`/api/cafeteria/${cafeteria.value}/counters`).then(response => {
-      //   counters.value = response.data
-      // })
-      // temp
-      counters.value = [
-        { id: 1, name: '窗口1', image: '/banfan.jpg', description: '窗口1描述', likes: 10 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
-        { id: 2, name: '窗口2', image: '/banfan.jpg', description: '窗口2描述', likes: 20 },
+    // temp
+    counters.value = [
+        { id: 1, name: '窗口1', img: '/banfan.jpg', floor: 1, collectCount: 10 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
         // 其他窗口信息
       ]
+    
+    onMounted(() => {
+      // 从后端 API 获取指定食堂的窗口数据
+      getCountersOf(cafeteria.value)
     })
+    const getCountersOf = async(cafeteriaId) => {
+      try {
+        const response = await getCounters(cafeteriaId)
+        counters.value = response.data
+      } catch (error) {
+        console.error('获取柜台数据失败:', error)
+      }
+    }
 
     return {
       counters,
       cafeteria,
-      cafeteriaName
+      cafeteriaName,
     }
   }
 }

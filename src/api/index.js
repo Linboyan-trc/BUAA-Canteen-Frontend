@@ -1,18 +1,31 @@
-import axios from "axios";
+import http from "@/utils/http";
 
-const apiClient = axios.create({
-    baseURL: process.env.VUE_APP_API_URL || 'http://localhost:8000/api',
-    headers: {
-        'Content-Type': 'application/json',
-    }
-});
-
-export default {
-    getDishes() {
-        return apiClient.get('/dishes');
-    },
-    getDish(id) {
-        return apiClient.get(`/dishes/${id}`);
-    }
-    //TODO 其他API方法
+// 获取某食堂的全部柜台
+export const getCounters = ({cafeteria}) => {
+    return http({
+        url: '/cafeteria/get-counters',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            cafeteria
+        }
+    })
 }
+
+//获取某柜台的全部菜肴
+export const getDishes = ({cafeteria, counterId}) => {
+    return http({
+        url: '/cafeteria/counter/get-dishes',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            cafeteria,
+            counterId
+        }
+    })
+}
+
