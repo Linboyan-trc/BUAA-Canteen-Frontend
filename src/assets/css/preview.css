@@ -1,0 +1,23 @@
+.dishes-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* 调整间距 */
+}
+
+.dishes-preview a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.counter-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* 调整间距 */
+}
+
+.counter-preview a {
+    text-decoration: none;
+    color: inherit;
+}
