@@ -153,6 +153,15 @@ export const postDetail = ({id}) => {
     })
 }
 
+// 主页帖子
+export const queryPost = ({offset, query}) => {
+    return http({
+        url: '/post/',
+        method: 'POST',
+        data: {offset, query}
+    })
+}
+
 export const controlUserCollectOrLike = ({post_id, operator, type}) => {
     return http({
         url: '/post/control/',

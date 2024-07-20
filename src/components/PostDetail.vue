@@ -1,154 +1,192 @@
 <script>
-import { ChatRound, Edit } from "@element-plus/icons-vue";
-import { onMounted, ref } from "vue";         // 引入 Vue 的生命周期钩子和响应式 API
-import { doComment, doCollect, cancelCollect, doAte, cancelAte, loadReplies, getComment } from "@/api/index";   // 引入 API 方法
-import { ElMessage } from "element-plus";
+import { ChatRound, Edit } from '@element-plus/icons-vue';
+import { defineComponent, onMounted, ref, defineEmits } from "vue";
+import { doComment, doCollect, cancelCollect, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
+import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
+import infiniteScroll from 'vue-infinite-scroll'; // Import the infinite-scroll directive
 
-export default {
-  name: 'dish'
-}
-
-const props = defineProps({
-  detail: {
-    type: Object,
-    required: true,
+export default defineComponent({
+  name: 'PostDetail',
+  components: {
+    ChatRound,
+    Edit,
+    ElMessage,
+    ElButton,
+    ElInput,
   },
-  review: {
-    type: Boolean,
-    default: false
-  }
-})
-const comments = ref([])
-
-const emit = defineEmits(['afterDoComment'])
-const userStore = useUserStore()
-
-// 更改用户对帖子的喜欢/收藏状态
-const checkCollect = (id) => {
-  return userStore.userCollect.includes(id)
-}
-const checkEat = (id) => {
-  return userStore.userAte.includes(id)
-}
-
-const doSomething = async (type, detail) => {
-  const dish_id = detail.id;
-
-  if (type === 'ate') {
-    const operator = checkEat(dish_id);
-    const res = operator ? await cancelAte(dish_id) : await doAte(dish_id);
-
-    if (operator) {
-      userStore.removeFocus(1, dish_id);
-      detail.likeCount--;
-      ElMessage({ type: 'success', message: res.info });
-    } else {
-      userStore.extendUserInfo(1, dish_id);
-      detail.ateCount++;
-      ElMessage({ type: 'success', message: res.info });
+  props: {
+    detail: {
+      type: Object,
+      required: true,
+    },
+    review: {
+      type: Boolean,
+      default: false
     }
-  } else if (type === 'collect') {
-    const operator = checkCollect(dish_id);
-    const res = operator ? await cancelCollect(dish_id) : await doCollect(dish_id);
+  },
+  setup(props, { emit }) {
+    const comments = ref([]);
+    const userStore = useUserStore();
 
-    if (operator) {
-      detail.collectCount--;
-      userStore.removeFocus(2, dish_id);
-      ElMessage({ type: 'success', message: res.info });
-    } else {
-      detail.collectCount++;
-      userStore.extendUserInfo(2, dish_id);
-      ElMessage({ type: 'success', message: res.info });
-    }
-  }
-};
-
-
-// 评论内容
-const content = ref('');
-const to = ref(0);
-const commentInput = ref(null);
-
-const sendComment = async (post, to) => {
-  const info = ref([
-    {
-      id: 0,
-      user: userStore.userInfo,
-      content: content.value,
-      createTime: getCurrentTime(),
-      replyCount: 0,
-      replies: []
-    }
-  ]);
-
-  if (to === 0 || to === '0') {
-    const data = {
-      post_id: post.id,
-      content: content.value
+    const checkCollect = (id) => {
+      return userStore.userCollect.includes(id);
     };
-    const res = await doComment({ data });
-    ElMessage({ type: 'success', message: res.info });
-    info.value[0].id = res.id;
-    console.log(res.id, info.value);
-    comments.value = [...comments.value, ...info.value];
-  } else {
-    const data = {
-      post_id: post.id,
-      content: content.value,
-      parent_comment_id: to
+    const checkEat = (id) => {
+      return userStore.userAte.includes(id);
     };
-    const res = await doComment({ data });
-    ElMessage({ type: 'success', message: res.info });
-    const comment = comments.value.find(item => item.id === to);
-    comment.replies = [...comment.replies, ...info.value];
-    clearReply();
+
+    const doSomething = async (type, detail) => {
+      const dish_id = detail.id;
+
+      if (type === 'ate') {
+        const operator = checkEat(dish_id);
+        const res = operator ? await cancelAte(dish_id) : await doAte(dish_id);
+
+        if (operator) {
+          userStore.removeFocus(1, dish_id);
+          detail.ateCount--;
+          ElMessage({ type: 'success', message: res.info });
+        } else {
+          userStore.extendUserInfo(1, dish_id);
+          detail.ateCount++;
+          ElMessage({ type: 'success', message: res.info });
+        }
+      } else if (type === 'collect') {
+        const operator = checkCollect(dish_id);
+        const res = operator ? await cancelCollect(dish_id) : await doCollect(dish_id);
+
+        if (operator) {
+          detail.collectCount--;
+          userStore.removeFocus(2, dish_id);
+          ElMessage({ type: 'success', message: res.info });
+        } else {
+          detail.collectCount++;
+          userStore.extendUserInfo(2, dish_id);
+          ElMessage({ type: 'success', message: res.info });
+        }
+      }
+    };
+
+    const content = ref('');
+    const to = ref(0);
+    const commentInput = ref(null);
+
+    const sendComment = async (post, to) => {
+      const info = [
+        {
+          id: 0,
+          user: userStore.userInfo,
+          content: content.value,
+          createTime: getCurrentTime(),
+          replyCount: 0,
+          replies: []
+        }
+      ];
+
+      if (to === 0 || to === '0') {
+        const data = {
+          post_id: post.id,
+          content: content.value
+        };
+        const res = await doComment({ data });
+        ElMessage({ type: 'success', message: res.info });
+        info[0].id = res.id;
+        comments.value = [...comments.value, ...info];
+      } else {
+        const data = {
+          post_id: post.id,
+          content: content.value,
+          parent_comment_id: to
+        };
+        const res = await doComment({ data });
+        ElMessage({ type: 'success', message: res.info });
+        const comment = comments.value.find(item => item.id === to);
+        comment.replies = [...comment.replies, ...info];
+        clearReply();
+      }
+      emit('afterDoComment');
+      content.value = '';
+    };
+
+    const commentMain = item => {
+      to.value = item.id;
+      const toPeople = item.user.username;
+      commentInput.value.input.placeholder = `回复${toPeople}: `;
+    };
+
+    const loadReply = async item => {
+      const offset = item.replies.length;
+      const id = item.id;
+      const res = await loadReplies({ id, offset });
+      item.replies = [...item.replies, ...res.info];
+      item.replyCount -= res.count;
+    };
+
+    const clearReply = () => {
+      commentInput.value.input.placeholder = `说点什么....`;
+      to.value = 0;
+    };
+
+    const disabled = ref(true);
+
+    const load = async () => {
+      disabled.value = true;
+      const offset = comments.value.length;
+      const id = props.detail.id;
+      // temp
+      // const res1 = await getComment({ id, offset });
+      const res1 = {
+        "info": [
+          {
+            "id": 127,
+            "content": "123",
+            "createTime": "2023-07-27 21:51",
+            "user": {
+              "id": 9,
+              "username": "回锅炒辣椒",
+              "avatar": "/friedPrawn.jpg"
+            },
+            "replyCount": 1,
+            "replies": []
+          }
+        ]
+      }
+      const data = res1.info;
+      if (data.length !== 0) {
+        disabled.value = false;
+        comments.value = [...comments.value, ...data];
+      } else {
+        disabled.value = true;
+      }
+    };
+
+    onMounted(() => load());
+
+    return {
+      comments,
+      userStore,
+      checkCollect,
+      checkEat,
+      doSomething,
+      content,
+      to,
+      commentInput,
+      sendComment,
+      commentMain,
+      loadReply,
+      clearReply,
+      disabled,
+      load
+    };
+  },
+  directives: {
+    infiniteScroll
   }
-  emit('afterDoComment');
-  content.value = '';
-};
-
-const commentMain = item => {
-  to.value = item.id;
-  console.log(item);
-  const toPeople = item.user.username;
-  commentInput.value.input.placeholder = `回复${toPeople}: `;
-};
-
-const loadReply = async item => {
-  const offset = item.replies.length;
-  const id = item.id;
-  const res = await loadReplies({ id, offset });
-  item.replies = [...item.replies, ...res.info];
-  item.replyCount -= res.count;
-};
-
-const clearReply = () => {
-  commentInput.value.input.placeholder = `说点什么....`;
-  to.value = 0;
-};
-
-// 无限加载评论
-const disabled = ref(true);
-
-const load = async () => {
-  disabled.value = true;
-  const offset = comments.value.length;
-  const id = props.detail.id;
-  const res1 = await getComment({ id, offset });
-  const data = res1.info;
-  if (data.length !== 0) {
-    disabled.value = false;
-    comments.value = [...comments.value, ...data];
-  } else {
-    disabled.value = true;
-  }
-};
-
-// 在组件完成渲染后立即执行某些初始化操作，例如数据获取、设置状态等
-onMounted(() => load())
+});
 </script>
+
 
 <template>
   <div class="box" v-if="detail.id">
@@ -236,7 +274,6 @@ onMounted(() => load())
                 </div>
               </div>
             </div>
-            <!-- 评论区结束 -->
             <el-divider />
           </div>
           <div class="bottomArea">
@@ -247,7 +284,7 @@ onMounted(() => load())
                     xmlns="http://www.w3.org/2000/svg" p-id="3345" width="25" height="25">
                     <path
                       d="M512 901.746939c-13.583673 0-26.122449-4.179592-37.093878-13.061225-8.881633-7.314286-225.697959-175.020408-312.424489-311.379592C133.746939 532.37551 94.040816 471.24898 94.040816 384.522449c0-144.718367 108.146939-262.269388 240.326531-262.269388 67.395918 0 131.657143 30.82449 177.632653 84.636735 45.453061-54.334694 109.191837-84.636735 177.110204-84.636735 132.702041 0 240.326531 117.55102 240.326531 262.269388 0 85.159184-37.093878 143.673469-67.395919 191.216327l-1.044898 1.567346c-86.726531 136.359184-303.542857 304.587755-312.424489 311.379592-10.44898 8.359184-22.987755 13.061224-36.571429 13.061225z"
-                      :fill="!checkFavorite(detail.id) ? '#cecccc' : '#d81e06'" p-id="3346"></path>
+                      :fill="!checkEat(detail.id) ? '#cecccc' : '#d81e06'" p-id="3346"></path>
                   </svg>
                   <el-text size="large" tag="b" type="info">{{ detail.ateCount }}</el-text>
                 </el-button>
@@ -272,8 +309,13 @@ onMounted(() => load())
               </el-row>
             </div>
             <el-input v-model="content" class="comment-input my" type="text" placeholder="说点什么..." ref="commentInput"
-              :prefix-icon="Edit" @keyup.enter="sendComment(detail, to)" clearable style="margin-top: 5px"
-              :disabled="review" />
+              @keyup.enter="sendComment(detail, to)" clearable style="margin-top: 5px" :disabled="review">
+              <template #prefix>
+                <el-icon>
+                  <Edit />
+                </el-icon>
+              </template>
+            </el-input>
           </div>
         </el-col>
         <!-- 卡牌详情区结束 -->

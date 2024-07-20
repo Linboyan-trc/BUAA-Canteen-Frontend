@@ -3,13 +3,13 @@ import Home from '@/views/Home.vue';
 import All from '@/views/All.vue';
 import Cafeteria from '@/views/Cafeteria.vue';
 import Counter from '@/views/Counter.vue';
-import Dish from '@/views/Dish.vue';
 import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
 import Admin from '@/views/Admin.vue'
 import store from '@/store';
 import { useUserStore } from '@/store/user';
+import Detail from '@/views/Detail.vue';
 
 const routes = [
   { 
@@ -42,7 +42,7 @@ const routes = [
   },
   { 
     path: '/dish/:dishId', 
-    component: Dish 
+    component: Detail 
   },
   { 
     path: '/register', 

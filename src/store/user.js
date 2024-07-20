@@ -65,6 +65,7 @@ export const useUserStore = defineStore('user', () => {
         userLogout,
         userRegister,
         extendUserInfo,
+        removeFocus,
         changeInfo,
         userCollect,
         userAte,
