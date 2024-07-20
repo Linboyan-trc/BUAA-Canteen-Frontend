@@ -34,7 +34,7 @@ export default {
 <style scoped>
 .box {
   position: absolute;
-  left: 50px;
+  left: 120px;
   top: 5px;
   border-radius: 0.8rem;
   width: 1200px;

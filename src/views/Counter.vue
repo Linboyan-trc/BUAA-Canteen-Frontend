@@ -2,7 +2,7 @@
   <div>
     <header>
       <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
-      <h1>{{ counterName }}</h1>
+      <h1 style="margin-left: 20px;">{{ counterName }}</h1>
     </header>
 
     <body>
