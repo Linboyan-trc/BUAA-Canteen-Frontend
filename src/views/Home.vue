@@ -192,6 +192,10 @@ export default {
     margin-left: 10px; /* Add some space between input and button */
 }
 
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
 .recommendations-container {
     display: flex;
     flex-wrap: wrap;
