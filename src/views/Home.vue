@@ -41,7 +41,7 @@ export default {
             {
                 "name": "分享今日学习",
                 "id": 119,
-                "img": "/banfan.jpg",
+                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
                 "img_info": {
                     "height": 1706,
                     "width": 1280
@@ -50,7 +50,7 @@ export default {
                 "user": {
                     "id": 12,
                     "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
+                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
                 },
                 "collectCount": 0,
                 "ateCount": 0
@@ -58,7 +58,7 @@ export default {
             {
                 "name": "求解！！",
                 "id": 118,
-                "img": "/banfan.jpg",
+                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
                 "img_info": {
                     "height": 2560,
                     "width": 1920
@@ -67,7 +67,7 @@ export default {
                 "user": {
                     "id": 12,
                     "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
+                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
                 },
                 "collectCount": 0,
                 "ateCount": 0
@@ -75,7 +75,7 @@ export default {
             {
                 "name": "python学习",
                 "id": 117,
-                "img": "/banfan.jpg",
+                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
                 "img_info": {
                     "height": 1707,
                     "width": 1280
@@ -84,7 +84,7 @@ export default {
                 "user": {
                     "id": 12,
                     "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
+                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
                 },
                 "collectCount": 0,
                 "ateCount": 0
@@ -92,7 +92,7 @@ export default {
             {
                 "name": "好漂亮！！！",
                 "id": 116,
-                "img": "/banfan.jpg",
+                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
                 "img_info": {
                     "height": 960,
                     "width": 960
@@ -101,7 +101,7 @@ export default {
                 "user": {
                     "id": 12,
                     "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
+                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
                 },
                 "collectCount": 0,
                 "ateCount": 0
@@ -109,7 +109,7 @@ export default {
             {
                 "name": "可爱可爱",
                 "id": 115,
-                "img": "/banfan.jpg",
+                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
                 "img_info": {
                     "height": 1350,
                     "width": 1080
@@ -118,7 +118,7 @@ export default {
                 "user": {
                     "id": 12,
                     "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
+                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
                 },
                 "collectCount": 0,
                 "ateCount": 0
