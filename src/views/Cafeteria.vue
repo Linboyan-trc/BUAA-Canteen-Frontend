@@ -10,7 +10,7 @@
     <body>
       <div class="counter-preview">
         <router-link v-for="counter in counters" :key="counter.id" :to="`/cafeteria/${cafeteria}/counter/${counter.id}`">
-          <CounterPreview :name="counter.name" :img="counter.img" :floor="counter.floor" :collectCount="counter.collectCount" />
+          <CounterPreview :counter="counter" />
         </router-link>
       </div>
     </body>
@@ -48,31 +48,31 @@ export default {
       ])
       return cafeteriaMap.value.find(c => c.name_en === cafeteria.value).name_zh
     })
-    // temp
+    //temp
     counters.value = [
-        { id: 1, name: '窗口1', img: '/banfan.jpg', floor: 1, collectCount: 10 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: '/banfan.jpg', floor: 2, collectCount: 20 },
+        { id: 1, name: '拌饭', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333', floor: 1, collectCount: 10 },
+        { id: 2, name: '基本伙', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
+        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
         // 其他窗口信息
       ]
     
-    onMounted(() => {
-      // 从后端 API 获取指定食堂的窗口数据
-      getCountersOf(cafeteria.value)
-    })
-    const getCountersOf = async(cafeteriaId) => {
-      try {
-        const response = await getCounters(cafeteriaId)
-        counters.value = response.data
-      } catch (error) {
-        console.error('获取柜台数据失败:', error)
-      }
-    }
+    // onMounted(() => {
+    //   // 从后端 API 获取指定食堂的窗口数据
+    //   getCountersOf(cafeteria.value)
+    // })
+    // const getCountersOf = async(cafeteriaId) => {
+    //   try {
+    //     const response = await getCounters(cafeteriaId)
+    //     counters.value = response.data
+    //   } catch (error) {
+    //     console.error('获取柜台数据失败:', error)
+    //   }
+    // }
 
     return {
       counters,
@@ -84,15 +84,6 @@ export default {
 </script>
 
 
-<style scoped>
-.counter-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* 调整间距 */
-}
+<style src="@/assets/css/preview.css">
 
-.counter-preview a {
-  text-decoration: none;
-  color: inherit;
-}
 </style>

@@ -1,20 +1,10 @@
 <script setup>
-import router from './router';
+import Sidebar from '@/components/Sidebar.vue'
 </script>
 
 <template>
-  <div class="app-container">
-    <aside class = "sidebar">
-      <img alt="buaa emoji" class="logo" src="./assets/emoji.png" width="50" height="50" />
-      <ul>
-        <li><router-link to="/home">浏览（首页）</router-link></li>
-        <li><router-link to="/all">所有食堂</router-link></li>
-        <li><router-link to="/admin">管理员</router-link></li>
-        <li><router-link to="/login">登录</router-link></li> 
-        <li><router-link to="/register">注册</router-link></li>
-        <li id="user-item"><router-link to="/User">我的</router-link></li>
-      </ul>
-    </aside>
+  <div>
+    <Sidebar></Sidebar>
     <main>
       <router-view />
     </main>

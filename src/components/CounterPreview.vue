@@ -1,12 +1,12 @@
 <template>
     <div class="counter-item">
         <div class="counter-image">
-            <img :src="img" alt="窗口图片" />
+            <img :src="counter.img" alt="窗口图片" />
         </div>
         <div class="counter-floor">
-            <p>{{ name }}: {{ floor }}层</p>
+            <p>{{ counter.name }}: {{ counter.floor }}层</p>
             <div class="counter-likes">
-                <span>{{ collectCount }} 收藏</span>
+                <span>{{ counter.collectCount }} 收藏</span>
             </div>
         </div>
     </div>
@@ -18,26 +18,27 @@ import { defineComponent } from 'vue';
 export default defineComponent({
     name: 'CounterPreview',
     props: {
-        name: {
-            type: String,
+        counter: {
+            type: Object,
             required: true
-        },
-        img: {
-            type: String,
-            required: true
-        },
-        floor: {
-            type: Number,
-            required: true
-        },
-        collectCount: {
-            type: Number,
-            required: true
+            // name: {
+            //     type: String,
+            //     required: true
+            // },
+            // img: {
+            //     type: String,
+            //     required: true
+            // },
+            // floor: {
+            //     type: Number,
+            //     required: true
+            // },
+            // collectCount: {
+            //     type: Number,
+            //     required: true
+            // }
         }
     },
-    setup(props) {
-        return {};
-    }
 });
 </script>
 

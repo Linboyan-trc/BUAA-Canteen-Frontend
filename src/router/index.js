@@ -9,19 +9,54 @@ import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
 import Admin from '@/views/Admin.vue'
 import store from '@/store';
+import { useUserStore } from '@/store/user';
 
 const routes = [
-  { path: '/', component: Login },
-  { path: '/admin', component: Admin },
-  { path: '/home', component: Home },
-  { path: '/cafeteria', component: All },
-  { path: '/all', component: All },
-  { path: '/cafeteria/:cafeteria', component: Cafeteria },
-  { path: '/cafeteria/:cafeteria/counter/:counterId', component: Counter },
-  { path: '/dish/:dishId', component: Dish },
-  { path: '/register', component: Register },
-  { path: '/login', component: Login },
-  { path: '/user', component: User/*, meta: { requiresAuth: true }*/ },
+  { 
+    path: '/',
+    component: Login 
+  },
+  { 
+    path: '/admin', 
+    component: Admin 
+  },
+  { 
+    path: '/home', 
+    component: Home 
+  },
+  { 
+    path: '/cafeteria', 
+    component: All 
+  },
+  { 
+    path: '/all', 
+    component: All 
+  },
+  { 
+    path: '/cafeteria/:cafeteria', 
+    component: Cafeteria 
+  },
+  { 
+    path: '/cafeteria/:cafeteria/counter/:counterId', 
+    component: Counter 
+  },
+  { 
+    path: '/dish/:dishId', 
+    component: Dish 
+  },
+  { 
+    path: '/register', 
+    component: Register 
+  },
+  { 
+    path: '/login', 
+    component: Login 
+  },
+  { 
+    path: '/user/:userId', 
+    component: User, 
+    // meta: { requiresAuth: true }
+  },
 ];
 
 const router = createRouter({

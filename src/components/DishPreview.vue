@@ -1,15 +1,15 @@
 <template>
     <div class="dish-item">
         <div class="dish-img">
-            <img :src="img" alt="窗口图片" />
+            <img :src="dish.img" alt="窗口图片" />
         </div>
         <div class="dish-info">
-            <p>{{ name }}</p>
+            <p>{{ dish.name }}</p>
             <div class="dish-collectCount">
-                <span>{{ collectCount }} 收藏</span>
+                <span>{{ dish.collectCount }} 收藏</span>
             </div>
             <div class="dish-ateCount">
-                <span>{{ ateCount }} 吃过</span>
+                <span>{{ dish.ateCount }} 吃过</span>
             </div>
         </div>
     </div>
@@ -19,24 +19,12 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-    name: 'CounterPreview',
+    name: 'DishPreview',
     props: {
-        name: {
-            type: String,
+        dish: {
+            type: Object,
             required: true
-        },
-        img: {
-            type: String,
-            required: true
-        },
-        collectCount: {
-            type: Number,
-            required: true
-        },
-        ateCount: {
-            type: Number,
-            required: true
-        },
+        }
     },
     setup(props) {
         return {};

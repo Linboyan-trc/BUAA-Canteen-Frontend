@@ -152,3 +152,74 @@ export const postDetail = ({id}) => {
         }
     })
 }
+
+export const controlUserCollectOrLike = ({post_id, operator, type}) => {
+    return http({
+        url: '/post/control/',
+        method: 'POST',
+        data: {
+            post_id,
+            type,
+            operator
+        }
+    })
+}
+
+// 访问用户主页
+export const queryUserIndex = ({id}) => {
+    // return http({
+    //     url: '/index/',
+    //     method: 'POST',
+    //     data: {
+    //         id
+    //     }
+    // })
+    return { 
+        data: {
+            user: {
+                id: 9,
+                username: "回锅炒辣椒",
+                avatar: "/friedPrawn.jpg",
+                signature: "I love Rose~",
+                fans: 0,
+                focusOn: 0,
+                postsCount: 0
+            }
+        }
+    }
+}
+
+export const queryUserPost = ({user_id, types, offset}) => {
+    // return http({
+    //     url: '/user/post/',
+    //     method: 'POST',
+    //     data: {
+    //         user_id,
+    //         types,
+    //         offset
+    //     }
+    // })
+    //temp
+    if (offset == 15) {
+        return { info: [] }
+    }
+    if (types == '收藏') {
+        return {
+            info: [
+                {
+                    id: 1, name: '菜名', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10, ateCount: 20
+                }
+            ]
+        }
+    } else if (types == '吃过') {
+        return {
+            info: [
+                {
+                    id: 1, name: '菜名', img: 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg', collectCount: 10, ateCount: 20,
+                }
+            ]
+        }
+    } else if (types == '帖子') {
+        return { info: [] }
+    }
+}
