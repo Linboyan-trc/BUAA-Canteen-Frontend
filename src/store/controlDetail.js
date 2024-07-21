@@ -15,7 +15,7 @@ export const controlDetail = () => {
   const getDetail = async (id) => {
         // const res = await postDetail({id});
     const res = {
-      "info": {
+      "data": {
         "title": "分享今日学习",
         "id": 119,
         "imgs": ["/banfan.jpg", "/friedPrawn.jpg", "/garlicFish.jpg"],
@@ -31,7 +31,7 @@ export const controlDetail = () => {
         "content": "今天是2024/07/20此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容"
       }
     };
-    detail.value = res.info;
+    detail.value = res.data;
     document.title = detail.value.title;
   };
 

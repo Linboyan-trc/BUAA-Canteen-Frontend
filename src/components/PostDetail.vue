@@ -119,7 +119,23 @@ export default defineComponent({
     const loadReply = async item => {
       const offset = item.replies.length;
       const id = item.id;
-      const res = await loadReplies({ id, offset });
+      // temp
+      // const res = await loadReplies({ id, offset });
+      const res = {
+    "info": [
+        {
+            "id": 128,
+            "content": "123",
+            "createTime": "2023-07-27 21:53",
+            "user": {
+                "id": 9,
+                "username": "回锅炒辣椒",
+                "avatar": "https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg"
+            }
+        }
+    ],
+    "count": 1
+};
       item.replies = [...item.replies, ...res.info];
       item.replyCount -= res.count;
     };
