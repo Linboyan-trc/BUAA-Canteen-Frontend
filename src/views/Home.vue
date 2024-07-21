@@ -38,96 +38,25 @@ export default {
 
         // Sample data
         recommendedPosts.value = [
-            {
-                "name": "分享今日学习",
-                "id": 119,
-                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
-                "img_info": {
-                    "height": 1706,
-                    "width": 1280
-                },
-                "load": false,
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
-                },
-                "collectCount": 0,
-                "ateCount": 0
-            },
-            {
-                "name": "求解！！",
-                "id": 118,
-                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
-                "img_info": {
-                    "height": 2560,
-                    "width": 1920
-                },
-                "load": false,
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
-                },
-                "collectCount": 0,
-                "ateCount": 0
-            },
-            {
-                "name": "python学习",
-                "id": 117,
-                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
-                "img_info": {
-                    "height": 1707,
-                    "width": 1280
-                },
-                "load": false,
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
-                },
-                "collectCount": 0,
-                "ateCount": 0
-            },
-            {
-                "name": "好漂亮！！！",
-                "id": 116,
-                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
-                "img_info": {
-                    "height": 960,
-                    "width": 960
-                },
-                "load": false,
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
-                },
-                "collectCount": 0,
-                "ateCount": 0
-            },
-            {
-                "name": "可爱可爱",
-                "id": 115,
-                "img": "https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333",
-                "img_info": {
-                    "height": 1350,
-                    "width": 1080
-                },
-                "load": false,
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png"
-                },
-                "collectCount": 0,
-                "ateCount": 0
-            }
+        {
+          "id":1,
+        	"name":"鱼香肉丝",
+        	"img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
+        	"collectCount":10,
+        	"ateCount":20,
+        },
+        {
+            "id":2,
+        	"name":"糖醋里脊",
+        	"img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
+        	"collectCount":10,
+        	"ateCount":15,
+        }
         ]
         const fetchRecommendedPosts = async () => {
             try {
                 const response = await queryPost({ offset: 0, query: searchQuery.value });
-                recommendedPosts.value = response.info;
+                recommendedPosts.value = response.data;
             } catch (error) {
                 console.error('Failed to fetch posts:', error);
             }
@@ -190,6 +119,10 @@ export default {
     cursor: pointer;
     border-radius: 5px;
     margin-left: 10px; /* Add some space between input and button */
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
 }
 
 .recommendations-container {

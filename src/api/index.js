@@ -46,7 +46,7 @@ export const getAllDishes = () => {
 // 登录
 export const login = ({email, password}) => {
     return http({
-        url: '/login/',
+        url: 'user/login/',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -60,9 +60,9 @@ export const login = ({email, password}) => {
 
 
 // 注册
-export const Register = ({email, username, password}) => {
+export const register = ({email, username, password}) => {
     return http({
-        url: '/register/',
+        url: 'user/register/',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -72,6 +72,28 @@ export const Register = ({email, username, password}) => {
             password,
             email
         }
+    })
+}
+
+//登出
+export const logout = ({}) => {
+    return http({
+        url: 'user/logout/',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+}
+
+//注销账号
+export const deleteAccount = ({}) => {
+    return http({
+        url: 'user/delete/',
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
     })
 }
 
@@ -177,27 +199,26 @@ export const controlUserCollectOrLike = ({post_id, operator, type}) => {
 // 访问用户主页
 export const queryUserIndex = ({id}) => {
     // return http({
-    //     url: '/index/',
-    //     method: 'POST',
+    //     url: '/user/get-info-by-id',
+    //     method: 'GET',
     //     data: {
     //         id
     //     }
     // })
     return { 
         data: {
-            user: {
-                id: 9,
-                username: "回锅炒辣椒",
-                avatar: "/friedPrawn.jpg",
-                signature: "I love Rose~",
-                fans: 0,
-                focusOn: 0,
-                postsCount: 0
-            }
+            id: 9,
+            username: "回锅炒辣椒",
+            email: "123456@qq.com",
+            student_id: "22370000",
+            avatar: "/friedPrawn.jpg",
+            introduction: "I love Rose~",
+            gender: 'female',
         }
     }
 }
 
+//查询用户收藏或吃过
 export const queryUserPost = ({user_id, types, offset}) => {
     // return http({
     //     url: '/user/post/',
@@ -231,4 +252,42 @@ export const queryUserPost = ({user_id, types, offset}) => {
     } else if (types == '帖子') {
         return { info: [] }
     }
+}
+
+//更新用户信息（文本）
+export const updateUserInfo = ({username, email, gender, introduction, student_id}) => {
+    return http({
+        url: '/user/change-info/',
+        method: 'PUT',
+        data: {
+            username: username,
+            email: email,
+            gender: gender,
+            introduction: introduction,
+            student_id: student_id
+        }
+    })
+}
+
+//更新用户头像
+export const updateUserAvatar = ({avatar}) => {
+    return http({
+        url: '/user/change-avatar/',
+        method: 'PUT',
+        data: {
+            avatar: avatar
+        }
+    })
+}
+
+//更新用户密码
+export const updateUserPassword = ({oldPassword, newPassword}) => {
+    return http({
+        url: '/user/change-password/',
+        method: 'POST',
+        data: {
+            old_password: oldPassword,
+            new_password: newPassword
+        }
+    })
 }

@@ -31,7 +31,7 @@
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios'; // 确保已经安装并导入axios
-import { Register } from '@/api';
+import { register } from '@/api';
 
 export default {
   name: 'Register',
@@ -51,7 +51,7 @@ export default {
       }
       try {
         console.log('正在注册', formData);
-        await Register({
+        await register({
           usrname: registerForm.username, 
           email: registerForm.email, 
           password: registerForm.password});
