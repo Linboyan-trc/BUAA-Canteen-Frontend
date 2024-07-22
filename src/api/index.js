@@ -58,6 +58,14 @@ export const login = ({email, password}) => {
     })
 }
 
+export const refreshAccessToken = (refreshToken) => {
+  return http.post('/user/refresh-token', {}, {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  });
+};
+
 
 // 注册
 export const register = ({email, username, password}) => {

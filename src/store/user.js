@@ -1,21 +1,40 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { login, register } from "@/api/index";
+import {login, register, refreshAccessToken, logout} from "@/api/index";
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref({});
     const userCollect = ref([]);
     const userAte = ref([]);
     const headersObj = ref({})
+    const token = ref('');
+
     const userRegister = async ({ email, username, password }) => {
         await register({ email, username, password });
     };
 
+    const userLogin = async ( email, password ) => {
+        const response = await login({ email, password });
+        const { token, refresh_token, username } = response.data;
+        setToken(token);
+        document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
+        userInfo.value = { username };
+        return username;
+    }
+
     const getUserInfo = async ({ email, password }) => {
-        userInfo.value = await login({ email, password });
-        userCollect.value = focusResult.info.collected;
-        userAte.value = focusResult.info.favorites;
-        headersObj.value = { Authorization: `Bearer ${userInfo.value.token}` }
+        // 感觉这里不需要调用登陆的api，只需要调用获取用户信息的api就行。但是要保证这个函数一定是用户登陆了之后才调用的
+        // 登陆了之后，会在localStorage里面存储token，到后端是可以直接定位到是哪个用户的
+        // 等需要调用这个函数的时候再更改这里面的逻辑吧
+
+        const response = await login({ email, password });
+        userInfo.value = response.data;
+
+        // 这里还需要调其他的api
+        // userCollect.value = focusResult.info.collected;
+        // userAte.value = focusResult.info.favorites;
+
+        // headersObj.value = { Authorization: `Bearer ${response.data.token}` };
     };
 
     const extendUserInfo = (type, id) => {
@@ -42,6 +61,10 @@ export const useUserStore = defineStore('user', () => {
 
     const userLogout = async () => {
         userInfo.value = {};
+        token.value = '';
+        localStorage.removeItem('token');
+        document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; HttpOnly`;
+        await logout();
         return { info: "成功退出登录" };
     };
 
@@ -54,6 +77,43 @@ export const useUserStore = defineStore('user', () => {
         userInfo.value.student_id = student_id;
     };
 
+
+    // 以下是登陆认证等功能函数
+
+    const getRefreshTokenFromCookie = () => {
+        const name = 'refresh_token=';
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const ca = decodedCookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return '';
+    };
+    const refreshAccessTokenHandler = async () => {
+        try {
+            const refreshToken = getRefreshTokenFromCookie();
+            const response = await refreshAccessToken(refreshToken);
+            token.value = response.data.token;
+            headersObj.value = { Authorization: `Bearer ${token.value}` };
+            localStorage.setItem('token', token.value);
+        } catch (error) {
+            console.error('刷新token失败:', error);
+        }
+    };
+
+    const setToken = (newToken) => {
+        token.value = newToken;
+        headersObj.value = { Authorization: `Bearer ${newToken}` };
+        localStorage.setItem('token', newToken);
+    };
+
+
     //temp
     userInfo.value = {
         id: 12,
@@ -64,6 +124,7 @@ export const useUserStore = defineStore('user', () => {
     };
     return {
         userInfo,
+        userLogin,
         getUserInfo,
         userLogout,
         userRegister,
@@ -72,7 +133,12 @@ export const useUserStore = defineStore('user', () => {
         changeInfo,
         userCollect,
         userAte,
-        headersObj
+        headersObj,
+
+        // 以下是登陆认证等功能函数
+        token,
+        refreshAccessTokenHandler,
+        setToken
     };
 }, {
     persist: true,
