@@ -23,13 +23,13 @@
 import { reactive } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { login } from '@/api';
-import { useStore } from 'vuex';
+import { useUserStore } from '@/store/user';
+
 
 export default {
   name: 'Login',
   setup() {
-    const store = useStore();
+    const store = useUserStore();
     const router = useRouter();
     const loginForm = reactive({
       username: '',
@@ -39,10 +39,11 @@ export default {
     const handleLogin = async () => {
       try {
         // 调用登录方法
-        const response = await login({username: username, password: password,});
+        const username = await store.userLogin(loginForm.username, loginForm.password);   //这里应该传入email和password
+
         console.log(`登录用户 ${username}`);
-        store.dispatch('login');
-        router.push({ name: 'home' }); // 登录成功后重定向到首页
+
+        await router.push({ name: 'home' }); // 登录成功后重定向到首页
       } catch (error) {
         console.error('登录失败:', error);
         // 处理登录失败，例如显示错误消息
