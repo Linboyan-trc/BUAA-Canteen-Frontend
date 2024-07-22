@@ -27,8 +27,23 @@ export default {
       router.back();
     };
 
+    const deleteDetail = async () => {
+      try {
+        const res = await postDelete({ id })
+        ElMessage({ type: 'success', message: res.success })
+        router.push('/home');
+      } catch (error) {
+        ElMessage.error('删除帖子失败');
+        console.error("Failed to delete post:", error);
+      }
+    };
+
+    const showDelete = () => {
+      return detail.user.id === userStore.userInfo.value.id;
+    };
+
     onMounted(() => getDetail());
-    return { detail, afterDoComment, content, closeDetail };
+    return { detail, afterDoComment, content, closeDetail, deleteDetail, showDelete };
   }
 }
 </script>
@@ -41,14 +56,20 @@ export default {
         <Close />
       </el-icon>
     </div>
+    <el-button v-if=showDelete type="danger" @click="deleteDetail" class="delete-button">
+      删除帖子
+    </el-button>
   </div>
 </template>
 
 <style scoped>
 .box {
   position: absolute;
-  left: 120px;
-  top: 5px;
+  /* left: 50px;
+  top: 5px; */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 0.8rem;
   width: 1200px;
   height: 600px;
@@ -57,8 +78,10 @@ export default {
 .close-button {
   color: #4274b9;
   position: absolute;
-  top: 20px;
-  left: 1190px;
+  /* top: 20px;
+  left: 1190px; */
+  left: 95%;
+  top: 3%;
 
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
@@ -69,9 +92,18 @@ export default {
   transform: rotate(90deg);
 }
 
-.close-button > svg {
+.close-button>svg {
   width: 25px;
   height: 25px;
   stroke-width: 2;
+}
+
+.delete-button {
+  position: absolute;
+  left: 91%;
+  top: 12%;
+  font-weight: bold;
+  background-color: #4274b9;
+  border-color: #4274b9;
 }
 </style>
