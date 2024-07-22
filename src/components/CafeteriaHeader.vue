@@ -22,15 +22,11 @@ export default {
     },
     setup() {
         const cafeterias = ref([
-            { name_en: 'student1', name_zh: '学一' },
-            { name_en: 'student2', name_zh: '学二' },
-            { name_en: 'student3', name_zh: '学三' },
-            { name_en: 'student4', name_zh: '学四' },
-            { name_en: 'student5', name_zh: '学五' },
-            { name_en: 'student6', name_zh: '学六' },
-            { name_en: 'teacher', name_zh: '教工' },
-            { name_en: 'halal', name_zh: '清真' },
-            { name_en: 'heyi', name_zh: '合一厅' },
+            { name_en: 'xylnorth', name_zh: '学院路北区' },
+            { name_en: 'xyleast', name_zh: '学院路东区' },
+            { name_en: 'xylwest', name_zh: '学院路西区' },
+            { name_en: 'shwest', name_zh: '沙河西区'},
+            { name_en: 'sheast', name_zh: '沙河东区'},
         ])
 
         return {

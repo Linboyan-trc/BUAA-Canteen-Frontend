@@ -30,7 +30,6 @@
 <script>
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios'; // 确保已经安装并导入axios
 import { register } from '@/api';
 
 export default {
@@ -45,21 +44,40 @@ export default {
     });
 
     const handleRegister = async() => {
+      const usernameRegex = /^[a-zA-Z0-9_]{5,15}$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (!usernameRegex.test(registerForm.username)) {
+        alert("用户名必须是5到15个字符的字母、数字或下划线。");
+        return;
+      }
+
+      if (!emailRegex.test(registerForm.email)) {
+        alert("请输入有效的邮箱地址。");
+        return;
+      }
+
+      if (registerForm.password.length < 6) {
+        alert("密码必须至少6个字符。");
+        return;
+      }
+
       if (registerForm.password !== registerForm.confirmPassword) {
         alert("密码不匹配。");
         return;
       }
-      try {
-        console.log('正在注册', formData);
-        await register({
-          usrname: registerForm.username, 
-          email: registerForm.email, 
-          password: registerForm.password});
+
+      console.log('正在注册', formData);
+      const res = await register({
+        usrname: registerForm.username, 
+        email: registerForm.email, 
+        password: registerForm.password});
+      if (res.message) {
         alert("注册成功！");
-        router.push({ name: 'login' });// 注册成功后重定向到登录页面
-      } catch (error) {
-        console.error('注册失败:', error);
-        // 处理注册失败，例如显示错误消息
+        router.push({ name: 'login' }); // 注册成功后重定向到登录页面
+      } else {
+        console.error('注册失败:', res.error_msg);
+        alert(`注册失败: ${res.error_msg}`);
       }
     };
 

@@ -6,9 +6,9 @@
         </div>
 
         <div class="recommendations-container">
-            <router-link v-for="_ in recommendedPosts" :key="_.id" :to="`/dish/${_.id}`">
-                <DishPreview :dish = _ />
-            </router-link>
+            <div v-for="_ in recommendedPosts" :key="_.id">
+                <Preview :name="'dish'" :dish = _ />
+            </div>
         </div>
 
         <div class="icon-button refresh-button" @click="refreshPage">
@@ -25,12 +25,12 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { queryPost } from '@/api';
-import DishPreview from '@/components/DishPreview.vue';
+import Preview from '@/components/Preview.vue';
 
 export default {
     name: 'Home',
     components: {
-        DishPreview
+        Preview
     },
     setup() {
         const searchQuery = ref('');

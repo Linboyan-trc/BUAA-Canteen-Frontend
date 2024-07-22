@@ -3,8 +3,8 @@
         <h1>请先登录</h1>
         <form @submit.prevent="handleLogin">
             <div>
-                <label for="username">用户名:</label>
-                <input id="username" v-model="loginForm.username" type="text" required>
+                <label for="email">邮箱:</label>
+                <input id="email" v-model="loginForm.email" type="text" required>
             </div>
             <div>
                 <label for="password">密码:</label>
@@ -32,15 +32,15 @@ export default {
     const store = useStore();
     const router = useRouter();
     const loginForm = reactive({
-      username: '',
+      email: '',
       password: '',
     });
 
     const handleLogin = async () => {
       try {
         // 调用登录方法
-        const response = await login({username: username, password: password,});
-        console.log(`登录用户 ${username}`);
+        const response = await login({email: email, password: password,});
+        console.log(`登录用户 ${email}`);
         store.dispatch('login');
         router.push({ name: 'home' }); // 登录成功后重定向到首页
       } catch (error) {
@@ -48,13 +48,14 @@ export default {
         // 处理登录失败，例如显示错误消息
       }
     };
-
+    
     return {
       loginForm,
       handleLogin,
     };
   },
 };
+
 </script>
 
 <style scoped>

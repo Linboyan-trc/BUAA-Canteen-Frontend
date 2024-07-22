@@ -3,7 +3,7 @@
         <div class="counter-image">
             <img :src="counter.img" alt="窗口图片" />
         </div>
-        <div class="counter-floor">
+        <div class="counter-text">
             <p>{{ counter.name }}: {{ counter.floor }}层</p>
             <div class="counter-likes">
                 <span>{{ counter.collectCount }} 收藏</span>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { doCollect } from '@/api';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -54,16 +55,16 @@ export default defineComponent({
 
 .counter-image img {
     width: 100%;
-    height: 100px;
+    height: 150px;
     object-fit: cover;
 }
 
-.counter-floor {
+.counter-text {
     padding: 10px;
     background-color: #f9f9f9;
 }
 
-.counter-floor p {
+.counter-text p {
     margin: 0;
     font-size: 14px;
     color: #333;

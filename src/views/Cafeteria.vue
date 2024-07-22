@@ -5,13 +5,17 @@
     </head>
     <header>
       <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
+      <div class="subHeader">
+        <h2>{{ cafeteriaName }}食堂</h2>
+        <button class="userBtn" @click="doCollect({cafeteria})">收藏该食堂</button>
+      </div>
     </header>
 
     <body>
       <div class="counter-preview">
-        <router-link v-for="counter in counters" :key="counter.id" :to="`/cafeteria/${cafeteria}/counter/${counter.id}`">
-          <CounterPreview :counter="counter" />
-        </router-link>
+        <div v-for="counter in counters" :key="counter.id">
+          <Preview :name="'counter'" :preview="counter" :cafeteria="cafeteria"/>
+        </div>
       </div>
     </body>
   </div>
@@ -20,7 +24,7 @@
 <script>
 import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
-import CounterPreview from '@/components/CounterPreview.vue'
+import Preview from '@/components/Preview.vue'
 import { useRoute } from 'vue-router'
 import { getCounters } from '@/api/index'
 
@@ -28,7 +32,7 @@ export default {
   name: 'Cafeteria',
   components: {
     CafeteriaHeader,
-    CounterPreview
+    Preview
   },
   setup() {
     const route = useRoute()
@@ -36,43 +40,27 @@ export default {
     const cafeteria = computed(() => route.params.cafeteria)
     const cafeteriaName = computed(() => {
       const cafeteriaMap = ref([
-        {'name_en': 'student1', 'name_zh': '学一'},
-        {'name_en': 'student2', 'name_zh': '学二'},
-        {'name_en': 'student3', 'name_zh': '学三'},
-        {'name_en': 'student4', 'name_zh': '学四'},
-        {'name_en': 'student5', 'name_zh': '学五'},
-        {'name_en': 'student6', 'name_zh': '学六'},
-        {'name_en': 'teacher', 'name_zh': '教工'},
-        {'name_en': 'halal', 'name_zh': '清真'},
-        {'name_en': 'heyi', 'name_zh': '合一厅'},
-      ])
+            { name_en: 'xylnorth', name_zh: '学院路北区' },
+            { name_en: 'xyleast', name_zh: '学院路东区' },
+            { name_en: 'xylwest', name_zh: '学院路西区' },
+            { name_en: 'shwest', name_zh: '沙河西区'},
+            { name_en: 'sheast', name_zh: '沙河东区'}
+        ])
       return cafeteriaMap.value.find(c => c.name_en === cafeteria.value).name_zh
     })
-    //temp
-    counters.value = [
-        { id: 1, name: '拌饭', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333', floor: 1, collectCount: 10 },
-        { id: 2, name: '基本伙', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        { id: 2, name: '窗口2', img: 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=jpeg?w=500&h=333', floor: 2, collectCount: 20 },
-        // 其他窗口信息
-      ]
-    
-    // onMounted(() => {
-    //   // 从后端 API 获取指定食堂的窗口数据
-    //   getCountersOf(cafeteria.value)
-    // })
-    // const getCountersOf = async(cafeteriaId) => {
-    //   try {
-    //     const response = await getCounters(cafeteriaId)
-    //     counters.value = response.data
-    //   } catch (error) {
-    //     console.error('获取柜台数据失败:', error)
-    //   }
-    // }
+  
+    onMounted(() => {
+      // 从后端 API 获取指定食堂的窗口数据
+      getCountersOf(cafeteria.value)
+    })
+    const getCountersOf = async(name) => {
+      try {
+        const response = await getCounters(name)
+        counters.value = response.data
+      } catch (error) {
+        console.error('获取柜台数据失败:', error)
+      }
+    }
 
     return {
       counters,

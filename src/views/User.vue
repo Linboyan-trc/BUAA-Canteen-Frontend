@@ -1,7 +1,7 @@
 <script setup>
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
-import DishPreview from "@/components/DishPreview.vue";
+import Preview from "@/components/Preview.vue";
 import { logout, queryUserIndex, queryUserPost, updateUserAvatar, updateUserPassword} from "@/api/index.js";
 import {controlDetail} from "@/store/controlDetail";
 import {onClickOutside} from "@vueuse/core";
@@ -213,10 +213,15 @@ onMounted(async () => {
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
            :infinite-scroll-distance="100"
            v-else>
-           <div class="dishes-preview">
-            <router-link v-for="dish in userCollect" :key="dish.id" :to="`/dish/${dish.id}`">
-              <DishPreview :dish="dish" />
-            </router-link>
+           <div class="dishes-preview" v-for="collect in userCollect">
+            <div v-if="collect.type === 'dish'">
+              <div :key="collect.id">
+                <Preview :preview="collect" />
+              </div>
+            </div>
+            <div v-else-if="collect.type === 'cafe'">
+              
+            </div>
           </div>
       </div>
       <transition

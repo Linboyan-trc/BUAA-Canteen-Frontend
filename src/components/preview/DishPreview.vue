@@ -5,11 +5,17 @@
         </div>
         <div class="dish-info">
             <p>{{ dish.name }}</p>
-            <div class="dish-collectCount">
-                <span>{{ dish.collectCount }} 收藏</span>
-            </div>
-            <div class="dish-ateCount">
-                <span>{{ dish.ateCount }} 吃过</span>
+            <div class="info-footer">
+                <div class="user-info">
+                    <img :src="dish.user.avatar" alt="用户头像" class="user-avatar" />
+                    <span class="user-name">{{ dish.user.username }}</span>
+                </div>
+                <div class="dish-collectCount">
+                    <span>{{ dish.collectCount }} 收藏</span>
+                </div>
+                <div class="dish-ateCount">
+                    <span>{{ dish.ateCount }} 吃过</span>
+                </div>
             </div>
         </div>
     </div>
@@ -64,4 +70,29 @@ export default defineComponent({
     font-size: 12px;
     color: #666;
 }
+
+.info-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.user-name {
+  font-size: 14px;
+  color: #333;
+}
+
 </style>

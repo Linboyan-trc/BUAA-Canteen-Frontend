@@ -2,45 +2,118 @@ import http from "@/utils/http";
 
 // 获取某食堂的全部柜台
 export const getCounters = ({cafeteria}) => {
-    return http({
-        url: '/cafeteria/get-counters',
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            cafeteria
-        }
-    })
+    // return http({
+    //     url: '/cafeteria/get-counters',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     data: {
+    //         cafeteria
+    //     }
+    // })
+    // temp
+    return {
+        "data": [
+            {
+                "id":1,
+                "name":"基本伙",
+                "img":'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+                "floor":1,
+                "collectCount":10,
+            },
+            {
+                "id":2,
+                "name":"猪肚鸡",
+                "img":'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+                "floor":-1,
+                "collectCount":10,
+            },
+        ]
+    }
 }
 
 //获取某柜台的全部菜肴
 export const getDishes = ({cafeteria, counterId}) => {
-    return http({
-        url: '/cafeteria/counter/get-dishes',
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
-            cafeteria,
-            counterId
-        }
-    })
+    // return http({
+    //     url: '/cafeteria/counter/get-dishes',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     data: {
+    //         cafeteria,
+    //         counterId
+    //     }
+    // })
+    //temp
+    return {
+        "data": [
+            {
+                "id":1,
+                "name":"鱼香肉丝",
+                "img":'https://img0.baidu.com/it/u=1280589996,1795755610&fm=253&fmt=auto&app=120&f=JPEG?w=747&h=500',
+                "collectCount":10,
+                "ateCount":20,
+                "user": {
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户"
+                }
+            },
+            {
+                "id":2,
+                "name":"糖醋里脊",
+                "img":'https://img0.baidu.com/it/u=1280589996,1795755610&fm=253&fmt=auto&app=120&f=JPEG?w=747&h=500',
+                "collectCount":10,
+                "ateCount":15,
+                "user": {
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户"
+                }
+            },
+        ]
+    }
 }
 
 //获取所有窗口和菜肴
 export const getAllDishes = () => {
-    return http({
-        url: '/cafeteria/get-all-dishes',
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        data: {
+    // return http({
+    //     url: '/cafeteria/get-all-dishes',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     data: {
             
-        }
-    })
+    //     }
+    // })
+    //temp
+    return {
+        "data": [
+            {
+                "id":1,
+                "name":"鱼香肉丝",
+                "img":'https://img0.baidu.com/it/u=1280589996,1795755610&fm=253&fmt=auto&app=120&f=JPEG?w=747&h=500',
+                "collectCount":10,
+                "ateCount":20,
+                "user": {
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户"
+                }
+            },
+            {
+                "id":2,
+                "name":"糖醋里脊",
+                "img":'https://img0.baidu.com/it/u=1280589996,1795755610&fm=253&fmt=auto&app=120&f=JPEG?w=747&h=500',
+                "collectCount":10,
+                "ateCount":15,
+                "user": {
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户"
+                }
+            },
+        ]
+    }
 }
 
 // 登录
@@ -237,7 +310,7 @@ export const queryUserPost = ({user_id, types, offset}) => {
         return {
             info: [
                 {
-                    id: 1, name: '菜名', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10, ateCount: 20
+                    id: 1, name: '菜名', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10, ateCount: 20, avatar: "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg"
                 }
             ]
         }
@@ -245,7 +318,7 @@ export const queryUserPost = ({user_id, types, offset}) => {
         return {
             info: [
                 {
-                    id: 1, name: '菜名', img: 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg', collectCount: 10, ateCount: 20,
+                    id: 1, name: '菜名', img: 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg', collectCount: 10, ateCount: 20, avatar: "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg"
                 }
             ]
         }

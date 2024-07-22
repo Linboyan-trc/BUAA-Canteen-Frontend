@@ -55,13 +55,13 @@ export const useUserStore = defineStore('user', () => {
     };
 
     //temp
-    userInfo.value = {
-        id: 12,
-        username: "测试用户",
-        avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
-        introduction: "暂时没有个性签名~",
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
-    };
+    // userInfo.value = {
+    //     id: 12,
+    //     username: "测试用户",
+    //     avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
+    //     introduction: "暂时没有个性签名~",
+    //     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
+    // };
     return {
         userInfo,
         getUserInfo,
