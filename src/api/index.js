@@ -224,15 +224,47 @@ export const queryUserIndex = ({id}) => {
 
 //查询用户收藏或吃过
 export const queryUserPost = ({user_id, types, offset}) => {
-    // return http({
-    //     url: '/user/post/',
-    //     method: 'POST',
-    //     data: {
-    //         user_id,
-    //         types,
-    //         offset
-    //     }
-    // })
+    // if (types == '收藏的菜肴') {
+    //     return http({
+    //         url: '/user/get-collect-dishes-list/',
+    //         method: 'POST',
+    //         data: {
+    //             offset
+    //         }
+    //     })
+    // } else if (types == '收藏的柜台') {
+    //     return http({
+    //         url: '/user/get-collect-counters-list/',
+    //         method: 'POST',
+    //         data: {
+    //             offset
+    //         }
+    //     })
+    // } else if (types == '收藏的食堂') {
+    //     return http({
+    //         url: '/user/get-collect-cafeterias-list/',
+    //         method: 'POST',
+    //         data: {
+    //             offset
+    //         }
+    //     })
+    // } else if (types == '吃过') {
+    //     return http({
+    //         url: '/user/get-ate-list/',
+    //         method: 'POST',
+    //         data: {
+    //             offset
+    //         }
+    //     })
+    // } else if (types == '帖子') {
+    //     return http({
+    //         url: '/user/get-post-list/',
+    //         method: 'POST',
+    //         data: {
+    //             offset
+    //         }
+    //     })
+    // }
     //temp
     if (offset == 15) {
         return { info: [] }
