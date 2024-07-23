@@ -10,6 +10,7 @@ import Admin from '@/views/Admin.vue'
 import store from '@/store';
 import { useUserStore } from '@/store/user';
 import Detail from '@/views/Detail.vue';
+import Upload from '@/views/Upload.vue';
 
 const routes = [
   { 
@@ -57,6 +58,10 @@ const routes = [
     component: User, 
     // meta: { requiresAuth: true }
   },
+  {
+    path: '/upload',
+    component: Upload
+  }
 ];
 
 const router = createRouter({

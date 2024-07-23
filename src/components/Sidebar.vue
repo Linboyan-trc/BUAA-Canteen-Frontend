@@ -8,6 +8,7 @@
         <li><router-link to="/admin">管理员</router-link></li>
         <li><router-link to="/login" v-if="!userId">登录</router-link></li> 
         <li><router-link to="/register" v-if="!userId">注册</router-link></li>
+        <li><router-link to="/upload">发布</router-link></li>
         <li id="user-item" v-if="userId"><router-link :to="`/user/${userId}`">我的</router-link></li>
       </ul>
     </aside>

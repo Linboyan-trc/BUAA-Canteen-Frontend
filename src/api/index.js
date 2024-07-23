@@ -375,25 +375,57 @@ export const getComment = ({id, offset}) => {
 }
 
 export const loadReplies = ({id, offset}) => {
-    return http({
-        url: '/comment/reply/',
-        method: 'POST',
-        data: {
-            id,
-            offset
-        }
-    })
+    // return http({
+    //     url: '/comment/reply/',
+    //     method: 'POST',
+    //     data: {
+    //         id,
+    //         offset
+    //     }
+    // })
+    return {
+        "info": [
+            {
+                "id": 128,
+                "content": "123",
+                "createTime": "2023-07-27 21:53",
+                "user": {
+                    "id": 9,
+                    "username": "回锅炒辣椒",
+                    "avatar": "https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg"
+                }
+            }
+        ],
+        "count": 1
+    };
 }
 
 // 帖子详情
 export const postDetail = ({id}) => {
-    return http({
-        url: '/post/detail/',
-        method: 'POST',
-        data: {
-            id
+    // return http({
+    //     url: '/post/detail/',
+    //     method: 'POST',
+    //     data: {
+    //         id
+    //     }
+    // })
+    return {
+        "data": {
+          "title": "分享今日学习",
+          "id": 119119119119119,
+          "imgs": ["/banfan.jpg", "/friedPrawn.jpg", "/garlicFish.jpg"],
+          "user": {
+            "id": 12,
+            "username": "测试用户1",
+            "avatar": "/friedPrawn.jpg"
+          },
+          "createTime": "2023-07-27 18:03",
+          "collectCount": 1,
+          "ateCount": 2,
+          "commentCount": 0,
+          "content": "今天是2024/07/20此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容"
         }
-    })
+      };
 }
 
 // 主页帖子
@@ -509,6 +541,24 @@ export const updateUserPassword = ({oldPassword, newPassword}) => {
         data: {
             old_password: oldPassword,
             new_password: newPassword
+        }
+    })
+}
+
+export const uploadPost = (data) => {
+    return http({
+        url: '/upload/info/',
+        method: 'POST',
+        data: data
+    })
+}
+
+export const postDelete = ({id}) => {
+    return http({
+        url: '/post/delete/',
+        method: 'POST',
+        data: {
+            id
         }
     })
 }
