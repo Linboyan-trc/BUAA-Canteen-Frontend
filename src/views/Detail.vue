@@ -1,5 +1,5 @@
 <script>
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import PostDetail from "@/components/PostDetail.vue";
 import { controlDetail } from "@/store/controlDetail";
@@ -18,6 +18,7 @@ export default {
     const userStore = useUserStore();
     const Detail = controlDetail();
     const detail = Detail.detail;
+    const detailPublishUserId = computed(() => detail.value.user ? detail.value.user.id : null);
     // 评论内容
     const content = Detail.content;
     const getDetail = () => Detail.getDetail(route.params.dishId); // 使用正确的路由参数名
@@ -28,6 +29,9 @@ export default {
     };
 
     const deleteDetail = async () => {
+      console.log("Delete detail:", detail.value.user.id);
+      console.log("User id:", userId.value);
+      console.log("userInfor:", userStore.userInfo);
       try {
         const res = await postDelete({ id })
         ElMessage({ type: 'success', message: res.success })
@@ -38,12 +42,8 @@ export default {
       }
     };
 
-    const showDelete = () => {
-      return detail.user.id === userStore.userInfo.value.id;
-    };
-
     onMounted(() => getDetail());
-    return { detail, afterDoComment, content, closeDetail, deleteDetail, showDelete };
+    return { userStore, detail, detailPublishUserId, afterDoComment, content, closeDetail, deleteDetail };
   }
 }
 </script>
@@ -56,7 +56,7 @@ export default {
         <Close />
       </el-icon>
     </div>
-    <el-button v-if=showDelete type="danger" @click="deleteDetail" class="delete-button">
+    <el-button v-if="detailPublishUserId === userStore.userInfo.id" type="danger" @click="deleteDetail" class="delete-button">
       删除帖子
     </el-button>
   </div>
