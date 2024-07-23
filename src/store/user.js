@@ -23,10 +23,10 @@ export const useUserStore = defineStore('user', () => {
             document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
             userInfo.value = { email: email , username: username};
             const res = await getUserActionInfo();
-            userAte = res.data.ateId;
-            userCollectDishes = res.data.collectDishesId;
-            userCollectCounters = res.data.collectCountersId;
-            userCollectCafeterias = res.data.collectCafeteriasId;
+            userAte.value = res.data.ateId;
+            userCollectDishes.value = res.data.collectDishesId;
+            userCollectCounters.value = res.data.collectCountersId;
+            userCollectCafeterias.value = res.data.collectCafeteriasId;
             return email;
         } else {
             return null;
