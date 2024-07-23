@@ -1,7 +1,7 @@
 <script>
 import { ChatRound, Edit } from '@element-plus/icons-vue';
 import { defineComponent, onMounted, ref, defineEmits } from "vue";
-import { doComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
+import { doComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
@@ -31,7 +31,7 @@ export default defineComponent({
     const userStore = useUserStore();
 
     const checkCollect = (id) => {
-      return userStore.userCollect.includes(id);
+      return userStore.userCollectDishes.includes(id);
     };
     const checkEat = (id) => {
       return userStore.userAte.includes(id);

@@ -1,6 +1,6 @@
 import {ref} from "vue";
 import {useUserStore} from "@/store/user";
-import {postDetail} from "@/api/index";
+import {postDetail} from "@/api";
 
 export const controlDetail = () => {
   const detail = ref({});

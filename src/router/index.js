@@ -42,6 +42,10 @@ const routes = [
     component: Counter 
   },
   { 
+    path: '/counter/:counterId', 
+    component: Counter 
+  },
+  { 
     path: '/dish/:dishId', 
     component: Detail 
   },

@@ -14,7 +14,6 @@
 <script>
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
-import { logout } from '@/api';
 import { deleteAccount } from '@/api';
 
 export default {
@@ -31,7 +30,6 @@ export default {
         const confirm = async () => {
             if (exeName === '退出登录') {
                 const res = await userStore.userLogout();
-                const msg = await logout({});
             } else if (exeName === '注销账号') {
                 const res = await userStore.userLogout();
                 const msg = await deleteAccount({});

@@ -5,13 +5,20 @@
         </router-link>
     </div>
     <div v-else-if="name=='counter'">
-        <router-link :to="`/cafeteria/${cafeteriaId}/counter/${preview.id}`">
-            <CounterPreview :counter="preview" />
-        </router-link>
+        <div v-if="cafeteriaId">
+            <router-link :to="`/cafeteria/${cafeteriaId}/counter/${preview.id}`">
+                <CounterPreview :counter="preview" />
+            </router-link>
+        </div>
+        <div v-else>
+            <router-link :to="`/counter/${preview.id}`">
+                <CounterPreview :counter="preview" />
+            </router-link>
+        </div>
     </div>
     <div v-else-if="name=='cafeteria'">
-        <router-link :to="`/cafeteria/${cafeteriaId}`">
-            <CafeteriaPreview :counter="preview" />
+        <router-link :to="`/cafeteria/${preview.id}`">
+            <CafeteriaPreview :cafeteria="preview" />
         </router-link>
     </div>
 </template>
@@ -21,7 +28,6 @@ import { defineComponent } from 'vue';
 import DishPreview from './preview/DishPreview.vue';
 import CounterPreview from './preview/CounterPreview.vue';
 import CafeteriaPreview from './preview/CafeteriaPreview.vue';
-import router from '@/router';
 
 export default defineComponent({
     name: 'Preview',

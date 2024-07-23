@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {login, register, refreshAccessToken, logout} from "@/api/index";
+import {login, register, refreshAccessToken, logout, getUserActionInfo} from "@/api";
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref({});
-    const userCollect = ref([]);
+    const userCollectDishes = ref([]);
+    const userCollectCounters = ref([]);
+    const userCollectCafeterias = ref([]);
     const userAte = ref([]);
     const headersObj = ref({})
     const token = ref('');
@@ -20,46 +22,28 @@ export const useUserStore = defineStore('user', () => {
             setToken(token);
             document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
             userInfo.value = { email: email , username: username};
+            const res = await getUserActionInfo();
+            userAte = res.data.ateId;
+            userCollectDishes = res.data.collectDishesId;
+            userCollectCounters = res.data.collectCountersId;
+            userCollectCafeterias = res.data.collectCafeteriasId;
             return email;
         } else {
             return null;
         }
     }
 
-    const getUserInfo = async ({ email, password }) => {
-        // 感觉这里不需要调用登陆的api，只需要调用获取用户信息的api就行。但是要保证这个函数一定是用户登陆了之后才调用的
-        // 登陆了之后，会在localStorage里面存储token，到后端是可以直接定位到是哪个用户的
-        // 等需要调用这个函数的时候再更改这里面的逻辑吧
-
-        const response = await login({ email, password });
-        userInfo.value = response.data;
-
-        // 这里还需要调其他的api
-        // userCollect.value = focusResult.info.collected;
-        // userAte.value = focusResult.info.favorites;
-
-        // headersObj.value = { Authorization: `Bearer ${response.data.token}` };
-    };
-
     const extendUserInfo = (type, id) => {
-        if (type === 1) {
+        if (type === 'ate') {
             userAte.value = [...userAte.value, id];
-        } else if (type === 2) {
-            userCollect.value = [...userCollect.value, id];
-        }
-    };
-
-    const removeFocus = (type, id) => {
-        if (type === 1) {
-            const index = userAte.value.indexOf(id);
-            if (index !== -1) {
-                userAte.value.splice(index, 1);
-            }
-        } else if (type === 2) {
-            const index = userCollect.value.indexOf(id);
-            if (index !== -1) {
-                userCollect.value.splice(index, 1);
-            }
+        } else if (type === 'dish') {
+            userCollectDishes.value = [...userCollectDishes.value, id];
+        } else if (type === 'counter') {
+            userCollectCounters.value = [...userCollectCounters.value, id];
+        } else if (type === 'cafeteria') {
+            userCollectCafeterias.value = [...userCollectCafeterias.value, id];
+        } else {
+            console.log("extendUserInfo失败: 没有这个类型")
         }
     };
 
@@ -80,7 +64,6 @@ export const useUserStore = defineStore('user', () => {
         userInfo.value.avatar = avatar;
         userInfo.value.student_id = student_id;
     };
-
 
     // 以下是登陆认证等功能函数
 
@@ -119,23 +102,23 @@ export const useUserStore = defineStore('user', () => {
 
 
     //temp
-    // userInfo.value = {
-    //     id: 12,
-    //     username: "测试用户",
-    //     avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
-    //     introduction: "暂时没有个性签名~",
-    //     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
-    // };
+    userInfo.value = {
+        id: 12,
+        username: "测试用户",
+        avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
+        introduction: "暂时没有个性签名~",
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
+    };
     return {
         userInfo,
         userLogin,
-        getUserInfo,
         userLogout,
         userRegister,
         extendUserInfo,
-        removeFocus,
         changeInfo,
-        userCollect,
+        userCollectDishes,
+        userCollectCounters,
+        userCollectCafeterias,
         userAte,
         headersObj,
 

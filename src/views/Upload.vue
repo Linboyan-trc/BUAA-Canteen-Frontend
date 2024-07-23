@@ -5,7 +5,7 @@ import { computed, onBeforeMount, ref } from "vue";
 import { Back, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { getCurrentTime } from "@/utils/getTime";
-import { uploadPost } from "@/api/index";
+import { uploadPost } from "@/api";
 import PostDetail from "@/components/PostDetail.vue";
 
 export default {

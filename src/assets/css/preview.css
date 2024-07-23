@@ -1,4 +1,4 @@
-.dishes-preview, .counter-preview, .recommendations-container {
+.dishes-preview, .counters-preview, .cafeterias-preview, .recommendations-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -7,7 +7,7 @@
     justify-content: flex-start;
 }
 
-.dishes-preview, .counter-preview, .recommendations-container, a {
+.dishes-preview, .counters-preview, .cafeterias-preview, .recommendations-container, a {
     text-decoration: none;
     color: inherit;
 }

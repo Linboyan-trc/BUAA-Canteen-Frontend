@@ -4,7 +4,7 @@
       <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
       <div class="subHeader">
         <h2>柜台名：{{ counter.name }}</h2>
-        <div v-if="hasCollectedCounter">
+        <div v-if="!hasCollectedCounter">
           <button class="userBtn" @click="doCollectCounter({counterId})">收藏该柜台</button>
         </div>
         <div v-else>
@@ -28,7 +28,8 @@ import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
 import Preview from '@/components/Preview.vue'
 import { useRoute } from 'vue-router';
-import { cancelCollectCounter, doCollectCounter, getCounter, getDishes, hasCollectedCounter } from '@/api';
+import { cancelCollectCounter, doCollectCounter, getCounter, getDishes } from '@/api';
+import { useUserStore } from '@/store/user';
 
 export default {
   name: 'Counter',
@@ -40,9 +41,11 @@ export default {
     const route = useRoute()
     const counter = ref({})    
     const dishes = ref([])
-    
+    const userStore = useUserStore()
+
     const counterId = computed(() => Number(route.params.counterId))
     const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
+    const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value))
     onMounted(async() => {
       try {
         const response = await getDishes({ counterId })
@@ -62,7 +65,8 @@ export default {
       counter,
       dishes,
       counterId,
-      cafeteriaId
+      cafeteriaId,
+      hasCollectedCounter
     }
   },
 }

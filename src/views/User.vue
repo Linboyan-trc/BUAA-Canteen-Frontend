@@ -2,14 +2,12 @@
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import Preview from "@/components/Preview.vue";
-import { logout, queryUserIndex, queryUserPost, updateUserAvatar, updateUserPassword} from "@/api/index.js";
-import {controlDetail} from "@/store/controlDetail";
+import { logout, queryUserIndex, queryUserPost, updateUserAvatar, updateUserPassword} from "@/api";
 import {onClickOutside} from "@vueuse/core";
 
 const route = useRoute()
-const Details = controlDetail()
 import EditUserInfoModal from '@/components/EditUserInfoModal.vue'
-import { updateUserInfo } from "@/api/index.js";
+import { updateUserInfo } from "@/api";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/user";
 // 加载用户信息 //////////////////////////////////////////////////////////////
@@ -24,9 +22,11 @@ const userStore = useUserStore()
 // 加载用户信息结束 ////////////////////////////////////////////////////////////
 
 // 主页切换标签 //////////////////////////////////////////////////////////////
-const radio = ref('收藏')
+const radio = ref('吃过')
 const userPost = ref([])
-const userCollect = ref([])
+const userCollectDihses = ref([])
+const userCollectCounters = ref([])
+const userCollectCafeterias = ref([])
 const userAte = ref([])
 const disabled = ref(true); // 初始禁用滚动加载
 const showEditModal = ref(false)
@@ -77,9 +77,15 @@ const Toggle = async () => {
   const user_id = route.params.id
   const offset = 0
   const types = radio.value
-  if (radio.value === '收藏' && userCollect.value.length === 0) {
+  if (radio.value === '收藏的菜肴' && userCollectDihses.value.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userCollect.value = post.info
+    userCollectDihses.value = post.info
+  } else if (radio.value === '收藏的柜台' && userCollectCounters.value.length === 0) {
+    const post = await queryUserPost({user_id, types, offset})
+    userCollectCounters.value = post.info
+  } else if (radio.value === '收藏的食堂' && userCollectCafeterias.value.length === 0) {
+    const post = await queryUserPost({user_id, types, offset})
+    userCollectCafeterias.value = post.info
   } else if (radio.value === '吃过' && userAte.value.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
     userAte.value = post.info
@@ -111,13 +117,31 @@ const load = async () => {
       userAte.value = [...userAte.value, ...ate.info];
       disabled.value = false;
     }
-  } else if (types === '收藏') {
-    const offset = userCollect.value.length;
+  } else if (types === '收藏的菜肴') {
+    const offset = userCollectDihses.value.length;
     const collect = await queryUserPost({user_id, types, offset});
     if (collect.info.length === 0) {
       disabled.value = true;
     } else {
-      userCollect.value = [...userCollect.value, ...collect.info];
+      userCollectDihses.value = [...userCollectDihses.value, ...collect.info];
+      disabled.value = false;
+    }
+  } else if (types === '收藏的柜台') {
+    const offset = userCollectCounters.value.length;
+    const collect = await queryUserPost({user_id, types, offset});
+    if (collect.info.length === 0) {
+      disabled.value = true;
+    } else {
+      userCollectCounters.value = [...userCollectCounters.value, ...collect.info];
+      disabled.value = false;
+    }
+  } else if (types === '收藏的食堂') {
+    const offset = userCollectCafeterias.value.length;
+    const collect = await queryUserPost({user_id, types, offset});
+    if (collect.info.length === 0) {
+      disabled.value = true;
+    } else {
+      userCollectCafeterias.value = [...userCollectCafeterias.value, ...collect.info];
       disabled.value = false;
     }
   }
@@ -200,27 +224,68 @@ onMounted(async () => {
   </div>
   <div class="checkBox" @change="Toggle">
     <el-radio-group v-model="radio" size="large" class="radio-group">
-      <el-radio-button class="radio" label="收藏" :value='收藏' name="collect"/>
       <el-radio-button class="radio" label="吃过" :value='吃过' name="ate"/>
+      <el-radio-button class="radio" label="收藏的菜肴" :value='收藏的菜肴' name="collectDishs"/>
+      <el-radio-button class="radio" label="收藏的食堂" :value='收藏的食堂' name="collectCafeterias"/>
+      <el-radio-button class="radio" label="收藏的柜台" :value='收藏的柜台' name="collectCounters"/>
       <el-radio-button class="radio" label="帖子" :value='帖子' name="post"/>
     </el-radio-group>
   </div>
   <div style="margin-top: 30px;" v-if="userInfo">
-    <div v-if="radio === '收藏'">
-      <div v-if="userCollect.length === 0">
-        <el-empty description="现在还没有收藏..."/>
+    <div v-if="radio === '收藏的菜肴'">
+      <div v-if="userCollectDihses.length === 0">
+        <el-empty description="现在还没有收藏菜肴..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
            :infinite-scroll-distance="100"
            v-else>
-           <div class="dishes-preview" v-for="collect in userCollect">
-            <div v-if="collect.type === 'dish'">
-              <div :key="collect.id">
-                <Preview :preview="collect" />
+            <div class="dishes-preview">
+              <div v-for="collect in userCollectDihses">
+                <Preview :name="'dish'" :preview="collect" />
               </div>
             </div>
-            <div v-else-if="collect.type === 'cafe'">
-              
+      </div>
+      <transition
+          name="fade"
+          @before-enter="onBeforeEnter"
+          @after-enter="onAfterEnter"
+          @before-leave="onBeforeLeave"
+          @after-leave="onAfterLeave"
+      >
+      </transition>
+    </div>
+    <div v-else-if="radio === '收藏的柜台'">
+      <div v-if="userCollectCounters.length === 0">
+        <el-empty description="现在还没有收藏柜台..."/>
+      </div>
+      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+           :infinite-scroll-distance="100"
+           v-else>
+          <div class="counters-preview">
+            <div v-for="collect in userCollectCounters">
+              <Preview :name="'counter'" :preview="collect" />
+            </div>
+          </div>
+      </div>
+      <transition
+          name="fade"
+          @before-enter="onBeforeEnter"
+          @after-enter="onAfterEnter"
+          @before-leave="onBeforeLeave"
+          @after-leave="onAfterLeave"
+      >
+      </transition>
+    </div>
+    <div v-else-if="radio === '收藏的食堂'">
+      <div v-if="userCollectCafeterias.length === 0">
+        <el-empty description="现在还没有收藏食堂..."/>
+      </div>
+      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+           :infinite-scroll-distance="100"
+           v-else>
+          <div class="cafeterias-preview">
+            <div v-for="collect in userCollectCafeterias">
+              <Preview :name="'cafeteria'" :preview="collect" />
             </div>
           </div>
       </div>
@@ -241,9 +306,9 @@ onMounted(async () => {
            :infinite-scroll-distance="100"
            v-else>
            <div class="dishes-preview">
-            <router-link v-for="dish in userAte" :key="dish.id" :to="`/dish/${dish.id}`">
-              <DishPreview :dish="dish"/>
-            </router-link>
+            <div v-for="dish in userAte">
+              <Preview :name="'dish'" :preview="dish"/>
+            </div>
           </div>
       </div>
       <transition
