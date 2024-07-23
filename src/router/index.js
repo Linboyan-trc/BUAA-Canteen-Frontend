@@ -33,11 +33,11 @@ const routes = [
     component: All 
   },
   { 
-    path: '/cafeteria/:cafeteria', 
+    path: '/cafeteria/:cafeteriaId', 
     component: Cafeteria 
   },
   { 
-    path: '/cafeteria/:cafeteria/counter/:counterId', 
+    path: '/cafeteria/:cafeteriaId/counter/:counterId', 
     component: Counter 
   },
   { 
@@ -66,7 +66,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = store.state.isAuthenticated; // 假设你在Vuex中存储了登录状态
+  const isAuthenticated = store.state.isAuthenticated;
 
   if (requiresAuth && !isAuthenticated) {
     next('/login');

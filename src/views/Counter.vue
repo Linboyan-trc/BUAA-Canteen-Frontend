@@ -1,10 +1,15 @@
 <template>
   <div>
     <header>
-      <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
+      <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
       <div class="subHeader">
-        <h2>柜台名：{{ counterName }}</h2>
-        <button class="userBtn" @click="doCollect({counterId})">收藏该柜台</button>
+        <h2>柜台名：{{ counter.name }}</h2>
+        <div v-if="hasCollectedCounter">
+          <button class="userBtn" @click="doCollectCounter({counterId})">收藏该柜台</button>
+        </div>
+        <div v-else>
+          <button class="userBtn" @click="cancelCollectCounter({counterId})">取消收藏</button>
+        </div>
       </div>
     </header>
 
@@ -23,7 +28,7 @@ import { ref, computed, onMounted } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
 import Preview from '@/components/Preview.vue'
 import { useRoute } from 'vue-router';
-import { getDishes } from '@/api';
+import { cancelCollectCounter, doCollectCounter, getCounter, getDishes, hasCollectedCounter } from '@/api';
 
 export default {
   name: 'Counter',
@@ -33,33 +38,33 @@ export default {
   },
   setup() {
     const route = useRoute()
-    const counterName = ref('')
+    const counter = ref({})    
     const dishes = ref([])
-
-    const counterId = computed(() => route.params.counterId)
-    const cafeteria = computed(() => route.params.cafeteria)
-
-    counterName.value = '基本伙'    
-    onMounted(() => {
-      getDishesOf({ cafeteria: cafeteria.value, counterId: counterId.value })
-    })
-    const getDishesOf = async ({ cafeteria, counterId }) => {
+    
+    const counterId = computed(() => Number(route.params.counterId))
+    const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
+    onMounted(async() => {
       try {
-        const response = getDishes({ cafeteria, counterId })
+        const response = await getDishes({ counterId })
         dishes.value = response.data
       } catch (error) {
         console.error('获取', cafeteria, '的', counterId, '窗口菜肴失败:', error)
       }
-    }
-
+      try {
+        const response = await getCounter({ counterId}) // 替换为实际的 counterId
+        counter.value = response.data
+      } catch (error) {
+        console.error('获取 counter 失败:', error)
+      }
+    })
 
     return {
-      counterName,
+      counter,
       dishes,
       counterId,
-      cafeteria
+      cafeteriaId
     }
-  }
+  },
 }
 </script>
 

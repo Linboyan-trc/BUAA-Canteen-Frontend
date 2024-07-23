@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <CafeteriaHeader :selectedCafeteria=cafeteria></CafeteriaHeader>
+      <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
     </header>
     <h1>{{ dish.name }}</h1>
     <p>{{ dish.description }}</p>
@@ -27,8 +27,8 @@ export default {
     dishId() {
       return this.$route.params.dishId;
     },
-    cafeteria() {
-      return this.$route.params.cafeteria;
+    cafeteriaId() {
+      return this.$route.params.cafeteriaId;
     }
   },
   created() {

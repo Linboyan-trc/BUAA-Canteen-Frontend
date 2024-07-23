@@ -3,9 +3,9 @@
         <h3>所有食堂</h3>
         <ul>
             <li v-for="cafeteria in cafeterias">
-                <router-link :to="`/cafeteria/${cafeteria.name_en}`"
-                    :class="{ 'active': selectedCafeteria === cafeteria.name_en }">
-                    {{ cafeteria.name_zh }}食堂
+                <router-link :to="`/cafeteria/${cafeteria.id}`"
+                    :class="{ 'active': selectedCafeteria === cafeteria.id }">
+                    {{ cafeteria.name }}食堂
                 </router-link>
             </li>
         </ul>
@@ -13,21 +13,21 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { getAllCafeterias } from '@/api';
+import { onMounted, ref } from 'vue'
 
 export default {
     name: 'CafeteriaHeader',
     props: {
-        selectedCafeteria: String
+        selectedCafeteria: Number
     },
     setup() {
-        const cafeterias = ref([
-            { name_en: 'xylnorth', name_zh: '学院路北区' },
-            { name_en: 'xyleast', name_zh: '学院路东区' },
-            { name_en: 'xylwest', name_zh: '学院路西区' },
-            { name_en: 'shwest', name_zh: '沙河西区'},
-            { name_en: 'sheast', name_zh: '沙河东区'},
-        ])
+        const cafeterias = ref([]);
+        onMounted(async () => {
+            const res = await getAllCafeterias();
+            cafeterias.value = res.data;
+            console.log(cafeterias.value)
+        })
 
         return {
             cafeterias

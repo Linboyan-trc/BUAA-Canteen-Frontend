@@ -5,7 +5,7 @@
         </div>
         <div class="counter-text">
             <p>{{ counter.name }}: {{ counter.floor }}层</p>
-            <div class="counter-likes">
+            <div class="counter-collectCount">
                 <span>{{ counter.collectCount }} 收藏</span>
             </div>
         </div>
@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import { doCollect } from '@/api';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -22,22 +21,6 @@ export default defineComponent({
         counter: {
             type: Object,
             required: true
-            // name: {
-            //     type: String,
-            //     required: true
-            // },
-            // img: {
-            //     type: String,
-            //     required: true
-            // },
-            // floor: {
-            //     type: Number,
-            //     required: true
-            // },
-            // collectCount: {
-            //     type: Number,
-            //     required: true
-            // }
         }
     },
 });
@@ -70,7 +53,7 @@ export default defineComponent({
     color: #333;
 }
 
-.counter-likes {
+.counter-collectCount {
     text-align: right;
     font-size: 12px;
     color: #666;

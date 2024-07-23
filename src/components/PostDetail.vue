@@ -1,7 +1,7 @@
 <script>
 import { ChatRound, Edit } from '@element-plus/icons-vue';
 import { defineComponent, onMounted, ref, defineEmits } from "vue";
-import { doComment, doCollect, cancelCollect, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
+import { doComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
@@ -55,7 +55,7 @@ export default defineComponent({
         }
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
-        const res = operator ? await cancelCollect(dish_id) : await doCollect(dish_id);
+        const res = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
 
         if (operator) {
           detail.collectCount--;

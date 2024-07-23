@@ -1,9 +1,58 @@
 import http from "@/utils/http";
 
-// 获取某食堂的全部柜台
-export const getCounters = ({cafeteria}) => {
+// 获取所有食堂的信息
+export const getAllCafeterias = () => {
     // return http({
-    //     url: '/cafeteria/get-counters',
+    //     url: '/cafeteria/get-all-cafeterias',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+    return {
+        "data": [
+            {
+                "id":1,
+                "name": "学院路新北",
+                "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+                "collectCount": 10,	
+            },
+            {
+                "id":2,
+                "name": "学院路合一",
+                "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+                "collectCount": 20,
+            }
+        ]
+    }
+}
+
+//获取某食堂的信息
+export const getCafeteria = ({cafeteriaId}) => {
+    // return http({
+    //     url: '/cafeteria/get-cafeteria',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     data: {
+    //         cafeteriaId
+    //     }
+    // })
+    return {
+        "data": {
+            "id":1,
+            "name": "学院路新北",
+            "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+            "collectCount": 10,	
+        }
+    }
+}
+
+// 获取某食堂的全部柜台
+export const getCountersOf = ({cafeteriaId}) => {
+    // return http({
+    //     url: '/cafeteria/get-counters-of',
     //     method: 'GET',
     //     headers: {
     //         'Content-Type': 'application/json'
@@ -33,8 +82,31 @@ export const getCounters = ({cafeteria}) => {
     }
 }
 
+// 获取某柜台的信息
+export const getCounter = ({counterId}) => {
+    // return http({
+    //     url: '/cafeteria/counter/get-counter',
+    //     method: 'GET',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     data: {
+    //         counterId
+    //     }
+    // })
+    return {
+        'data' : 
+        {
+            "id":1,
+            "name":"基本伙",
+            "img":'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
+            "floor":1,
+            "collectCount":10,
+        }
+    }
+}
 //获取某柜台的全部菜肴
-export const getDishes = ({cafeteria, counterId}) => {
+export const getDishes = ({counterId}) => {
     // return http({
     //     url: '/cafeteria/counter/get-dishes',
     //     method: 'GET',
@@ -75,6 +147,7 @@ export const getDishes = ({cafeteria, counterId}) => {
     }
 }
 
+// 这个不用了
 //获取所有窗口和菜肴
 export const getAllDishes = () => {
     // return http({
@@ -187,17 +260,84 @@ export const doComment = ({data}) => {
     })
 }
 
-// 用户收藏
-export const doCollect = ({id}) => {
+// 用户收藏的菜品
+export const doCollectDish = ({id}) => {
     return http({
-        url: 'user/collect/',
+        url: 'user/collect-dish/',
         method: 'POST',
         data: {id}
     })
 }
 
-//用户取消收藏
-export const cancelCollect = ({id}) => {
+// 用户收藏的柜台
+export const doCollectCounter = ({id}) => {
+    return http({
+        url: 'user/collect-dish/',
+        method: 'POST',
+        data: {id}
+    })
+}
+
+// 用户收藏的柜台
+export const doCollectCafeteria = ({id}) => {
+    return http({
+        url: 'user/collect-cafeteria/',
+        method: 'POST',
+        data: {id}
+    })
+}
+
+// 用户是否已收藏菜品
+export const hasCollectedDish = ({id}) => {
+    // return http({
+    //     url: 'user/has-collected-dish/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return true;
+}
+
+// 用户是否已收藏柜台
+export const hasCollectedCounter = ({id}) => {
+    // return http({
+    //     url: 'user/has-collected-counter/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return true;
+}
+
+
+// 用户是否已收藏食堂
+export const hasCollectedCafeteria = ({id}) => {
+    // return http({
+    //     url: 'user/has-collected-cafeteria/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return false;
+}
+
+//用户取消收藏的菜品
+export const cancelCollectDish = ({id}) => {
+    return http({
+        url: 'user/uncollect/',
+        method: 'DELETE',
+        data: {id}
+    })
+}
+
+//用户取消收藏的柜台
+export const cancelCollectCounter = ({id}) => {
+    return http({
+        url: 'user/uncollect/',
+        method: 'DELETE',
+        data: {id}
+    })
+}
+
+//用户取消收藏的食堂
+export const cancelCollectCafeteria = ({id}) => {
     return http({
         url: 'user/uncollect/',
         method: 'DELETE',
