@@ -49,7 +49,7 @@ export default defineComponent({
           detail.ateCount--;
           ElMessage({ type: 'success', message: res.info });
         } else {
-          userStore.extendUserInfo(1, dish_id);
+          userStore.extendUserInfo('ate', dish_id);
           detail.ateCount++;
           ElMessage({ type: 'success', message: res.info });
         }
@@ -63,7 +63,7 @@ export default defineComponent({
           ElMessage({ type: 'success', message: res.info });
         } else {
           detail.collectCount++;
-          userStore.extendUserInfo(2, dish_id);
+          userStore.extendUserInfo('dish', dish_id);
           ElMessage({ type: 'success', message: res.info });
         }
       }
