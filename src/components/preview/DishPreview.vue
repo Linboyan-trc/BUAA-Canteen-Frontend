@@ -50,7 +50,7 @@ export default defineComponent({
 
 .dish-img img {
     width: 100%;
-    height: 100px;
+    height: 150px;
     object-fit: cover;
 }
 
@@ -67,7 +67,7 @@ export default defineComponent({
 
 .dish-collectCount, .dish-ateCount {
     text-align: right;
-    font-size: 12px;
+    font-size: 10px;
     color: #666;
 }
 
@@ -91,6 +91,10 @@ export default defineComponent({
 }
 
 .user-name {
+  white-space: nowrap; /* 防止文本换行 */
+  max-width: 50px;
+  overflow: hidden; /* 隐藏超出容器的内容 */
+  text-overflow: ellipsis; /* 显示省略号 */
   font-size: 14px;
   color: #333;
 }

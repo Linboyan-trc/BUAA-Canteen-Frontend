@@ -128,8 +128,9 @@ export const getDishes = ({counterId}) => {
                 "collectCount":10,
                 "ateCount":20,
                 "user": {
+                    "id": 1,
                     "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户"
+                    "username": "测试用户1"
                 }
             },
             {
@@ -139,8 +140,9 @@ export const getDishes = ({counterId}) => {
                 "collectCount":10,
                 "ateCount":15,
                 "user": {
+                    "id": 2,
                     "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户"
+                    "username": "测试用户2"
                 }
             },
         ]
@@ -170,8 +172,9 @@ export const getAllDishes = () => {
                 "collectCount":10,
                 "ateCount":20,
                 "user": {
+                    "id": 1,
                     "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户"
+                    "username": "测试用户1"
                 }
             },
             {
@@ -181,8 +184,9 @@ export const getAllDishes = () => {
                 "collectCount":10,
                 "ateCount":15,
                 "user": {
+                    "id": 2,
                     "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户"
+                    "username": "测试用户2"
                 }
             },
         ]
@@ -428,13 +432,41 @@ export const postDetail = ({id}) => {
       };
 }
 
-// 主页帖子
+// 获取首页推荐帖子
 export const queryPost = ({offset, query}) => {
-    return http({
-        url: '/post/',
-        method: 'POST',
-        data: {offset, query}
-    })
+    // return http({
+    //     url: '/post/',
+    //     method: 'POST',
+    //     data: {offset, query}
+    // })
+    return {
+        "data": [
+            {
+                "id":1,
+                "name":"鱼香肉丝",
+                "img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
+                "collectCount":10,
+                "ateCount":20,
+                "user": {
+                    "id": 2,
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户2"
+                }
+            },
+            {
+                "id":2,
+                "name":"糖醋里脊",
+                "img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
+                "collectCount":10,
+                "ateCount":15,
+                "user": {
+                    "id": 1,
+                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
+                    "username": "测试用户1"
+                }
+            }
+        ]
+    }
 }
 
 export const controlUserCollectOrLike = ({post_id, operator, type}) => {

@@ -1,20 +1,18 @@
 <template>
-    <div class="item">
-        <div v-if="name=='dish'">
-            <router-link :to="`/dish/${preview.id}`">
-                <DishPreview :dish="preview" />
-            </router-link>
-        </div>
-        <div v-else-if="name=='counter'">
-            <router-link :to="`/cafeteria/${cafeteriaId}/counter/${preview.id}`">
-                <CounterPreview :counter="preview" />
-            </router-link>
-        </div>
-        <div v-else-if="name=='cafeteria'">
-            <router-link :to="`/cafeteria/${cafeteriaId}`">
-                <CafeteriaPreview :counter="preview" />
-            </router-link>
-        </div>
+    <div v-if="name=='dish'">
+        <router-link :to="`/dish/${preview.id}`">
+            <DishPreview :dish="preview" />
+        </router-link>
+    </div>
+    <div v-else-if="name=='counter'">
+        <router-link :to="`/cafeteria/${cafeteriaId}/counter/${preview.id}`">
+            <CounterPreview :counter="preview" />
+        </router-link>
+    </div>
+    <div v-else-if="name=='cafeteria'">
+        <router-link :to="`/cafeteria/${cafeteriaId}`">
+            <CafeteriaPreview :counter="preview" />
+        </router-link>
     </div>
 </template>
 
@@ -42,11 +40,11 @@ export default defineComponent({
         }
     },
     setup(props) {
+        console.log("preview:", props.preview);
         return {};
     }
 });
 </script>
-
 
 <style scoped>
 

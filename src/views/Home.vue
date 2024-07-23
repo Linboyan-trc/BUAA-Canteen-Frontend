@@ -7,7 +7,7 @@
 
         <div class="recommendations-container">
             <div v-for="_ in recommendedPosts" :key="_.id">
-                <Preview :name="'dish'" :dish = _ />
+                <Preview :name="'dish'" :preview = "_" />
             </div>
         </div>
 
@@ -36,23 +36,6 @@ export default {
         const searchQuery = ref('');
         const recommendedPosts = ref([]);
 
-        // Sample data
-        recommendedPosts.value = [
-        {
-          "id":1,
-        	"name":"鱼香肉丝",
-        	"img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
-        	"collectCount":10,
-        	"ateCount":20,
-        },
-        {
-            "id":2,
-        	"name":"糖醋里脊",
-        	"img":'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
-        	"collectCount":10,
-        	"ateCount":15,
-        }
-        ]
         const fetchRecommendedPosts = async () => {
             try {
                 const response = await queryPost({ offset: 0, query: searchQuery.value });
@@ -71,7 +54,7 @@ export default {
         };
 
         onMounted(() => {
-            // fetchRecommendedPosts();
+            fetchRecommendedPosts();
         });
 
         return {
@@ -91,7 +74,6 @@ export default {
 .app-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     position: relative; /* Add this to position the buttons */
 }
 
@@ -100,6 +82,7 @@ export default {
     width: 80%;
     margin-top: 20px;
     margin-bottom: 20px;
+    align-self: center;
 }
 
 .search-container input {
@@ -123,12 +106,6 @@ export default {
 
 .search-container button:hover {
     background-color: #0056b3;
-}
-
-.recommendations-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0px;
 }
 
 .icon-button {

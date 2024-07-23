@@ -68,6 +68,6 @@ export default {
 }
 </script>
 
-<style src="@/assets/css/preview.css">
+<style scoped>
 
 </style>

@@ -26,7 +26,6 @@ export default {
         onMounted(async () => {
             const res = await getAllCafeterias();
             cafeterias.value = res.data;
-            console.log(cafeterias.value)
         })
 
         return {
