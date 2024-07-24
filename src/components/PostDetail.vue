@@ -280,12 +280,10 @@ export default defineComponent({
             <div class="buttonArea">
               <el-row>
                 <el-button link class="warp" @click="doSomething('ate', detail)" :disabled="review">
-    <font-awesome-icon
-      :icon="['fas', 'utensils']"
-      :style="{ color: checkEat(detail.id) ? '#d81e06' : '#cecccc', width: '25px', height: '25px' }"
-    />
-    <el-text size="large" tag="b" type="info">{{ detail.ateCount }}</el-text>
-  </el-button>
+                  <font-awesome-icon :icon="['fas', 'utensils']"
+                    :style="{ color: checkEat(detail.id) ? '#d81e06' : '#cecccc', width: '25px', height: '25px' }" />
+                  <el-text size="large" tag="b" type="info">{{ detail.ateCount }}</el-text>
+                </el-button>
                 <el-button link class="warp" @click="doSomething('collect', detail)" :disabled="review">
                   <svg x="1689148085763" class="icon" viewBox="0 0 1024 1024" version="1.1" style="margin-bottom: 4px;"
                     xmlns="http://www.w3.org/2000/svg" p-id="4912" width="25" height="25">
@@ -351,7 +349,7 @@ export default defineComponent({
   position: absolute;
   /* left: 200px;
   top: 40px; */
-  left: 50%; 
+  left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   border-radius: 0.8rem;
