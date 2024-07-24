@@ -81,7 +81,7 @@ export default {
   /* top: 20px;
   left: 1190px; */
   left: 95%;
-  top: 3%;
+  top: 1%;
 
   cursor: pointer;
   transition: transform 0.3s ease-in-out;

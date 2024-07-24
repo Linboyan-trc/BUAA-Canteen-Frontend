@@ -351,12 +351,15 @@ export default defineComponent({
 
 .box {
   position: absolute;
-  left: 200px;
-  top: 40px;
+  /* left: 200px;
+  top: 40px; */
+  left: 50%; 
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 0.8rem;
   width: 1200px;
   height: 620px;
-  margin-top: 5px;
+  margin-top: -8px;
   box-shadow: -16px 28px 28px -3px rgba(0, 0, 0, 0.1), 0px 10px 61px -8px rgba(0, 0, 0, 0.1);
 }
 
