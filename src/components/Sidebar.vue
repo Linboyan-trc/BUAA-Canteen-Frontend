@@ -1,21 +1,23 @@
 <template>
   <div class="app-container">
     <aside class = "sidebar">
-      <img alt="buaa emoji" class="logo" src="../assets/emoji.png" width="50" height="50" />
+      <img alt="buaa emoji" class="logo" src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-bg-no.svg" width="80" height="80" />
       <ul>
-        <li><router-link to="/home">浏览（首页）</router-link></li>
-        <li><router-link to="/all">所有食堂</router-link></li>
-        <li><router-link to="/admin">管理员</router-link></li>
-        <li><router-link to="/login" v-if="!userId">登录</router-link></li> 
-        <li><router-link to="/register" v-if="!userId">注册</router-link></li>
-        <li><router-link to="/upload">发布</router-link></li>
-        <li id="user-item" v-if="userId"><router-link :to="`/user/${userId}`">我的</router-link></li>
+        <li><div><router-link to="/home"><i class="fas fa-home"></i> 首页</router-link></div></li>
+        <li><div><router-link to="/all"><i class="fas fa-list"></i> 所有</router-link></div></li>
+        <li class="menu-break"><hr></li>
+        <li><div><router-link to="/login" v-if="!userId">登录</router-link></div></li> 
+        <li><div><router-link to="/register" v-if="!userId">注册</router-link></div></li>
+        <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i> 发布</router-link></div></li>
+        <li id="user-item" v-if="userId"><div><router-link :to="`/user/${userId}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
+        <li id="admin-item"><div><router-link to="/admin"><i class="fas fa-user-shield"></i> 管理员</router-link></div></li>
       </ul>
     </aside>
   </div>
 </template>
 
 <script>
+import '@fortawesome/fontawesome-free/css/all.css';
 import { useUserStore } from '@/store/user';
 import { ref, computed } from 'vue';
 
@@ -49,13 +51,26 @@ header {
     width: 200px;
     min-height: 100vh;
     /* overflow: auto; */
-    background-color: #04379d;
-    padding-left: 2px;
+    background-color: #125188;
+    /* padding-left: 2px; */
 }
 
 ul {
   margin: 0;
   padding: 0;
+}
+
+li>div {
+  padding-left:1rem;
+}
+
+#admin-item>div {
+  padding-left:1rem;
+  padding-bottom: 1rem;
+}
+
+.menu-break {
+  padding: 0 3rem 0 1.5rem;
 }
 
 main {
@@ -71,23 +86,31 @@ a {
   display: block;
   /* width: 100%; */
   color: white;
+  font-size: 18px;
 }
 
 .logo {
   display: block;
-  margin: 0 2rem 0 0;
+  margin: 1.5rem 0 1rem 1.5rem;
 }
 
 #user-item {
   position: absolute;
-  bottom: 0;
+  bottom: 60px;
+  left: 0;
+  width: 100%;
+}
+
+#admin-item {
+  position: absolute;
+  bottom: 0px;
   left: 0;
   width: 100%;
 }
 
 @media (hover: hover) {
-  a:hover {
-    background-color: rgb(77, 146, 249);
+  li>div:hover {
+    background-color: #32B1EE
   }
 }
 
