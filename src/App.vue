@@ -28,7 +28,7 @@ header {
     width: 200px;
     min-height: 100vh;
     /* overflow: auto; */
-    background-color: #04379d;
+    background-color: #125188;
     padding-left: 2px;
 }
 
@@ -66,7 +66,7 @@ a {
 
 @media (hover: hover) {
   a:hover {
-    background-color: rgb(77, 146, 249);
+    background-color: #32B1EE
   }
 }
 

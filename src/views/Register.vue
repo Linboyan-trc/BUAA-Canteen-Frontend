@@ -1,4 +1,5 @@
 <template>
+  <div class="register">
   <div class="register-container">
     <h1>请先注册</h1>
     <form @submit.prevent="handleRegister">
@@ -18,12 +19,14 @@
         <label for="confirmPassword">确认密码:</label>
         <input id="confirmPassword" v-model="registerForm.confirmPassword" type="password" required>
       </div>
-      <button type="submit">注册</button>
+      <button type="submit" class="btn">注册</button>
     </form>
+    <hr>
     <p>
       已有账号？
-      <router-link to="/login">立即登录</router-link>
+      <router-link to="/login" class="lg">立即登录</router-link>
     </p>
+  </div>
   </div>
 </template>
 
@@ -90,8 +93,14 @@ export default {
 </script>
 
 <style scoped>
+.register {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  height:850px;
+}
 .register-container {
-  max-width: 400px;
+  width: 400px;
   margin: auto;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -109,9 +118,47 @@ label {
 input[type="text"],
 input[type="email"],
 input[type="password"] {
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+.btn {
+  background-color: #1574b8; /* Transparent background */
+  color: white; /* White font color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Add some padding */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Inline block display */
+  font-size: 18px; /* Increase font size */
+  margin: 4px 2px; /* Add some margin */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 4px; /* Rounded corners */
+  transition: color 0.3s; /* Smooth font color transition */
+}
+
+.btn:active {
+  background-color: #125188; 
+  color: #d3d3d3; /* Light grey font color on hover */
+}
+
+.lg {
+    background-color: #1574b8;
+    color: white; /* White font color */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Add some padding */
+    text-align: center; /* Center text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block; /* Inline block display */
+    font-size: 18px; /* Increase font size */
+    margin: 4px 2px; /* Add some margin */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 4px; /* Rounded corners */
+    transition: color 0.3s;
+}
+.lg:active {
+  background-color: #125188; 
+  color: #d3d3d3; /* Light grey font color on hover */
 }
 </style>

@@ -15,15 +15,15 @@ import Upload from '@/views/Upload.vue';
 const routes = [
   { 
     path: '/',
-    component: Login 
+    component: Home
+  },
+  { 
+    path: '/home',
+    component: Home
   },
   { 
     path: '/admin', 
     component: Admin 
-  },
-  { 
-    path: '/home', 
-    component: Home 
   },
   { 
     path: '/cafeteria', 
