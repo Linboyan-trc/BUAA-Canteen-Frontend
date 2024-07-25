@@ -17,8 +17,8 @@ export const useUserStore = defineStore('user', () => {
 
     const userLogin = async ( email, password ) => {
         const response = await login({ email, password });
-        const { token, refresh_token, username, message } = response.data;
-        if (message) {
+        if (response.success) {
+            const { token, refresh_token, username } = response.data;
             setToken(token);
             document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
             userInfo.value = { email: email , username: username};
@@ -27,7 +27,7 @@ export const useUserStore = defineStore('user', () => {
             userCollectDishes.value = res.data.collectDishesId;
             userCollectCounters.value = res.data.collectCountersId;
             userCollectCafeterias.value = res.data.collectCafeteriasId;
-            return email;
+            return username;
         } else {
             return null;
         }

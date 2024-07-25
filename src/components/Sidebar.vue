@@ -54,11 +54,12 @@ header {
 .sidebar {
     position: fixed;
     left: 0;
-    width: 200px;
+    width: 175px;
     min-height: 100vh;
     /* overflow: auto; */
     background-color: #125188;
     /* padding-left: 2px; */
+    z-index: 1000;
 }
 
 ul {

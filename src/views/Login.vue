@@ -1,138 +1,286 @@
 <template>
-    <div class="login">
-        <div class="login-container">
-            <h1>请先登录</h1>
-            <form @submit.prevent="handleLogin">
-                <div>
-                    <label for="email">邮箱:</label>
-                    <input id="email" v-model="loginForm.email" type="text" placeholder="请输入邮箱" required>
-                </div>
-                <div>
-                    <label for="password">密码:</label>
-                    <input id="password" v-model="loginForm.password" type="password" placeholder="请输入密码" required>
-                </div>
-                <button type="submit" class="btn">登录</button>
-            </form>
-            <hr>
-            <p>
-                还没有账号？
-                <router-link to="/register" class="reg">立即注册</router-link>
-            </p>
+  <div class="bg" :class="{ 'slide-out': isRedirecting }">
+    <div class="login-decorator" :class="{ 'slide-down': isRegistering }">
+      <div class="login-main">
+        <div class="logo">
+          <img :src="logo" alt="Logo">
         </div>
+        <div class="header">{{ siteHeader }}</div>
+        <form @submit.prevent="login">
+          <div class="simpleui-input-inline">
+            <el-input
+              v-model="email"
+              name="email"
+              placeholder="邮箱"
+              autofocus
+              :prefix-icon="Message"
+            ></el-input>
+          </div>
+          <div class="simpleui-input-inline">
+            <el-input
+              type="password"
+              v-model="password"
+              name="password"
+              @focus="changeLogoToClosedEyes"
+              @blur="changeLogoToOpenEyes"
+              @keyup.enter="login"
+              placeholder="密码"
+              show-password
+              :prefix-icon="Lock"
+            ></el-input>
+          </div>
+          <div class="simpleui-input-inline button-container">
+            <el-button
+              @click="login"
+              type="primary"
+            >登录</el-button>
+            <el-button @click="goToRegister" type="secondary">注册</el-button>
+            <el-button @click="goToAdminLogin" type="warning">管理员登录</el-button>
+          </div>
+          <input type="hidden" name="next" :value="next">
+        </form>
+      </div>
     </div>
+    <div id="particles-js"></div>
+  </div>
+  <div v-if="isRedirecting" class="loading-overlay">
+    <div class="loading-content">
+      <img :src="logo" class="bird-logo" alt="小鸟">
+      <div class="loading-text">正在跳转...</div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { reactive } from 'vue';
-import axios from 'axios';
-import { useRouter } from 'vue-router';
-import { useUserStore } from '@/store/user';
-
+/* global particlesJS */
+import {useUserStore} from '@/store/user';
+import {ref, onMounted} from 'vue';
+import {useRouter} from 'vue-router';
+import {Message, Lock} from '@element-plus/icons-vue';
+import 'particles.js';
+import { ElMessage } from 'element-plus';
 
 export default {
   name: 'Login',
   setup() {
-    const store = useUserStore();
     const router = useRouter();
-    const loginForm = reactive({
-      email: '',
-      password: '',
-    });
+    const email = ref('');
+    const password = ref('');
+    const logoOpenEyes = 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-bg-no.svg';
+    const logoClosedEyes = 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-close-eyes.jpg';
+    const logo = ref(logoOpenEyes);
+    const siteHeader = '小蓝书登陆界面';
+    const next = ref('');
+    const isRedirecting = ref(false);
+    const isRegistering = ref(false);
 
-    const handleLogin = async () => {
-        // 调用登录方法
-        const email = await store.userLogin(loginForm.email, loginForm.password);
-        if (!email) {
-          alert('登录失败，请检查邮箱和密码是否正确');
+    const store = useUserStore();
+
+    const changeLogoToClosedEyes = () => {
+      logo.value = logoClosedEyes;
+    };
+
+    const changeLogoToOpenEyes = () => {
+      logo.value = logoOpenEyes;
+    };
+
+    const login = async () => {
+
+      if (!email.value || !password.value) {
+        ElMessage({
+          message: '邮箱和密码不能为空',
+          type: 'error',
+          duration: 1000,
+        });
+        return;
+      }
+
+      try {
+        const user = await store.userLogin(email.value, password.value);
+        if (!user) {
+          ElMessage({
+            message: '登录失败，请检查邮箱和密码',
+            type: 'error',
+            duration: 1000,
+          });
           return;
         }
-        console.log(`登录用户 ${email}`);
-        await router.push({ name: 'home' }); // 登录成功后重定向到首页
+
+        // 显示登录成功消息
+        ElMessage({
+          message: `欢迎 ${user} 登录成功`,
+          type: 'success',
+          duration: 1000, // 持续时间为500毫秒
+        });
+
+        // 等待0.5秒后重定向到首页
+        setTimeout(async () => {
+          await router.push({name: 'home'});
+        }, 1000);
+
+      } catch (error) {
+        ElMessage({
+          message: '登录失败，请检查邮箱和密码是否正确',
+          type: 'error',
+          duration: 1000,
+        });
+      }
     };
-    
+
+    const goToAdminLogin = () => {
+      isRedirecting.value = true;
+      setTimeout(() => {
+        window.location.href = 'http://localhost:8000/admin/';
+      }, 1000); // 1秒钟的过渡动画
+    };
+
+    const goToRegister = () => {
+      isRegistering.value = true;
+      setTimeout(() => {
+        router.push('/register');
+      }, 1000); // 1秒钟的过渡动画
+    };
+
+    onMounted(() => {
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+        particlesJS.load('particles-js', '/particles.json', function () {
+          console.log('particles.js loaded - callback');
+        });
+      };
+      document.body.appendChild(script);
+    });
+
     return {
-      loginForm,
-      handleLogin,
+      email,
+      password,
+      login,
+      logo,
+      siteHeader,
+      next,
+      store,
+      Message,
+      Lock,
+      goToAdminLogin,
+      goToRegister,
+      isRedirecting,
+      isRegistering,
+      changeLogoToClosedEyes,
+      changeLogoToOpenEyes,
     };
   },
 };
-
 </script>
 
 <style scoped>
-.login {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    height:800px;
-}
-.login-container {
-    width: 400px;
-    margin: auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-form>div {
-    margin-bottom: 20px;
+.bg {
+  background: #f0f2f5;
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  padding: 20px 0;
+  position: relative;
+  z-index: 0;
+  transition: transform 1s ease-in-out;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
+.slide-out {
+  transform: translateX(-100%);
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 90%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-.btn {
-  background-color: #1574b8; /* Transparent background */
-  color: white; /* White font color */
-  border: none; /* Remove border */
-  padding: 10px 20px; /* Add some padding */
-  text-align: center; /* Center text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Inline block display */
-  font-size: 18px; /* Increase font size */
-  margin: 4px 2px; /* Add some margin */
-  cursor: pointer; /* Pointer cursor on hover */
-  border-radius: 4px; /* Rounded corners */
-  transition: color 0.3s; /* Smooth font color transition */
+.slide-down {
+  transform: translateY(100%);
 }
 
-.btn:active {
-  background-color: #125188; 
-  color: #d3d3d3; /* Light grey font color on hover */
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
-label {
-    font-size: 18px;
+.login-decorator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 94vh;
+  z-index: 1;
+  transition: transform 1s ease-in-out;
 }
 
-p {
-    font-size: 18px;
+.login-main {
+  padding-bottom: 50px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.reg {
-    background-color: #1574b8;
-    color: white; /* White font color */
-    border: none; /* Remove border */
-    padding: 10px 20px; /* Add some padding */
-    text-align: center; /* Center text */
-    text-decoration: none; /* Remove underline */
-    display: inline-block; /* Inline block display */
-    font-size: 18px; /* Increase font size */
-    margin: 4px 2px; /* Add some margin */
-    cursor: pointer; /* Pointer cursor on hover */
-    border-radius: 4px; /* Rounded corners */
-    transition: color 0.3s;
+.logo img {
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
-.reg:active {
-  background-color: #125188; 
-  color: #d3d3d3; /* Light grey font color on hover */
+
+.header {
+  font-size: 26px;
+  color: #666;
+  margin: 0 auto 40px auto;
+  text-align: center;
+  font-weight: 700;
+}
+
+.simpleui-input-inline {
+  margin-bottom: 15px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bird-logo {
+  width: 100px;
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-size: 24px;
+  color: #333;
 }
 </style>
