@@ -45,11 +45,11 @@ export default defineComponent({
         const res = operator ? await cancelAte(dish_id) : await doAte(dish_id);
 
         if (operator) {
-          userStore.removeFocus(1, dish_id);
+          userStore.removeUserInfo(type, dish_id);
           detail.ateCount--;
           ElMessage({ type: 'success', message: res.info });
         } else {
-          userStore.extendUserInfo('ate', dish_id);
+          userStore.extendUserInfo(type, dish_id);
           detail.ateCount++;
           ElMessage({ type: 'success', message: res.info });
         }
@@ -59,11 +59,11 @@ export default defineComponent({
 
         if (operator) {
           detail.collectCount--;
-          userStore.removeFocus(2, dish_id);
+          userStore.removeUserInfo(type, dish_id);
           ElMessage({ type: 'success', message: res.info });
         } else {
           detail.collectCount++;
-          userStore.extendUserInfo('dish', dish_id);
+          userStore.extendUserInfo(type, dish_id);
           ElMessage({ type: 'success', message: res.info });
         }
       }
@@ -135,24 +135,7 @@ export default defineComponent({
       disabled.value = true;
       const offset = comments.value.length;
       const id = props.detail.id;
-      // temp
-      // const res1 = await getComment({ id, offset });
-      const res1 = {
-        "info": [
-          {
-            "id": 127,
-            "content": "123",
-            "createTime": "2023-07-27 21:51",
-            "user": {
-              "id": 9,
-              "username": "回锅炒辣椒",
-              "avatar": "/friedPrawn.jpg"
-            },
-            "replyCount": 1,
-            "replies": []
-          }
-        ]
-      }
+      const res1 = await getComment({ id, offset });
       const data = res1.info;
       if (data.length !== 0) {
         disabled.value = false;

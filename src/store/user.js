@@ -47,6 +47,30 @@ export const useUserStore = defineStore('user', () => {
         }
     };
 
+    const removeUserInfo = (type, id) => {
+        if (type === 'ate') {
+            const index = userAte.value.indexOf(id);
+            if (index !== -1) {
+                userAte.value.splice(index, 1);
+            }
+        } else if (type === 'dish') {
+            const index = userCollectDishes.value.indexOf(id);
+            if (index !== -1) {
+                userCollectDishes.value.splice(index, 1);
+            }
+        } else if (type === 'counter') {
+            const index = userCollectCounters.value.indexOf(id);
+            if (index !== -1) {
+                userCollectCounters.value.splice(index, 1);
+            }
+        } else if (type === 'cafeteria') {
+            const index = userCollectCafeterias.value.indexOf(id);
+            if (index !== -1) {
+                userCollectCafeterias.value.splice(index, 1);
+            }
+        }
+    };
+
     const userLogout = async () => {
         userInfo.value = {};
         token.value = '';
@@ -115,6 +139,7 @@ export const useUserStore = defineStore('user', () => {
         userLogout,
         userRegister,
         extendUserInfo,
+        removeUserInfo,
         changeInfo,
         userCollectDishes,
         userCollectCounters,

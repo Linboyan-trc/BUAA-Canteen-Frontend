@@ -14,10 +14,10 @@ export const doComment = ({data}) => {
     })
 }
 
-// 用户收藏的菜品
+// 用户收藏帖子
 export const doCollectDish = ({id}) => {
     return http({
-        url: 'user/collect-dish/',
+        url: 'user/collect-post/',
         method: 'POST',
         data: {id}
     })
@@ -26,13 +26,13 @@ export const doCollectDish = ({id}) => {
 // 用户收藏的柜台
 export const doCollectCounter = ({id}) => {
     return http({
-        url: 'user/collect-dish/',
+        url: 'user/collect-counter/',
         method: 'POST',
         data: {id}
     })
 }
 
-// 用户收藏的柜台
+// 用户收藏的食堂
 export const doCollectCafeteria = ({id}) => {
     return http({
         url: 'user/collect-cafeteria/',
@@ -41,10 +41,10 @@ export const doCollectCafeteria = ({id}) => {
     })
 }
 
-//用户取消收藏的菜品
+//用户取消收藏帖子
 export const cancelCollectDish = ({id}) => {
     return http({
-        url: 'user/uncollect/',
+        url: 'user/uncollect-post/',
         method: 'DELETE',
         data: {id}
     })
@@ -53,7 +53,7 @@ export const cancelCollectDish = ({id}) => {
 //用户取消收藏的柜台
 export const cancelCollectCounter = ({id}) => {
     return http({
-        url: 'user/uncollect/',
+        url: 'user/uncollect-counter/',
         method: 'DELETE',
         data: {id}
     })
@@ -62,7 +62,7 @@ export const cancelCollectCounter = ({id}) => {
 //用户取消收藏的食堂
 export const cancelCollectCafeteria = ({id}) => {
     return http({
-        url: 'user/uncollect/',
+        url: 'user/uncollect-cafeteria/',
         method: 'DELETE',
         data: {id}
     })
@@ -87,14 +87,30 @@ export const cancelAte = ({id}) => {
 }
 
 export const getComment = ({id, offset}) => {
-    return http({
-        url: '/comment/main/',
-        method: 'POST',
-        data: {
-            id,
-            offset
-        }
-    })
+    // return http({
+    //     url: '/comment/main/',
+    //     method: 'POST',
+    //     data: {
+    //         id,
+    //         offset
+    //     }
+    // })
+    return {
+        "info": [
+          {
+            "id": 127,
+            "content": "123",
+            "createTime": "2023-07-27 21:51",
+            "user": {
+              "id": 9,
+              "username": "回锅炒辣椒",
+              "avatar": "/friedPrawn.jpg"
+            },
+            "replyCount": 1,
+            "replies": []
+          }
+        ]
+      }
 }
 
 export const loadReplies = ({id, offset}) => {
