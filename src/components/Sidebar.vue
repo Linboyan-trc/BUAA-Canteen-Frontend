@@ -9,7 +9,8 @@
         <li><div><router-link to="/login" v-if="!userId">登录</router-link></div></li> 
         <li><div><router-link to="/register" v-if="!userId">注册</router-link></div></li>
         <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i> 发布</router-link></div></li>
-        <li id="user-item" v-if="userId"><div><router-link :to="`/user/${userId}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
+        <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userId}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
+        <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i> 登录</router-link></div></li>
         <li id="admin-item"><div><router-link to="/admin"><i class="fas fa-user-shield"></i> 管理员</router-link></div></li>
       </ul>
     </aside>
@@ -23,6 +24,11 @@ import { ref, computed } from 'vue';
 
 export default {
     name: 'Sidebar',
+    data(){
+      return {
+        show:true,
+      }
+    },
     setup() {
         const userStore = useUserStore();
         const userId = computed(() => userStore.userInfo.id);
