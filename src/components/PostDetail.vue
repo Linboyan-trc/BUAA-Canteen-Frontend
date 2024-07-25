@@ -55,15 +55,16 @@ export default defineComponent({
         }
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
+        console.log(operator);
         const res = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
 
         if (operator) {
           detail.collectCount--;
-          userStore.removeUserInfo(type, dish_id);
+          userStore.removeUserInfo('dish', dish_id);
           ElMessage({ type: 'success', message: res.info });
         } else {
           detail.collectCount++;
-          userStore.extendUserInfo(type, dish_id);
+          userStore.extendUserInfo('dish', dish_id);
           ElMessage({ type: 'success', message: res.info });
         }
       }
@@ -264,7 +265,7 @@ export default defineComponent({
               <el-row>
                 <el-button link class="warp" @click="doSomething('ate', detail)" :disabled="review">
                   <font-awesome-icon :icon="['fas', 'utensils']"
-                    :style="{ color: checkEat(detail.id) ? '#d81e06' : '#cecccc', width: '25px', height: '25px' }" />
+                    :style="{ color: checkEat(detail.id) ? '#f16a3d' : '#cecccc', width: '25px', height: '25px' }" />
                   <el-text size="large" tag="b" type="info">{{ detail.ateCount }}</el-text>
                 </el-button>
                 <el-button link class="warp" @click="doSomething('collect', detail)" :disabled="review">
@@ -272,7 +273,7 @@ export default defineComponent({
                     xmlns="http://www.w3.org/2000/svg" p-id="4912" width="25" height="25">
                     <path
                       d="M512.009505 25.054894l158.199417 320.580987 353.791078 51.421464L767.995248 646.579761l60.432101 352.365345-316.417844-166.354615-316.436854 166.354615 60.432101-352.365345L0 397.057345l353.791078-51.421464z"
-                      :fill="!checkCollect(detail.id) ? '#cecccc' : '#f4ea2a'" p-id="4913"></path>
+                      :fill="!checkCollect(detail.id) ? '#cecccc' : '#f1d63d'" p-id="4913"></path>
                   </svg>
                   <el-text size="large" tag="b" type="info">{{ detail.collectCount }}</el-text>
                 </el-button>

@@ -16,11 +16,12 @@ export const doComment = ({data}) => {
 
 // 用户收藏帖子
 export const doCollectDish = ({id}) => {
-    return http({
-        url: 'user/collect-post/',
-        method: 'POST',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/collect-post/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return {"info": "成功添加收藏"}
 }
 
 // 用户收藏的柜台
@@ -43,11 +44,12 @@ export const doCollectCafeteria = ({id}) => {
 
 //用户取消收藏帖子
 export const cancelCollectDish = ({id}) => {
-    return http({
-        url: 'user/uncollect-post/',
-        method: 'DELETE',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/uncollect-post/',
+    //     method: 'DELETE',
+    //     data: {id}
+    // })
+    return {"info": "成功取消收藏"}
 }
 
 //用户取消收藏的柜台
@@ -70,20 +72,22 @@ export const cancelCollectCafeteria = ({id}) => {
 
 //用户吃过菜品
 export const doAte = ({id}) => {
-    return http({
-        url: 'user/ate/',
-        method: 'POST',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/ate/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return {"info": "成功添加吃过"}
 }
 
 //用户取消吃过菜品
 export const cancelAte = ({id}) => {
-    return http({
-        url: 'user/no-ate/',
-        method: 'DELETE',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/no-ate/',
+    //     method: 'DELETE',
+    //     data: {id}
+    // })
+    return {"info": "成功取消吃过"}
 }
 
 export const getComment = ({id, offset}) => {
