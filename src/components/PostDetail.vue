@@ -1,7 +1,7 @@
 <script>
 import { ChatRound, Edit } from '@element-plus/icons-vue';
 import { defineComponent, onMounted, ref, defineEmits } from "vue";
-import { doComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api";
+import { doComment, doReplyComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
@@ -101,7 +101,7 @@ export default defineComponent({
           content: content.value,
           parent_comment_id: to
         };
-        const res = await doComment({ data });
+        const res = await doReplyComment({ data });
         ElMessage({ type: 'success', message: res.info });
         const comment = comments.value.find(item => item.id === to);
         comment.replies = [...comment.replies, ...info];

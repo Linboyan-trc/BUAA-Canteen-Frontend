@@ -5,10 +5,19 @@ export { getAllCafeterias, getAllDishes, getCafeteria, getCountersOf, getCounter
 //获取用户登录注册相关api
 export { login, getUserActionInfo, refreshAccessToken, register, logout, deleteAccount, updateUserAvatar, updateUserInfo, updateUserPassword } from './user';
 
-// 评论帖子
+// 主评
 export const doComment = ({data}) => {
     return http({
-        url: 'user/comment/',
+        url: ' comment/main/',
+        method: 'POST',
+        data: data
+    })
+}
+
+// 回复主评
+export const doReplyComment = ({data}) => {
+    return http({
+        url: 'comment/reply/',
         method: 'POST',
         data: data
     })
@@ -92,7 +101,7 @@ export const cancelAte = ({id}) => {
 
 export const getComment = ({id, offset}) => {
     // return http({
-    //     url: '/comment/main/',
+    //     url: '/comment/get-main/',
     //     method: 'POST',
     //     data: {
     //         id,
@@ -119,7 +128,7 @@ export const getComment = ({id, offset}) => {
 
 export const loadReplies = ({id, offset}) => {
     // return http({
-    //     url: '/comment/reply/',
+    //     url: '/comment/get-reply/',
     //     method: 'POST',
     //     data: {
     //         id,
@@ -147,7 +156,7 @@ export const loadReplies = ({id, offset}) => {
 export const postDetail = ({id}) => {
     // return http({
     //     url: '/post/detail/',
-    //     method: 'POST',
+    //     method: 'GET',
     //     data: {
     //         id
     //     }
@@ -166,7 +175,6 @@ export const postDetail = ({id}) => {
           "collectCount": 1,
           "ateCount": 2,
           "commentCount": 0,
-          "content": "今天是2024/07/20此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容此处是文本内容"
         }
       };
 }
@@ -175,7 +183,7 @@ export const postDetail = ({id}) => {
 export const queryPost = ({offset, query}) => {
     // return http({
     //     url: '/post/recommend/',
-    //     method: 'POST',
+    //     method: 'GET',
     //     data: {offset, query}
     // })
     return {
@@ -338,7 +346,7 @@ export const queryUserPost = ({user_id, types, offset}) => {
 
 export const uploadPost = (data) => {
     return http({
-        url: '/upload/info/',
+        url: 'post/upload/info/',
         method: 'POST',
         data: data
     })
