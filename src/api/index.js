@@ -174,7 +174,7 @@ export const postDetail = ({id}) => {
 // 获取首页推荐帖子
 export const queryPost = ({offset, query}) => {
     // return http({
-    //     url: '/post/',
+    //     url: '/post/recommend/',
     //     method: 'POST',
     //     data: {offset, query}
     // })
