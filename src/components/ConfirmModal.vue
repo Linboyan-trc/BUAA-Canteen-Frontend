@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'; // 添加这一行
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
 import { deleteAccount } from '@/api';
@@ -23,26 +24,30 @@ export default {
             required: true
         }
     },
-    setup() {
-        const showModal = ref(false);
-        const userStore = useUserStore();
+    setup(props, { emit }) {
+    const showModal = ref(false);
+    const userStore = useUserStore();
+    const router = useRouter(); // 添加这一行
 
-        const confirm = async () => {
-            if (exeName === '退出登录') {
-                const res = await userStore.userLogout();
-            } else if (exeName === '注销账号') {
-                const res = await userStore.userLogout();
-                const msg = await deleteAccount({});
-            }
-            alert('已' + exeName);
-            showModal.value = false;
-        };
+    const confirm = async () => {
+        if (props.exeName === '退出登录') {
+            await userStore.userLogout();
+        } else if (props.exeName === '注销账号') {
+            await userStore.userLogout();
+            await deleteAccount({});
+        }
+        emit('confirmed');
+        alert('已' + props.exeName);
+        showModal.value = false;
 
-        return {
-            showModal,
-            confirm
-        };
-    }
+        router.push('/home'); // 添加这一行
+    };
+
+    return {
+        showModal,
+        confirm
+    };
+}
 };
 </script>
 

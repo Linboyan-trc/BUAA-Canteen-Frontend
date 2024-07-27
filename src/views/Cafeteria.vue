@@ -6,7 +6,7 @@
     <header>
       <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
       <div class="subHeader">
-        <h2>{{ cafeteria.name }}食堂</h2>
+        <h2>{{ cafeteria.name }}</h2>
         <div v-if="!hasCollectedCafeteria">
           <button class="userBtn" @click="doCollectCafeteria({cafeteriaId})">收藏该食堂</button>
         </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
 import Preview from '@/components/Preview.vue'
 import { useRoute } from 'vue-router'
@@ -45,12 +45,29 @@ export default {
     const cafeteria = ref({})
     const counters = ref([])
     const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
+    console.log(`现在食堂id${cafeteriaId.value}`)
 
     const userStore = useUserStore()
     const hasCollectedCafeteria = computed(() => userStore.userCollectCafeterias.includes(cafeteriaId.value))
     console.log('hasCollectedCafeteria:', hasCollectedCafeteria.value)
+
+    const fetchCafeteriaData = async (id) => {
+      try {
+        console.log(`现在食堂id是${id}`)
+        const res = await getCafeteria({ cafeteriaId: id });
+        cafeteria.value = res.data;
+        console.log(res)
+        console.log('cafeteria:', cafeteria.value);
+        
+        const response = await getCountersOf({ cafeteriaId: id });
+        counters.value = response.data;
+      } catch (error) {
+        console.error('获取柜台数据失败:', error);
+      }
+    };
+
     onMounted(async() => {
-      const res = await getCafeteria({cafeteriaId})
+      const res = await getCafeteria({cafeteriaId:cafeteriaId.value})
       cafeteria.value = res.data
       console.log('cafeteria:', cafeteria.value)
       try {
@@ -60,6 +77,10 @@ export default {
         console.error('获取柜台数据失败:', error)
       }
     })
+
+    watch(cafeteriaId, (newId) => {
+      fetchCafeteriaData(newId);
+    });
 
     return {
       cafeteria,

@@ -11,23 +11,39 @@ import { updateUserInfo } from "@/api";
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/user";
 // 加载用户信息 //////////////////////////////////////////////////////////////
+const userStore = ref({})
 const userInfo = ref({})
+const userAte = ref([])
+const userCollectDishes = ref([])
+const userCollectCounters = ref([])
+const userCollectCafeterias = ref([])
 const getUserInfo = async () => {
-  const id = route.params.id
-  const res = await queryUserIndex({id})
-  userInfo.value = res.data
-  document.title = res.data.username + '的小蓝书'
+  userStore.value = useUserStore()
+  console.log(`用户在User.vue的信息是${userStore}和${userStore.value}和${userStore.value.userAte}`)
+  userAte.value = userStore.value.userAte
+  console.log(`用户在User.vue的信息是"userAte"和${userAte}和${userAte.value}`)
+
+  userCollectDishes.value = userStore.value.userCollectDishes;
+  console.log(`用户在User.vue的信息是"userCollectDishes"和${userCollectDishes}和${userCollectDishes.value}`)
+
+  userCollectCounters.value = userStore.value.userCollectCounters;
+  console.log(`用户在User.vue的信息是"userCollectCounters"和${userCollectCounters}和${userCollectCounters.value}`)
+
+  userCollectCafeterias.value = userStore.value.userCollectCafeterias;
+  console.log(`用户在User.vue的信息是"userCollectCafeterias"和${userCollectCafeterias}和${userCollectCafeterias.value}`)
+
+  
+  userInfo.value = useUserStore().userInfo;
+  document.title = userInfo.value.username + '的小蓝书'
 }
-const userStore = useUserStore()
 // 加载用户信息结束 ////////////////////////////////////////////////////////////
 
 // 主页切换标签 //////////////////////////////////////////////////////////////
 const radio = ref('吃过')
 const userPost = ref([])
-const userCollectDihses = ref([])
-const userCollectCounters = ref([])
-const userCollectCafeterias = ref([])
-const userAte = ref([])
+// const userCollectCounters = ref([])
+// const userCollectCafeterias = ref([])
+// const userAte = ref([])
 const disabled = ref(true); // 初始禁用滚动加载
 const showEditModal = ref(false)
 
@@ -74,24 +90,26 @@ const doUpdate = async(updatedInfo) => {
 
 getUserInfo()
 const Toggle = async () => {
-  const user_id = route.params.id
+  console.log(`用户信息是${userInfo.value.userId}`);
+  const user_id = userInfo.value.userId;
   const offset = 0
   const types = radio.value
-  if (radio.value === '收藏的菜肴' && userCollectDihses.value.length === 0) {
+  if (radio.value === '收藏的菜肴' && userCollectDishes.value?.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userCollectDihses.value = post.info
-  } else if (radio.value === '收藏的柜台' && userCollectCounters.value.length === 0) {
+    userCollectDishes.value = post.data.info
+  } else if (radio.value === '收藏的柜台' && userCollectCounters.value?.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userCollectCounters.value = post.info
-  } else if (radio.value === '收藏的食堂' && userCollectCafeterias.value.length === 0) {
+    userCollectCounters.value = post.data.info
+  } else if (radio.value === '收藏的食堂' && userCollectCafeterias.value?.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userCollectCafeterias.value = post.info
-  } else if (radio.value === '吃过' && userAte.value.length === 0) {
+    userCollectCafeterias.value = post.data.info
+  } else if (radio.value === '吃过' && userAte.value?.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userAte.value = post.info
-  } else if (radio.value === '帖子' && userPost.value.length === 0) {
+    console.log(`Toggle处调用API结果是${post}和${post.data}和${post.data.info}`)
+    userAte.value = post.data.info
+  } else if (radio.value === '帖子' && userPost.value?.length === 0) {
     const post = await queryUserPost({user_id, types, offset})
-    userPost.value = post.info
+    userPost.value = post.data.info
   }
   disabled.value = false;
 }
@@ -109,21 +127,22 @@ const load = async () => {
       disabled.value = false;
     }
   } else if (types === '吃过') {
-    const offset = userAte.value.length;
+    const offset = userAte.value?.length;
     const ate = await queryUserPost({user_id, types, offset});
-    if (ate.info.length === 0) {
+    if (ate.info?.length === 0) {
       disabled.value = true;
     } else {
+      console.log(`userAte是${userAte}和${userAte.value}`)
       userAte.value = [...userAte.value, ...ate.info];
       disabled.value = false;
     }
   } else if (types === '收藏的菜肴') {
-    const offset = userCollectDihses.value.length;
+    const offset = userCollectDishes.value.length;
     const collect = await queryUserPost({user_id, types, offset});
     if (collect.info.length === 0) {
       disabled.value = true;
     } else {
-      userCollectDihses.value = [...userCollectDihses.value, ...collect.info];
+      userCollectDishes.value = [...userCollectDishes.value, ...collect.info];
       disabled.value = false;
     }
   } else if (types === '收藏的柜台') {
@@ -193,10 +212,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h3>用户中心</h3>
   <div id="logout">
     <ConfirmModal :exeName="'退出登录'"/>
-    <ConfirmModal :exeName="'注销账号'"/>
   </div>
   <div class="userInfo" v-if="userInfo">
     <el-row :gutter="10">
@@ -205,8 +222,8 @@ onMounted(async () => {
       </el-col>
       <el-col :span="12" style="width: 250px!important;">
         <h2>{{ userInfo.username }}</h2>
-        <p>学号：{{ userInfo.student_id }}</p>
-        <p>个性签名：{{ userInfo.introduction }}</p>
+        <p class="in-one"><strong>邮箱：</strong>{{ userInfo.email }}</p>
+        <p class="in-one"><strong>个性签名：</strong>{{ userInfo.introduction }}</p>
         <p v-if="userInfo.gender === 'female'">性别：女</p>
         <p v-else-if="userInfo.gender === 'male'">性别：男</p>
         <p v-else-if="userInfo.gender === null">性别：还没有设置性别</p>
@@ -233,14 +250,14 @@ onMounted(async () => {
   </div>
   <div style="margin-top: 30px;" v-if="userInfo">
     <div v-if="radio === '收藏的菜肴'">
-      <div v-if="userCollectDihses.length === 0">
+      <div v-if="userCollectDishes?.length === 0">
         <el-empty description="现在还没有收藏菜肴..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
            :infinite-scroll-distance="100"
            v-else>
             <div class="dishes-preview">
-              <div v-for="collect in userCollectDihses">
+              <div v-for="collect in userCollectDishes">
                 <Preview :name="'dish'" :preview="collect" />
               </div>
             </div>
@@ -255,7 +272,7 @@ onMounted(async () => {
       </transition>
     </div>
     <div v-else-if="radio === '收藏的柜台'">
-      <div v-if="userCollectCounters.length === 0">
+      <div v-if="userCollectCounters?.length === 0">
         <el-empty description="现在还没有收藏柜台..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
@@ -277,7 +294,7 @@ onMounted(async () => {
       </transition>
     </div>
     <div v-else-if="radio === '收藏的食堂'">
-      <div v-if="userCollectCafeterias.length === 0">
+      <div v-if="userCollectCafeterias?.length === 0">
         <el-empty description="现在还没有收藏食堂..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
@@ -299,7 +316,7 @@ onMounted(async () => {
       </transition>
     </div>
     <div v-else-if="radio === '吃过'">
-      <div v-if="userAte.length === 0">
+      <div v-if="userAte?.length === 0">
         <el-empty description="现在还没有吃过..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
@@ -321,7 +338,7 @@ onMounted(async () => {
       </transition>
     </div>
     <div v-else-if="radio === '帖子'">
-      <div v-if="userPost.length === 0">
+      <div v-if="userPost?.length === 0">
         <el-empty description="现在还没有帖子..."/>
       </div>
       <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
@@ -413,5 +430,9 @@ h3 {
 
 .fade-leave-active {
   animation: scale-up-center 0.5s linear both reverse;
+}
+
+.in-one {
+  width: 240px;
 }
 </style>

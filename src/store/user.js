@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import {login, register, refreshAccessToken, logout, getUserActionInfo} from "@/api";
+import {login, register, refreshAccessToken, logout, getUserInfo, getUserActionInfo} from "@/api/user.js";
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref({});
@@ -17,17 +17,39 @@ export const useUserStore = defineStore('user', () => {
 
     const userLogin = async ( email, password ) => {
         const response = await login({ email, password });
-        const { token, refresh_token, username, message } = response.data;
-        if (message) {
+        if (response.success) {
+            // 1. 返回数据
+            const { token, refresh_token, username } = response.data;
+
+            // 2. 设置token
             setToken(token);
             document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
-            userInfo.value = { email: email , username: username};
-            const res = await getUserActionInfo();
-            userAte.value = res.data.ateId;
-            userCollectDishes.value = res.data.collectDishesId;
-            userCollectCounters.value = res.data.collectCountersId;
-            userCollectCafeterias.value = res.data.collectCafeteriasId;
-            return email;
+            
+            // 3. 设置用户信息
+            userInfo.value = { email: email , username: username };
+
+            // 4. 获取用户个人信息
+            const res = await getUserInfo();
+            userInfo.value.userId = res.data.id;
+            console.log(`用户id是${userInfo.value.userId}`);
+            userInfo.value.studentId = res.data.student_id;
+            userInfo.value.gender = res.data.gender;
+            userInfo.value.introduction = res.data.introduction;
+            userInfo.value.avatar = res.data.avatar;
+
+            // 5. 获取用户行为数据
+            const resp = await getUserActionInfo();
+            console.log(`用户登录后获取的食物信息:${resp}`);
+            console.log(`用户登录后获取的食物信息:${resp.data}`);
+            console.log(`用户登录后获取的食物信息ateId:${resp.data.ateId}`);
+            userAte.value = resp.data.ateId;
+            userCollectDishes.value = resp.data.collectDishesId;
+            userCollectCounters.value = resp.data.collectCountersId;
+            userCollectCafeterias.value = resp.data.collectCafeteriasId;
+            console.log(`用户登录后获取的食物信息collectDishesId:${resp.data.collectDishesId}`);
+            console.log(`用户登录后获取的食物信息collectCountersId:${resp.data.collectCountersId}`);
+            console.log(`用户登录后获取的食物信息collectCafeteriasId:${resp.data.collectCafeteriasId}`);
+            return username;
         } else {
             return null;
         }
@@ -72,14 +94,23 @@ export const useUserStore = defineStore('user', () => {
     };
 
     const userLogout = async () => {
-        userInfo.value = {};
-        token.value = '';
-        localStorage.removeItem('token');
-        document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; HttpOnly`;
-        await logout();
-        return { info: "成功退出登录" };
+        try {
+            await logout(); // 先调用 logout API
+            userInfo.value = {};
+            userCollectDishes.value = [];
+            userCollectCounters.value = [];
+            userCollectCafeterias.value = [];
+            userAte.value = [];
+            token.value = '';
+            headersObj.value = {};
+            localStorage.removeItem('token');
+            document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+            return { info: "成功退出登录" };
+        } catch (error) {
+            console.error('退出登录失败:', error);
+        }
     };
-
+    
     const changeInfo = ({username, email, gender, introduction, student_id, avatar}) => {
         userInfo.value.username = username;
         userInfo.value.email = email;
@@ -106,6 +137,7 @@ export const useUserStore = defineStore('user', () => {
         }
         return '';
     };
+
     const refreshAccessTokenHandler = async () => {
         try {
             const refreshToken = getRefreshTokenFromCookie();
@@ -124,15 +156,14 @@ export const useUserStore = defineStore('user', () => {
         localStorage.setItem('token', newToken);
     };
 
-
-    //temp
-    userInfo.value = {
-        id: 12,
-        username: "测试用户",
-        avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
-        introduction: "暂时没有个性签名~",
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
-    };
+    // userInfo.value = {
+    //     id: 12,
+    //     username: "测试用户",
+    //     avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
+    //     introduction: "暂时没有个性签名~",
+    //     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
+    // };
+    
     return {
         userInfo,
         userLogin,
@@ -152,6 +183,7 @@ export const useUserStore = defineStore('user', () => {
         refreshAccessTokenHandler,
         setToken
     };
+
 }, {
     persist: true,
 });
