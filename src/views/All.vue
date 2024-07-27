@@ -29,9 +29,9 @@ export default {
         const cafeterias = ref([])
         
         onMounted(() => {
-            fetchAllDishes()
+            fetchAll()
         })
-        const fetchAllDishes = async() => {
+        const fetchAll = async() => {
             try {
                 const response = await getAllCafeterias()
                 cafeterias.value = response.data
