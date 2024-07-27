@@ -5,6 +5,7 @@ import PostDetail from "@/components/PostDetail.vue";
 import { controlDetail } from "@/store/controlDetail";
 import { useUserStore } from "@/store/user";
 import { Close } from '@element-plus/icons-vue';
+import { postDelete } from '@/api/index';
 
 export default {
   name: "Detail",
@@ -33,7 +34,9 @@ export default {
       console.log("User id:", userId.value);
       console.log("userInfor:", userStore.userInfo);
       try {
-        const res = await postDelete({ id })
+        const response = await postDelete({ id })
+        const res = response.data
+        console.log("Delete post response:", response);
         ElMessage({ type: 'success', message: res.success })
         router.push('/home');
       } catch (error) {
@@ -81,7 +84,7 @@ export default {
   /* top: 20px;
   left: 1190px; */
   left: 95%;
-  top: 3%;
+  top: 1%;
 
   cursor: pointer;
   transition: transform 0.3s ease-in-out;

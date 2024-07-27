@@ -1,7 +1,7 @@
 <script>
 import { ChatRound, Edit } from '@element-plus/icons-vue';
 import { defineComponent, onMounted, ref, defineEmits } from "vue";
-import { doComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api";
+import { doComment, doReplyComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
@@ -42,24 +42,24 @@ export default defineComponent({
 
       if (type === 'ate') {
         const operator = checkEat(dish_id);
-        const res = operator ? await cancelAte(dish_id) : await doAte(dish_id);
-
+        const response = operator ? await cancelAte(dish_id) : await doAte(dish_id);
+        const res = res.data;
         if (operator) {
-          userStore.removeFocus(1, dish_id);
+          userStore.removeUserInfo(type, dish_id);
           detail.ateCount--;
           ElMessage({ type: 'success', message: res.info });
         } else {
-          userStore.extendUserInfo('ate', dish_id);
+          userStore.extendUserInfo(type, dish_id);
           detail.ateCount++;
           ElMessage({ type: 'success', message: res.info });
         }
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
-        const res = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
-
+        const response = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
+        const res = res.data;
         if (operator) {
           detail.collectCount--;
-          userStore.removeFocus(2, dish_id);
+          userStore.removeUserInfo('dish', dish_id);
           ElMessage({ type: 'success', message: res.info });
         } else {
           detail.collectCount++;
@@ -90,7 +90,8 @@ export default defineComponent({
           post_id: post.id,
           content: content.value
         };
-        const res = await doComment({ data });
+        const response = await doComment({ data });
+        const res = res.data;
         ElMessage({ type: 'success', message: res.info });
         info[0].id = res.id;
         comments.value = [...comments.value, ...info];
@@ -100,7 +101,8 @@ export default defineComponent({
           content: content.value,
           parent_comment_id: to
         };
-        const res = await doComment({ data });
+        const response = await doReplyComment({ data });
+        const res = res.data;
         ElMessage({ type: 'success', message: res.info });
         const comment = comments.value.find(item => item.id === to);
         comment.replies = [...comment.replies, ...info];
@@ -119,7 +121,8 @@ export default defineComponent({
     const loadReply = async item => {
       const offset = item.replies.length;
       const id = item.id;
-      const res = await loadReplies({ id, offset });
+      const response = await loadReplies({ id, offset });
+      const res = res.data;
       item.replies = [...item.replies, ...res.info];
       item.replyCount -= res.count;
     };
@@ -135,24 +138,8 @@ export default defineComponent({
       disabled.value = true;
       const offset = comments.value.length;
       const id = props.detail.id;
-      // temp
-      // const res1 = await getComment({ id, offset });
-      const res1 = {
-        "info": [
-          {
-            "id": 127,
-            "content": "123",
-            "createTime": "2023-07-27 21:51",
-            "user": {
-              "id": 9,
-              "username": "回锅炒辣椒",
-              "avatar": "/friedPrawn.jpg"
-            },
-            "replyCount": 1,
-            "replies": []
-          }
-        ]
-      }
+      const response1 = await getComment({ id, offset });
+      const res1 = res1.data;
       const data = res1.info;
       if (data.length !== 0) {
         disabled.value = false;
@@ -280,12 +267,8 @@ export default defineComponent({
             <div class="buttonArea">
               <el-row>
                 <el-button link class="warp" @click="doSomething('ate', detail)" :disabled="review">
-                  <svg x="1689147877558" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                    xmlns="http://www.w3.org/2000/svg" p-id="3345" width="25" height="25">
-                    <path
-                      d="M512 901.746939c-13.583673 0-26.122449-4.179592-37.093878-13.061225-8.881633-7.314286-225.697959-175.020408-312.424489-311.379592C133.746939 532.37551 94.040816 471.24898 94.040816 384.522449c0-144.718367 108.146939-262.269388 240.326531-262.269388 67.395918 0 131.657143 30.82449 177.632653 84.636735 45.453061-54.334694 109.191837-84.636735 177.110204-84.636735 132.702041 0 240.326531 117.55102 240.326531 262.269388 0 85.159184-37.093878 143.673469-67.395919 191.216327l-1.044898 1.567346c-86.726531 136.359184-303.542857 304.587755-312.424489 311.379592-10.44898 8.359184-22.987755 13.061224-36.571429 13.061225z"
-                      :fill="!checkEat(detail.id) ? '#cecccc' : '#d81e06'" p-id="3346"></path>
-                  </svg>
+                  <font-awesome-icon :icon="['fas', 'utensils']"
+                    :style="{ color: checkEat(detail.id) ? '#f16a3d' : '#cecccc', width: '25px', height: '25px' }" />
                   <el-text size="large" tag="b" type="info">{{ detail.ateCount }}</el-text>
                 </el-button>
                 <el-button link class="warp" @click="doSomething('collect', detail)" :disabled="review">
@@ -293,7 +276,7 @@ export default defineComponent({
                     xmlns="http://www.w3.org/2000/svg" p-id="4912" width="25" height="25">
                     <path
                       d="M512.009505 25.054894l158.199417 320.580987 353.791078 51.421464L767.995248 646.579761l60.432101 352.365345-316.417844-166.354615-316.436854 166.354615 60.432101-352.365345L0 397.057345l353.791078-51.421464z"
-                      :fill="!checkCollect(detail.id) ? '#cecccc' : '#f4ea2a'" p-id="4913"></path>
+                      :fill="!checkCollect(detail.id) ? '#cecccc' : '#f1d63d'" p-id="4913"></path>
                   </svg>
                   <el-text size="large" tag="b" type="info">{{ detail.collectCount }}</el-text>
                 </el-button>
@@ -351,12 +334,15 @@ export default defineComponent({
 
 .box {
   position: absolute;
-  left: 200px;
-  top: 40px;
+  /* left: 200px;
+  top: 40px; */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 0.8rem;
   width: 1200px;
   height: 620px;
-  margin-top: 5px;
+  margin-top: -8px;
   box-shadow: -16px 28px 28px -3px rgba(0, 0, 0, 0.1), 0px 10px 61px -8px rgba(0, 0, 0, 0.1);
 }
 

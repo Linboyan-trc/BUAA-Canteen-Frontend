@@ -11,6 +11,10 @@ import 'element-plus/dist/index.css'
 import { createPinia } from 'pinia';
 import * as ElIcons from '@element-plus/icons-vue';
 
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faUtensils } from '@fortawesome/free-solid-svg-icons';
+
 axios.defaults.baseURL = import.meta.env.VUE_APP_API_BASE_URL || 'http://localhost:8000/api';
 
 const app = createApp(App)
@@ -18,6 +22,8 @@ const app = createApp(App)
 for (const name in ElIcons) {
     app.component(name, ElIcons[name]);
 }
+library.add(faUtensils);
+app.component('font-awesome-icon', FontAwesomeIcon);
 
 app.use(router)
 app.use(store)
