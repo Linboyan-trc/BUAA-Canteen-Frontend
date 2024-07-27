@@ -13,7 +13,9 @@ export const controlDetail = () => {
   };
 
   const getDetail = async (id) => {
-    const res = await postDetail({id});
+    const response = await postDetail({id});
+    const res = response.data;
+    console.log(res);
     detail.value = res.data;
     document.title = detail.value.title;
   };

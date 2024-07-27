@@ -1,7 +1,7 @@
 <script>
 import { ChatRound, Edit } from '@element-plus/icons-vue';
 import { defineComponent, onMounted, ref, defineEmits } from "vue";
-import { doComment, doReplyComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api";
+import { doComment, doReplyComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
 import { getCurrentTime } from "@/utils/getTime";
@@ -42,8 +42,8 @@ export default defineComponent({
 
       if (type === 'ate') {
         const operator = checkEat(dish_id);
-        const res = operator ? await cancelAte(dish_id) : await doAte(dish_id);
-
+        const response = operator ? await cancelAte(dish_id) : await doAte(dish_id);
+        const res = res.data;
         if (operator) {
           userStore.removeUserInfo(type, dish_id);
           detail.ateCount--;
@@ -55,9 +55,8 @@ export default defineComponent({
         }
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
-        console.log(operator);
-        const res = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
-
+        const response = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
+        const res = res.data;
         if (operator) {
           detail.collectCount--;
           userStore.removeUserInfo('dish', dish_id);
@@ -91,7 +90,8 @@ export default defineComponent({
           post_id: post.id,
           content: content.value
         };
-        const res = await doComment({ data });
+        const response = await doComment({ data });
+        const res = res.data;
         ElMessage({ type: 'success', message: res.info });
         info[0].id = res.id;
         comments.value = [...comments.value, ...info];
@@ -101,7 +101,8 @@ export default defineComponent({
           content: content.value,
           parent_comment_id: to
         };
-        const res = await doReplyComment({ data });
+        const response = await doReplyComment({ data });
+        const res = res.data;
         ElMessage({ type: 'success', message: res.info });
         const comment = comments.value.find(item => item.id === to);
         comment.replies = [...comment.replies, ...info];
@@ -120,7 +121,8 @@ export default defineComponent({
     const loadReply = async item => {
       const offset = item.replies.length;
       const id = item.id;
-      const res = await loadReplies({ id, offset });
+      const response = await loadReplies({ id, offset });
+      const res = res.data;
       item.replies = [...item.replies, ...res.info];
       item.replyCount -= res.count;
     };
@@ -136,7 +138,8 @@ export default defineComponent({
       disabled.value = true;
       const offset = comments.value.length;
       const id = props.detail.id;
-      const res1 = await getComment({ id, offset });
+      const response1 = await getComment({ id, offset });
+      const res1 = res1.data;
       const data = res1.info;
       if (data.length !== 0) {
         disabled.value = false;
