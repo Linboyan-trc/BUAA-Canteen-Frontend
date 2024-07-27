@@ -7,6 +7,7 @@ import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
 import Admin from '@/views/Admin.vue'
+import Team from '@/views/Team.vue';
 import store from '@/store';
 import { useUserStore } from '@/store/user';
 import Detail from '@/views/Detail.vue';
@@ -20,6 +21,10 @@ const routes = [
   { 
     path: '/home',
     component: Home
+  },
+  {
+    path: '/team',
+    component: Team
   },
   { 
     path: '/admin', 
