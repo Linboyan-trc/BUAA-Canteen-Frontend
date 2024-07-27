@@ -38,7 +38,7 @@ export const getUserActionInfo = () => {
 export const refreshAccessToken = (refreshToken) => {
   return http.post('/user/refresh-token', {}, {
     headers: {
-      Authorization: `Bearer ${refreshToken}`
+      Authorization: `Bearer ${refreshToken.refresh_token}`,
     }
   });
 };
@@ -83,7 +83,7 @@ export const deleteAccount = ({}) => {
 }
 
 //更新用户信息（文本）
-export const updateUserInfo = ({username, email, gender, introduction, student_id}) => {
+export const updateUserInfo = ({username, email, gender, introduction}) => {
     return http({
         url: '/user/change-info',
         method: 'PUT',
@@ -92,7 +92,6 @@ export const updateUserInfo = ({username, email, gender, introduction, student_i
             email: email,
             gender: gender,
             introduction: introduction,
-            student_id: student_id
         }
     });
 }
@@ -111,7 +110,7 @@ export const updateUserAvatar = ({avatar}) => {
 //更新用户密码
 export const updateUserPassword = ({oldPassword, newPassword}) => {
     return http({
-        url: '/user/change-password/',
+        url: '/user/change-password',
         method: 'POST',
         data: {
             old_password: oldPassword,

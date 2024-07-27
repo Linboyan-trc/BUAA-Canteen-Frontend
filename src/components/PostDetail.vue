@@ -43,7 +43,7 @@ export default defineComponent({
       if (type === 'ate') {
         const operator = checkEat(dish_id);
         const response = operator ? await cancelAte(dish_id) : await doAte(dish_id);
-        const res = res.data;
+        const res = response.data;
         if (operator) {
           userStore.removeUserInfo(type, dish_id);
           detail.ateCount--;
@@ -56,7 +56,7 @@ export default defineComponent({
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
         const response = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
-        const res = res.data;
+        const res = response.data;
         if (operator) {
           detail.collectCount--;
           userStore.removeUserInfo('dish', dish_id);
@@ -91,7 +91,7 @@ export default defineComponent({
           content: content.value
         };
         const response = await doComment({ data });
-        const res = res.data;
+        const res = response.data;
         ElMessage({ type: 'success', message: res.info });
         info[0].id = res.id;
         comments.value = [...comments.value, ...info];
@@ -102,7 +102,7 @@ export default defineComponent({
           parent_comment_id: to
         };
         const response = await doReplyComment({ data });
-        const res = res.data;
+        const res = response.data;
         ElMessage({ type: 'success', message: res.info });
         const comment = comments.value.find(item => item.id === to);
         comment.replies = [...comment.replies, ...info];
@@ -118,14 +118,19 @@ export default defineComponent({
       commentInput.value.input.placeholder = `回复${toPeople}: `;
     };
 
-    const loadReply = async item => {
+    const loadReply = async (item) => {
+      // 确保 item.replies 是一个数组
+      if (!Array.isArray(item.replies)) {
+        item.replies = [];
+      }
       const offset = item.replies.length;
       const id = item.id;
-      const response = await loadReplies({ id, offset });
-      const res = res.data;
+      const response = loadReplies({ id, offset });
+      const res = response.data;
       item.replies = [...item.replies, ...res.info];
       item.replyCount -= res.count;
     };
+
 
     const clearReply = () => {
       commentInput.value.input.placeholder = `说点什么....`;
@@ -139,8 +144,7 @@ export default defineComponent({
       const offset = comments.value.length;
       const id = props.detail.id;
       const response1 = await getComment({ id, offset });
-      const res1 = res1.data;
-      const data = res1.info;
+      const data = response1.data.info;
       if (data.length !== 0) {
         disabled.value = false;
         comments.value = [...comments.value, ...data];

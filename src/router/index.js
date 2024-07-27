@@ -6,69 +6,81 @@ import Counter from '@/views/Counter.vue';
 import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
-import Admin from '@/views/Admin.vue'
 import Team from '@/views/Team.vue';
-import store from '@/store';
-import { useUserStore } from '@/store/user';
 import Detail from '@/views/Detail.vue';
 import Upload from '@/views/Upload.vue';
+import store from '@/store';
 
 const routes = [
-  { 
+  {
     path: '/',
+    name: 'Home',
     component: Home
   },
-  { 
+  {
     path: '/home',
+    name: 'Home',
     component: Home
   },
   {
     path: '/team',
+    name: 'Team',
     component: Team
   },
-  { 
-    path: '/admin', 
-    component: Admin 
+  {
+    path: '/cafeteria',
+    name: 'AllCafeteria',
+    component: All
   },
-  { 
-    path: '/cafeteria', 
-    component: All 
+  {
+    path: '/all',
+    name: 'All',
+    component: All
   },
-  { 
-    path: '/all', 
-    component: All 
+  {
+    path: '/cafeteria/:cafeteriaId',
+    name: 'Cafeteria',
+    component: Cafeteria,
+    props: true
   },
-  { 
-    path: '/cafeteria/:cafeteriaId', 
-    component: Cafeteria 
+  {
+    path: '/cafeteria/:cafeteriaId/counter/:counterId',
+    name: 'CafeteriaCounter',
+    component: Counter,
+    props: true
   },
-  { 
-    path: '/cafeteria/:cafeteriaId/counter/:counterId', 
-    component: Counter 
+  {
+    path: '/counter/:counterId',
+    name: 'Counter',
+    component: Counter,
+    props: true
   },
-  { 
-    path: '/counter/:counterId', 
-    component: Counter 
+  {
+    path: '/dish/:dishId',
+    name: 'DishDetail',
+    component: Detail,
+    props: true
   },
-  { 
-    path: '/dish/:dishId', 
-    component: Detail 
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   },
-  { 
-    path: '/register', 
-    component: Register 
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
-  { 
-    path: '/login', 
-    component: Login 
-  },
-  { 
-    path: '/user/:userId', 
-    component: User, 
+  {
+    path: '/user/:userId',
+    name: 'User',
+    component: User,
     // meta: { requiresAuth: true }
+    props: true
   },
   {
     path: '/upload',
+    name: 'Upload',
     component: Upload
   }
 ];

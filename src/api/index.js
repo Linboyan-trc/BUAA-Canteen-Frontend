@@ -1,14 +1,14 @@
 import http from "@/utils/http";
 
 // 获取食堂相关api
-export { getAllCafeterias, getAllDishes, getCafeteria, getCountersOf, getCounter, getDishes } from './cafeteria';
+export { getAllCafeterias, getCafeteria, getCountersOf, getCounter, getDishes } from './cafeteria';
 //获取用户登录注册相关api
 export { login, getUserActionInfo, refreshAccessToken, register, logout, deleteAccount, updateUserAvatar, updateUserInfo, updateUserPassword } from './user';
 
 // 主评
 export const doComment = ({ data }) => {
     return http({
-        url: ' comment/main/',
+        url: ' comment/main',
         method: 'POST',
         data: data
     })
@@ -17,7 +17,7 @@ export const doComment = ({ data }) => {
 // 回复主评
 export const doReplyComment = ({ data }) => {
     return http({
-        url: 'comment/reply/',
+        url: 'comment/reply',
         method: 'POST',
         data: data
     })
@@ -120,130 +120,53 @@ export const cancelAte = ({ id }) => {
 }
 
 export const getComment = ({ id, offset }) => {
-    // return http({
-    //     url: '/comment/get-main/',
-    //     method: 'POST',
-    //     data: {
-    //         id,
-    //         offset
-    //     }
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": [
-                {
-                    "id": 127,
-                    "content": "123",
-                    "createTime": "2023-07-27 21:51",
-                    "user": {
-                        "id": 9,
-                        "username": "回锅炒辣椒",
-                        "avatar": "/friedPrawn.jpg"
-                    },
-                    "replyCount": 1,
-                    "replies": []
-                }
-            ]
+    return http({
+        url: '/comment/get-main',
+        method: 'POST',
+        data: {
+            'id': id,
+            'offset': offset
         }
-    }
+    })
 }
 
 export const loadReplies = ({ id, offset }) => {
-    // return http({
-    //     url: '/comment/get-reply/',
-    //     method: 'POST',
-    //     data: {
-    //         id,
-    //         offset
-    //     }
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": [
-                {
-                    "id": 128,
-                    "content": "123",
-                    "createTime": "2023-07-27 21:53",
-                    "user": {
-                        "id": 9,
-                        "username": "回锅炒辣椒",
-                        "avatar": "https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg"
-                    }
-                }
-            ],
-            "count": 1
+    return http({
+        url: '/comment/get-reply',
+        method: 'POST',
+        data: {
+            'id': id,
+            'offset': offset
         }
-    };
+    })
 }
 
 // 帖子详情
 export const postDetail = ({ id }) => {
-    // return http({
-    //     url: '/post/detail/',
-    //     method: 'GET',
-    //     data: {
-    //         id
-    //     }
-    // })
-    return {
-        "sucess": true,
-        "data": {
-            "data": {
-                "title": "分享今日学习",
-                "id": 119119119119119,
-                "imgs": ["/banfan.jpg", "/friedPrawn.jpg", "/garlicFish.jpg"],
-                "user": {
-                    "id": 12,
-                    "username": "测试用户1",
-                    "avatar": "/friedPrawn.jpg"
-                },
-                "createTime": "2023-07-27 18:03",
-                "collectCount": 1,
-                "ateCount": 2,
-                "commentCount": 0,
-            }
+    return http({
+        url: '/post/detail',
+        method: 'GET',
+        params: {
+            id: id
         }
-    };
+    })
 }
 
-// 获取首页推荐帖子
-export const queryPost = ({ offset, query }) => {
-    // return http({
-    //     url: '/post/recommend/',
-    //     method: 'GET',
-    //     data: {offset, query}
-    // })
-    return {
-        "data": [
-            {
-                "id": 1,
-                "name": "鱼香肉丝",
-                "img": 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
-                "collectCount": 10,
-                "ateCount": 20,
-                "user": {
-                    "id": 2,
-                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户2"
-                }
-            },
-            {
-                "id": 2,
-                "name": "糖醋里脊",
-                "img": 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg',
-                "collectCount": 10,
-                "ateCount": 15,
-                "user": {
-                    "id": 1,
-                    "avatar": "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg",
-                    "username": "测试用户1"
-                }
-            }
-        ]
-    }
-}
+export const queryPost = ({ offset }) => {
+    return http({
+        url: '/post/recommend',
+        method: 'GET',
+        params: { offset }
+    });
+};
+
+export const queryPostBySearch = ({ offset, query }) => {
+    return http({
+        url: '/post/search',
+        method: 'GET',
+        params: { offset, query }
+    });
+};
 
 export const controlUserCollectOrLike = ({ post_id, operator, type }) => {
     return http({
@@ -257,28 +180,6 @@ export const controlUserCollectOrLike = ({ post_id, operator, type }) => {
     })
 }
 
-// 访问用户主页
-export const queryUserIndex = ({}) => {
-    return http({
-        // url: '/user/get-info-by-id',
-        url: '/user/get-info',
-        method: 'GET',
-        data: {
-            // id
-        }
-    })
-    // return { 
-    //     data: {
-    //         id: 9,
-    //         username: "回锅炒辣椒",
-    //         email: "123456@qq.com",
-    //         student_id: "22370000",
-    //         avatar: "/friedPrawn.jpg",
-    //         introduction: "I love Rose~",
-    //         gender: 'female',
-    //     }
-    // }
-}
 
 //查询用户收藏或吃过
 export const queryUserPost = ({user_id, types, offset}) => {
@@ -314,7 +215,7 @@ export const queryUserPost = ({user_id, types, offset}) => {
                 offset
             }
         })
-    } else if (types == '帖子') {
+    } else if (types == '我的帖子') {
         return http({
             url: '/user/get-post-list',
             method: 'GET',

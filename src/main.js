@@ -9,6 +9,7 @@ import axios from 'axios'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { createPinia } from 'pinia';
+import piniaPersist from 'pinia-plugin-persistedstate';
 import * as ElIcons from '@element-plus/icons-vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -29,5 +30,7 @@ app.use(router)
 app.use(store)
 app.use(ElementPlus)
 const pinia = createPinia()
+pinia.use(piniaPersist)
+
 app.use(pinia)
 app.mount('#app')

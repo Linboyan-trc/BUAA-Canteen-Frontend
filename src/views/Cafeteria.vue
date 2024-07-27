@@ -4,14 +4,14 @@
       <title>{{ cafeteria.name }}食堂</title>
     </head>
     <header>
-      <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
+      <CafeteriaHeader :selectedCafeteria="cafeteriaId"></CafeteriaHeader>
       <div class="subHeader">
-        <h2>{{ cafeteria.name }}</h2>
+        <h2>食堂名：{{ cafeteria.name }}</h2>
         <div v-if="!hasCollectedCafeteria">
           <button class="userBtn" @click="doCollectCafeteria({cafeteriaId})">收藏该食堂</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="CancelCollectCafeteria({cafeteriaId})">取消收藏</button>
+          <button class="userBtn" @click="cancelCollectCafeteria({cafeteriaId})">取消收藏</button>
         </div>
       </div>
     </header>
@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue'
-import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
-import Preview from '@/components/Preview.vue'
-import { useRoute } from 'vue-router'
-import { getCafeteria, getCountersOf, doCollectCafeteria, cancelCollectCafeteria } from '@/api'
-import { useUserStore } from '@/store/user'
+import { ref, computed, onMounted, watch } from 'vue';
+import CafeteriaHeader from '@/components/CafeteriaHeader.vue';
+import Preview from '@/components/Preview.vue';
+import { useRoute } from 'vue-router';
+import { getCafeteria, getCountersOf, doCollectCafeteria, cancelCollectCafeteria } from '@/api';
+import { useUserStore } from '@/store/user';
 
 export default {
   name: 'Cafeteria',
@@ -41,42 +41,29 @@ export default {
     Preview
   },
   setup() {
-    const route = useRoute()
-    const cafeteria = ref({})
-    const counters = ref([])
-    const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
-    console.log(`现在食堂id${cafeteriaId.value}`)
+    const route = useRoute();
+    const cafeteria = ref({});
+    const counters = ref([]);
+    const cafeteriaId = computed(() => Number(route.params.cafeteriaId));
 
-    const userStore = useUserStore()
-    const hasCollectedCafeteria = computed(() => userStore.userCollectCafeterias.includes(cafeteriaId.value))
-    console.log('hasCollectedCafeteria:', hasCollectedCafeteria.value)
+    const userStore = useUserStore();
+    const hasCollectedCafeteria = computed(() => userStore.userCollectCafeterias.includes(cafeteriaId.value));
 
     const fetchCafeteriaData = async (id) => {
       try {
-        console.log(`现在食堂id是${id}`)
         const res = await getCafeteria({ cafeteriaId: id });
         cafeteria.value = res.data;
-        console.log(res)
-        console.log('cafeteria:', cafeteria.value);
-        
+
         const response = await getCountersOf({ cafeteriaId: id });
-        counters.value = response.data;
+        counters.value = response.data.info;
       } catch (error) {
         console.error('获取柜台数据失败:', error);
       }
     };
 
-    onMounted(async() => {
-      const res = await getCafeteria({cafeteriaId:cafeteriaId.value})
-      cafeteria.value = res.data
-      console.log('cafeteria:', cafeteria.value)
-      try {
-        const response = await getCountersOf({cafeteriaId})
-        counters.value = response.data
-      } catch (error) {
-        console.error('获取柜台数据失败:', error)
-      }
-    })
+    onMounted(() => {
+      fetchCafeteriaData(cafeteriaId.value);
+    });
 
     watch(cafeteriaId, (newId) => {
       fetchCafeteriaData(newId);
@@ -86,13 +73,12 @@ export default {
       cafeteria,
       counters,
       cafeteriaId,
-      hasCollectedCafeteria,
-    }
+      hasCollectedCafeteria
+    };
   }
-}
+};
 </script>
 
-
 <style scoped>
-
+/* Your styles here */
 </style>

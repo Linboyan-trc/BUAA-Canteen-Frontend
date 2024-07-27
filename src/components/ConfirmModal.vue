@@ -16,6 +16,7 @@ import { useRouter } from 'vue-router'; // 添加这一行
 import { ref } from 'vue';
 import { useUserStore } from '@/store/user';
 import { deleteAccount } from '@/api';
+import { ElMessage } from 'element-plus';
 
 export default {
     props: {
@@ -37,7 +38,15 @@ export default {
             await deleteAccount({});
         }
         emit('confirmed');
-        alert('已' + props.exeName);
+
+        ElMessage(
+            {
+                message: '已' + props.exeName,
+                type: 'success',
+                duration: 2000
+            }
+        )
+
         showModal.value = false;
 
         router.push('/home'); // 添加这一行

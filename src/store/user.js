@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import {login, register, refreshAccessToken, logout, getUserInfo, getUserActionInfo} from "@/api/user.js";
+import { ElMessage } from 'element-plus';
+import Cookies from 'js-cookie';
 
 export const useUserStore = defineStore('user', () => {
     const userInfo = ref({});
@@ -8,6 +10,7 @@ export const useUserStore = defineStore('user', () => {
     const userCollectCounters = ref([]);
     const userCollectCafeterias = ref([]);
     const userAte = ref([]);
+    const userUpload = ref([]);
     const headersObj = ref({})
     const token = ref('');
 
@@ -24,36 +27,39 @@ export const useUserStore = defineStore('user', () => {
 
             // 2. 设置token
             setToken(token);
-            document.cookie = `refresh_token=${refresh_token}; path=/; HttpOnly`; // 保存 refresh_token 到 cookie
-            
-            // 3. 设置用户信息
-            userInfo.value = { email: email , username: username };
+            console.log(refresh_token);
+            Cookies.set('refreshToken', refresh_token, { expires: 7 });
 
-            // 4. 获取用户个人信息
-            const res = await getUserInfo();
-            userInfo.value.userId = res.data.id;
-            console.log(`用户id是${userInfo.value.userId}`);
-            userInfo.value.studentId = res.data.student_id;
-            userInfo.value.gender = res.data.gender;
-            userInfo.value.introduction = res.data.introduction;
-            userInfo.value.avatar = res.data.avatar;
+            // 3. 获取用户个人信息
+            await updateUserBaseInfo();
 
-            // 5. 获取用户行为数据
+            // 4. 获取用户行为数据
             const resp = await getUserActionInfo();
-            console.log(`用户登录后获取的食物信息:${resp}`);
-            console.log(`用户登录后获取的食物信息:${resp.data}`);
-            console.log(`用户登录后获取的食物信息ateId:${resp.data.ateId}`);
             userAte.value = resp.data.ateId;
             userCollectDishes.value = resp.data.collectDishesId;
             userCollectCounters.value = resp.data.collectCountersId;
             userCollectCafeterias.value = resp.data.collectCafeteriasId;
+            userUpload.value = resp.data.uploadPostId;
+            console.log(`用户登录后获取的食物信息ateId:${resp.data.ateId}`);
             console.log(`用户登录后获取的食物信息collectDishesId:${resp.data.collectDishesId}`);
             console.log(`用户登录后获取的食物信息collectCountersId:${resp.data.collectCountersId}`);
             console.log(`用户登录后获取的食物信息collectCafeteriasId:${resp.data.collectCafeteriasId}`);
+            console.log(`用户登录后获取的食物信息uploadPostId:${resp.data.uploadPostId}`);
             return username;
         } else {
             return null;
         }
+    }
+
+    const updateUserBaseInfo = async () => {
+        const res = await getUserInfo();
+
+        userInfo.value.userId = res.data.id;
+        userInfo.value.gender = res.data.gender;
+        userInfo.value.introduction = res.data.introduction;
+        userInfo.value.avatar = res.data.avatar;
+        userInfo.value.username = res.data.username;
+        userInfo.value.email = res.data.email;
     }
 
     const extendUserInfo = (type, id) => {
@@ -96,56 +102,52 @@ export const useUserStore = defineStore('user', () => {
 
     const userLogout = async () => {
         try {
-            await logout(); // 先调用 logout API
+            // 调用 logout API
+            await logout();
+
+            // 清理用户信息和相关状态
             userInfo.value = {};
             userCollectDishes.value = [];
             userCollectCounters.value = [];
             userCollectCafeterias.value = [];
             userAte.value = [];
+            userUpload.value = [];
             token.value = '';
             headersObj.value = {};
+
+            // 清理本地存储和 cookie
             localStorage.removeItem('token');
             document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+
+            // 返回登出成功信息
             return { info: "成功退出登录" };
         } catch (error) {
+            // 捕获错误并打印
             console.error('退出登录失败:', error);
+
+            // 通知用户登出失败
+            ElMessage({
+                type: 'error',
+                message: '退出登录失败，请稍后再试',
+            });
         }
     };
+
     
-    const changeInfo = ({username, email, gender, introduction, student_id, avatar}) => {
+    const changeInfo = ({username, email, gender, introduction, avatar}) => {
         userInfo.value.username = username;
         userInfo.value.email = email;
         userInfo.value.gender = gender;
         userInfo.value.introduction = introduction;
         userInfo.value.avatar = avatar;
-        userInfo.value.student_id = student_id;
     };
 
-    // 以下是登陆认证等功能函数
-
-    const getRefreshTokenFromCookie = () => {
-        const name = 'refresh_token=';
-        const decodedCookie = decodeURIComponent(document.cookie);
-        const ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return '';
-    };
 
     const refreshAccessTokenHandler = async () => {
         try {
-            const refreshToken = getRefreshTokenFromCookie();
-            const response = await refreshAccessToken(refreshToken);
-            token.value = response.data.token;
-            headersObj.value = { Authorization: `Bearer ${token.value}` };
-            localStorage.setItem('token', token.value);
+            const refreshToken = Cookies.get('refreshToken');
+            const response = await refreshAccessToken({ refresh_token: refreshToken }); // 传递 refresh_token 到请求体中
+            setToken(response.data.token);
         } catch (error) {
             console.error('刷新token失败:', error);
         }
@@ -156,20 +158,13 @@ export const useUserStore = defineStore('user', () => {
         headersObj.value = { Authorization: `Bearer ${newToken}` };
         localStorage.setItem('token', newToken);
     };
-
-    // userInfo.value = {
-    //     id: 12,
-    //     username: "测试用户",
-    //     avatar: "http://localhost:8000/static/img/avatar/12-Snipaste_2023-07-17_15-39-14.png",
-    //     introduction: "暂时没有个性签名~",
-    //     token: "eyJhbGciOiJIUzI1NiIsInR5cCI6Imp3dCJ9.eyJ1c2VyX2lkIjoxMiwidXNlcm5hbWUiOiJcdTZkNGJcdThiZDVcdTc1MjhcdTYyMzciLCJleHAiOjE2OTExMTA1NzJ9.hLs8JK2L2Iqr-vjkH6pYxmEKHhHp-7HZgGpLUMjXVYY"
-    // };
     
     return {
         userInfo,
         userLogin,
         userLogout,
         userRegister,
+        updateUserBaseInfo,
         extendUserInfo,
         removeUserInfo,
         changeInfo,
@@ -177,6 +172,7 @@ export const useUserStore = defineStore('user', () => {
         userCollectCounters,
         userCollectCafeterias,
         userAte,
+        userUpload,
         headersObj,
 
         // 以下是登陆认证等功能函数
@@ -186,5 +182,9 @@ export const useUserStore = defineStore('user', () => {
     };
 
 }, {
-    persist: true,
+    persist: {
+        key: 'user-store', // 自定义存储键名
+        storage: window.localStorage, // 你可以指定localStorage或sessionStorage
+        paths: ['userInfo', 'userCollectDishes', 'userCollectCounters', 'userCollectCafeterias', 'userAte', 'userUpload', 'token'], // 需要持久化的状态
+    },
 });

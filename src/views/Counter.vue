@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <CafeteriaHeader :selectedCafeteria=cafeteriaId></CafeteriaHeader>
+      <CafeteriaHeader :selectedCafeteria="cafeteriaId"></CafeteriaHeader>
       <div class="subHeader">
         <h2>柜台名：{{ counter.name }}</h2>
         <div v-if="!hasCollectedCounter">
@@ -24,11 +24,11 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
-import Preview from '@/components/Preview.vue'
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { cancelCollectCounter, doCollectCounter, getCounter, getDishes } from '@/api';
+import CafeteriaHeader from '@/components/CafeteriaHeader.vue';
+import Preview from '@/components/Preview.vue';
+import { getCounter, getDishes, doCollectCounter, cancelCollectCounter } from '@/api';
 import { useUserStore } from '@/store/user';
 
 export default {
@@ -38,40 +38,54 @@ export default {
     Preview,
   },
   setup() {
-    const route = useRoute()
-    const counter = ref({})    
-    const dishes = ref([])
-    const userStore = useUserStore()
+    const route = useRoute();
+    const counter = ref({});
+    const dishes = ref([]);
+    const cafeteriaId = computed(() => Number(route.params.cafeteriaId)); // 从路由参数中获取 cafeteriaId
+    const counterId = computed(() => Number(route.params.counterId)); // 从路由参数中获取 counterId
 
-    const counterId = computed(() => Number(route.params.counterId))
-    const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
-    const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value))
-    onMounted(async() => {
+    const userStore = useUserStore();
+    const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value));
+
+    const fetchCounterData = async (id) => {
       try {
-        const response = await getDishes({ counterId })
-        dishes.value = response.data
+        const response = await getCounter({counterId: id});
+        counter.value = response.data;
       } catch (error) {
-        console.error('获取', cafeteria, '的', counterId, '窗口菜肴失败:', error)
+        console.error('获取柜台数据失败:', error);
       }
+    };
+
+    const fetchDishesData = async (id) => {
       try {
-        const response = await getCounter({ counterId}) // 替换为实际的 counterId
-        counter.value = response.data
+        const response = await getDishes({counterId: id});
+        dishes.value = response.data.info;
       } catch (error) {
-        console.error('获取 counter 失败:', error)
+        console.error('获取菜肴数据失败:', error);
       }
-    })
+    };
+
+    onMounted(() => {
+      fetchCounterData(counterId.value);
+      fetchDishesData(counterId.value);
+    });
+
+    watch(counterId, (newId) => {
+      fetchCounterData(newId);
+      fetchDishesData(newId);
+    });
 
     return {
       counter,
       dishes,
-      counterId,
       cafeteriaId,
+      counterId,
       hasCollectedCounter
-    }
+    };
   },
-}
+};
 </script>
 
 <style scoped>
-
+/* Your styles here */
 </style>

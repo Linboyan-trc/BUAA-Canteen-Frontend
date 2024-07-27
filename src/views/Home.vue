@@ -2,12 +2,12 @@
     <div class="app-container">
         <div class="search-container">
             <input type="text" v-model="searchQuery" placeholder="搜索菜品..." />
-            <button @click="fetchRecommendedPosts">搜索</button>
+            <button @click="fetchPosts">搜索</button>
         </div>
 
         <div class="recommendations-container">
-            <div v-for="_ in recommendedPosts" :key="_.id">
-                <Preview :name="'dish'" :preview = "_" />
+            <div v-for="post in posts" :key="post.id">
+                <Preview :name="'dish'" :preview="post" />
             </div>
         </div>
 
@@ -24,7 +24,7 @@
 
 <script>
 import { ref, onMounted } from 'vue';
-import { queryPost } from '@/api';
+import { queryPost, queryPostBySearch } from '@/api';
 import Preview from '@/components/Preview.vue';
 
 export default {
@@ -34,12 +34,17 @@ export default {
     },
     setup() {
         const searchQuery = ref('');
-        const recommendedPosts = ref([]);
+        const posts = ref([]);
 
-        const fetchRecommendedPosts = async () => {
+        const fetchPosts = async () => {
             try {
-                const response = await queryPost({ offset: 0, query: searchQuery.value });
-                recommendedPosts.value = response.data;
+                let response;
+                if (searchQuery.value) {
+                    response = await queryPostBySearch({ offset: 0, query: searchQuery.value });
+                } else {
+                    response = await queryPost({ offset: 0 });
+                }
+                posts.value = response.data.posts;
             } catch (error) {
                 console.error('Failed to fetch posts:', error);
             }
@@ -54,13 +59,13 @@ export default {
         };
 
         onMounted(() => {
-            fetchRecommendedPosts();
+            fetchPosts();
         });
 
         return {
             searchQuery,
-            recommendedPosts,
-            fetchRecommendedPosts,
+            posts,
+            fetchPosts,
             refreshPage,
             scrollToTop
         };
@@ -74,7 +79,7 @@ export default {
 .app-container {
     display: flex;
     flex-direction: column;
-    position: relative; /* Add this to position the buttons */
+    position: relative;
 }
 
 .search-container {
@@ -101,7 +106,7 @@ export default {
     color: white;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 10px; /* Add some space between input and button */
+    margin-left: 10px;
 }
 
 .search-container button:hover {
@@ -123,11 +128,11 @@ export default {
     cursor: pointer;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease;
-    margin-bottom: 10px; /* Add some space between the buttons */
+    margin-bottom: 10px;
 }
 
 .refresh-button {
-    right: 80px; /* Adjust position to avoid overlapping with back-to-top button */
+    right: 80px;
 }
 
 .icon-button:hover {
@@ -154,3 +159,4 @@ export default {
     visibility: visible;
 }
 </style>
+z
