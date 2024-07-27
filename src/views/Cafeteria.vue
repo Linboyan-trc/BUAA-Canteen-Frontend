@@ -8,10 +8,10 @@
       <div class="subHeader">
         <h2>{{ cafeteria.name }}</h2>
         <div v-if="!hasCollectedCafeteria">
-          <button class="userBtn" @click="doCollect({cafeteriaId})">收藏该食堂</button>
+          <button class="userBtn" @click="doCollect">收藏该食堂</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="cancelCollect({cafeteriaId})">取消收藏</button>
+          <button class="userBtn" @click="cancelCollect">取消收藏</button>
         </div>
       </div>
     </header>
@@ -53,12 +53,12 @@ export default {
     console.log('hasCollectedCafeteria:', hasCollectedCafeteria.value)
 
     const doCollect = async() => {
-      const res = await doCollectCafeteria({cafeteriaId});
+      const res = await doCollectCafeteria({id: cafeteriaId});
       ElMessage({ type: 'success', message: res.data.info });
       userStore.extendUserInfo('cafeteria', cafeteriaId.value);
     }
     const cancelCollect = async() => {
-      const res = await cancelCollectCafeteria({cafeteriaId});
+      const res = await cancelCollectCafeteria({id: cafeteriaId});
       ElMessage({ type: 'success', message: res.data.info });
       userStore.removeUserInfo('cafeteria', cafeteriaId.value);
     }

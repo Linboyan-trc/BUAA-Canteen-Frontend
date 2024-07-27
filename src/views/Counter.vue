@@ -5,10 +5,10 @@
       <div class="subHeader">
         <h2>柜台名：{{ counter.name }}</h2>
         <div v-if="!hasCollectedCounter">
-          <button class="userBtn" @click="doCollect({counterId})">收藏该柜台</button>
+          <button class="userBtn" @click="doCollect">收藏该柜台</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="cancelCollect({counterId})">取消收藏</button>
+          <button class="userBtn" @click="cancelCollect">取消收藏</button>
         </div>
       </div>
     </header>
@@ -47,12 +47,12 @@ export default {
     const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
     const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value))
     const doCollect = async() => {
-      const res = await doCollectCounter({counterId});
+      const res = await doCollectCounter({id: counterId});
       ElMessage({ type: 'success', message: res.data.info });
       userStore.extendUserInfo('counter', counterId.value);
     }
     const cancelCollect = async() => {
-      const res = await cancelCollectCounter({counterId});
+      const res = await cancelCollectCounter({id: counterId});
       ElMessage({ type: 'success', message: res.data.info });
       userStore.removeUserInfo('counter', counterId.value);
     }
