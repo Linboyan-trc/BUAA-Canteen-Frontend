@@ -6,12 +6,9 @@
         <li><div><router-link to="/home"><i class="fas fa-home"></i> 首页</router-link></div></li>
         <li><div><router-link to="/all"><i class="fas fa-list"></i> 所有</router-link></div></li>
         <li class="menu-break"><hr></li>
-        <li><div><router-link to="/login" v-if="!userId">登录</router-link></div></li> 
-        <li><div><router-link to="/register" v-if="!userId">注册</router-link></div></li>
         <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i> 发布</router-link></div></li>
-        <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userId}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
+        <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userName}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
         <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i> 登录</router-link></div></li>
-        <li id="admin-item"><div><router-link to="/admin"><i class="fas fa-user-shield"></i> 管理员</router-link></div></li>
       </ul>
     </aside>
   </div>
@@ -26,16 +23,25 @@ export default {
     name: 'Sidebar',
     data(){
       return {
-        show:true,
+        // show:true,
+      }
+    },
+    computed:{
+      show(){
+        if (this.userName == null) {
+          return true;
+        } else {
+          return false;
+        }
       }
     },
     setup() {
         const userStore = useUserStore();
-        const userId = computed(() => userStore.userInfo.id);
+        const userName = computed(() => userStore.userInfo.username);
         // console.log('userInfo:', userStore.userInfo);
         // console.log('userId:', userId.value);
         return {
-            userId
+            userName
         }
     }
 }
@@ -71,11 +77,6 @@ li>div {
   padding-left:1rem;
 }
 
-#admin-item>div {
-  padding-left:1rem;
-  padding-bottom: 1rem;
-}
-
 .menu-break {
   padding: 0 3rem 0 1.5rem;
 }
@@ -103,14 +104,7 @@ a {
 
 #user-item {
   position: absolute;
-  bottom: 60px;
-  left: 0;
-  width: 100%;
-}
-
-#admin-item {
-  position: absolute;
-  bottom: 0px;
+  bottom: 30px;
   left: 0;
   width: 100%;
 }

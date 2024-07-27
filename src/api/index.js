@@ -201,118 +201,70 @@ export const controlUserCollectOrLike = ({post_id, operator, type}) => {
 }
 
 // 访问用户主页
-export const queryUserIndex = ({id}) => {
-    // return http({
-    //     url: '/user/get-info-by-id',
-    //     method: 'GET',
-    //     data: {
-    //         id
-    //     }
-    // })
-    return { 
+export const queryUserIndex = ({}) => {
+    return http({
+        // url: '/user/get-info-by-id',
+        url: '/user/get-info',
+        method: 'GET',
         data: {
-            id: 9,
-            username: "回锅炒辣椒",
-            email: "123456@qq.com",
-            student_id: "22370000",
-            avatar: "/friedPrawn.jpg",
-            introduction: "I love Rose~",
-            gender: 'female',
+            // id
         }
-    }
+    })
+    // return { 
+    //     data: {
+    //         id: 9,
+    //         username: "回锅炒辣椒",
+    //         email: "123456@qq.com",
+    //         student_id: "22370000",
+    //         avatar: "/friedPrawn.jpg",
+    //         introduction: "I love Rose~",
+    //         gender: 'female',
+    //     }
+    // }
 }
 
 //查询用户收藏或吃过
 export const queryUserPost = ({user_id, types, offset}) => {
-    // if (types == '收藏的菜肴') {
-    //     return http({
-    //         url: '/user/get-collect-dishes-list/',
-    //         method: 'POST',
-    //         data: {
-    //             offset
-    //         }
-    //     })
-    // } else if (types == '收藏的柜台') {
-    //     return http({
-    //         url: '/user/get-collect-counters-list/',
-    //         method: 'POST',
-    //         data: {
-    //             offset
-    //         }
-    //     })
-    // } else if (types == '收藏的食堂') {
-    //     return http({
-    //         url: '/user/get-collect-cafeterias-list/',
-    //         method: 'POST',
-    //         data: {
-    //             offset
-    //         }
-    //     })
-    // } else if (types == '吃过') {
-    //     return http({
-    //         url: '/user/get-ate-list/',
-    //         method: 'POST',
-    //         data: {
-    //             offset
-    //         }
-    //     })
-    // } else if (types == '帖子') {
-    //     return http({
-    //         url: '/user/get-post-list/',
-    //         method: 'POST',
-    //         data: {
-    //             offset
-    //         }
-    //     })
-    // }
-    //temp
-    if (offset == 15) {
-        return { info: [] }
-    }
     if (types == '收藏的菜肴') {
-        return {
-            info: [
-                {
-                    id: 1, name: '菜名', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10, ateCount: 20, 
-                    user: {
-                        id : 321,
-                        username: '测试用户321',
-                        avatar: "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg"
-                    }
-                }
-            ]
-        }
+        return http({
+            url: '/user/get-collect-dishes-list',
+            method: 'GET',
+            data: {
+                offset
+            }
+        })
     } else if (types == '收藏的柜台') {
-        return {
-            info: [
-                {
-                    id: 1, name: '菜名', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10, floor: -1,
-                }
-            ]
-        }
+        return http({
+            url: '/user/get-collect-counters-list',
+            method: 'GET',
+            data: {
+                offset
+            }
+        })
     } else if (types == '收藏的食堂') {
-        return {
-            info: [
-                {
-                    id: 1, name: '食堂', img: 'https://q3.itc.cn/q_70/images03/20240420/fc837bd20e2e47f9acecb2c822df298c.jpeg', collectCount: 10,
-                }
-            ]
-        }
+        return http({
+            url: '/user/get-collect-cafeterias-list',
+            method: 'GET',
+            data: {
+                offset
+            }
+        })
     } else if (types == '吃过') {
-        return {
-            info: [
-                {
-                    id: 1, name: '菜名', img: 'https://ww4.sinaimg.cn/mw690/75a4348fgy1hqvyz3mnscj20u0140wl9.jpg', collectCount: 10, ateCount: 20, 
-                    user: {
-                        id : 321,
-                        username: '测试用户321',
-                        avatar: "https://ww1.sinaimg.cn/mw690/0073ozWdly1hr3qefka09j30u00u0ke0.jpg"
-                    }
-                }
-            ]
-        }
+        return http({
+            url: '/user/get-ate-list',
+            method: 'GET',
+            data: {
+                offset
+            }
+        })
     } else if (types == '帖子') {
-        return { info: [] }
+        return http({
+            url: '/user/get-post-list',
+            method: 'GET',
+            data: {
+                offset
+            }
+        })
     }
 }
 

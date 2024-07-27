@@ -85,7 +85,6 @@ export default {
     };
 
     const login = async () => {
-
       if (!email.value || !password.value) {
         ElMessage({
           message: '邮箱和密码不能为空',
@@ -110,13 +109,13 @@ export default {
         ElMessage({
           message: `欢迎 ${user} 登录成功`,
           type: 'success',
-          duration: 1000, // 持续时间为500毫秒
+          duration: 1000, // 持续时间为1000毫秒
         });
 
-        // 等待0.5秒后重定向到首页
+        // 等待1秒后重定向到首页
         setTimeout(async () => {
-          await router.push({name: 'home'});
-        }, 1000);
+          await router.replace('/home'); // 重定向到 /home 页面
+        }, 500);
 
       } catch (error) {
         ElMessage({

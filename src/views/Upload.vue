@@ -19,7 +19,12 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
     const checkLogin = () => {
-      if (!userStore.userInfo.id) {
+      if (!userStore.userInfo.username) {
+        ElMessage({
+          message: '请先登录',
+          type: 'warning', // 提示类型可以是 'success', 'warning', 'info', 'error'
+          duration: 2000, // 提示消息显示的时间，单位是毫秒
+        });
         router.replace('/login')
       }
     }
