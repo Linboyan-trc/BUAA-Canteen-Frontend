@@ -24,6 +24,7 @@ http.interceptors.response.use(res => res.data, async e => {
     const userStore = useUserStore();
     const originalRequest = e.config;
 
+    console.log(e.response)
     if (e.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
