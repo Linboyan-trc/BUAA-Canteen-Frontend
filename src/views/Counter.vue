@@ -48,12 +48,12 @@ export default {
     const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value))
     const doCollect = async() => {
       const res = await doCollectCounter({counterId});
-      ElMessage({ type: 'success', message: res.info });
+      ElMessage({ type: 'success', message: res.data.info });
       userStore.extendUserInfo('counter', counterId.value);
     }
     const cancelCollect = async() => {
       const res = await cancelCollectCounter({counterId});
-      ElMessage({ type: 'info', message: res.info });
+      ElMessage({ type: 'success', message: res.data.info });
       userStore.removeUserInfo('counter', counterId.value);
     }
     onMounted(async() => {

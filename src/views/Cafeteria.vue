@@ -52,12 +52,12 @@ export default {
     console.log('hasCollectedCafeteria:', hasCollectedCafeteria.value)
     const doCollect = async() => {
       const res = await doCollectCafeteria({cafeteriaId});
-      ElMessage({ type: 'success', message: res.info });
+      ElMessage({ type: 'success', message: res.data.info });
       userStore.extendUserInfo('cafeteria', cafeteriaId.value);
     }
     const cancelCollect = async() => {
       const res = await cancelCollectCafeteria({cafeteriaId});
-      ElMessage({ type: 'info', message: res.info });
+      ElMessage({ type: 'success', message: res.data.info });
       userStore.removeUserInfo('cafeteria', cafeteriaId.value);
     }
     onMounted(async() => {

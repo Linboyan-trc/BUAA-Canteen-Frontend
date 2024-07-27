@@ -97,7 +97,8 @@ export default {
         content: content.value,
         user_id: userStore.userInfo.id,
       }
-      const res = await uploadPost(data)
+      const response = await uploadPost(data)
+      const res = res.data;
       PostId.value = res.info
       upload.value.submit()
       ElMessage({ type: 'success', message: '发布成功，3秒后跳转到主页' })
