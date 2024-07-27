@@ -35,20 +35,22 @@ export const doCollectDish = ({id}) => {
 
 // 用户收藏的柜台
 export const doCollectCounter = ({id}) => {
-    return http({
-        url: 'user/collect-counter/',
-        method: 'POST',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/collect-counter/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return {"info": "成功添加收藏"}
 }
 
 // 用户收藏的食堂
 export const doCollectCafeteria = ({id}) => {
-    return http({
-        url: 'user/collect-cafeteria/',
-        method: 'POST',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/collect-cafeteria/',
+    //     method: 'POST',
+    //     data: {id}
+    // })
+    return {"info": "成功添加收藏"}
 }
 
 //用户取消收藏帖子
@@ -63,20 +65,22 @@ export const cancelCollectDish = ({id}) => {
 
 //用户取消收藏的柜台
 export const cancelCollectCounter = ({id}) => {
-    return http({
-        url: 'user/uncollect-counter/',
-        method: 'DELETE',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/uncollect-counter/',
+    //     method: 'DELETE',
+    //     data: {id}
+    // })
+    return {"info": "成功取消收藏"}
 }
 
 //用户取消收藏的食堂
 export const cancelCollectCafeteria = ({id}) => {
-    return http({
-        url: 'user/uncollect-cafeteria/',
-        method: 'DELETE',
-        data: {id}
-    })
+    // return http({
+    //     url: 'user/uncollect-cafeteria/',
+    //     method: 'DELETE',
+    //     data: {id}
+    // })
+    return {"info": "成功取消收藏"}
 }
 
 //用户吃过菜品

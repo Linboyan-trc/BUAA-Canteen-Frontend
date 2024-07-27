@@ -8,10 +8,10 @@
       <div class="subHeader">
         <h2>{{ cafeteria.name }}食堂</h2>
         <div v-if="!hasCollectedCafeteria">
-          <button class="userBtn" @click="doCollectCafeteria({cafeteriaId})">收藏该食堂</button>
+          <button class="userBtn" @click="doCollect({cafeteriaId})">收藏该食堂</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="CancelCollectCafeteria({cafeteriaId})">取消收藏</button>
+          <button class="userBtn" @click="cancelCollect({cafeteriaId})">取消收藏</button>
         </div>
       </div>
     </header>
@@ -33,6 +33,7 @@ import Preview from '@/components/Preview.vue'
 import { useRoute } from 'vue-router'
 import { getCafeteria, getCountersOf, doCollectCafeteria, cancelCollectCafeteria } from '@/api'
 import { useUserStore } from '@/store/user'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'Cafeteria',
@@ -49,6 +50,16 @@ export default {
     const userStore = useUserStore()
     const hasCollectedCafeteria = computed(() => userStore.userCollectCafeterias.includes(cafeteriaId.value))
     console.log('hasCollectedCafeteria:', hasCollectedCafeteria.value)
+    const doCollect = async() => {
+      const res = await doCollectCafeteria({cafeteriaId});
+      ElMessage({ type: 'success', message: res.info });
+      userStore.extendUserInfo('cafeteria', cafeteriaId.value);
+    }
+    const cancelCollect = async() => {
+      const res = await cancelCollectCafeteria({cafeteriaId});
+      ElMessage({ type: 'info', message: res.info });
+      userStore.removeUserInfo('cafeteria', cafeteriaId.value);
+    }
     onMounted(async() => {
       const res = await getCafeteria({cafeteriaId})
       cafeteria.value = res.data
@@ -66,6 +77,8 @@ export default {
       counters,
       cafeteriaId,
       hasCollectedCafeteria,
+      doCollect,
+      cancelCollect
     }
   }
 }

@@ -5,10 +5,10 @@
       <div class="subHeader">
         <h2>柜台名：{{ counter.name }}</h2>
         <div v-if="!hasCollectedCounter">
-          <button class="userBtn" @click="doCollectCounter({counterId})">收藏该柜台</button>
+          <button class="userBtn" @click="doCollect({counterId})">收藏该柜台</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="cancelCollectCounter({counterId})">取消收藏</button>
+          <button class="userBtn" @click="cancelCollect({counterId})">取消收藏</button>
         </div>
       </div>
     </header>
@@ -46,6 +46,16 @@ export default {
     const counterId = computed(() => Number(route.params.counterId))
     const cafeteriaId = computed(() => Number(route.params.cafeteriaId))
     const hasCollectedCounter = computed(() => userStore.userCollectCounters.includes(counterId.value))
+    const doCollect = async() => {
+      const res = await doCollectCounter({counterId});
+      ElMessage({ type: 'success', message: res.info });
+      userStore.extendUserInfo('counter', counterId.value);
+    }
+    const cancelCollect = async() => {
+      const res = await cancelCollectCounter({counterId});
+      ElMessage({ type: 'info', message: res.info });
+      userStore.removeUserInfo('counter', counterId.value);
+    }
     onMounted(async() => {
       try {
         const response = await getDishes({ counterId })
@@ -66,7 +76,9 @@ export default {
       dishes,
       counterId,
       cafeteriaId,
-      hasCollectedCounter
+      hasCollectedCounter,
+      doCollect,
+      cancelCollect,
     }
   },
 }
