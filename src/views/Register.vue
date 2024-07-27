@@ -145,26 +145,27 @@ export default {
         return;
       }
 
+      try {
+        const res = await register({username: username.value, password: password.value, email: email.value});
 
-      const res = await register({ username: username.value, password: password.value, email: email.value });
-      if (res.success) {
-        ElMessage({
-          message: '注册成功，即将跳转到登录页面',
-          type: 'success',
-          duration: 1000,
-        });
+        if (res.success) {
+          ElMessage({
+            message: '注册成功，即将跳转到登录页面',
+            type: 'success',
+            duration: 1000,
+          });
 
-        setTimeout(() => {
-          router.push('/login');
-        }, 1000); // 1秒钟的过渡动画
-      } else {
+          setTimeout(() => {
+            router.push('/login');
+          }, 1000); // 1秒钟的过渡动画
+        }
+      } catch (error) {
         ElMessage({
           message: '注册失败，请检查用户名和邮箱是否已经被注册。',
           type: 'error',
           duration: 1000,
         });
       }
-
     };
 
     const goToLogin = () => {

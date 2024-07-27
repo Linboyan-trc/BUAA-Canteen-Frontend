@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', () => {
 
     const userLogin = async ( email, password ) => {
         const response = await login({ email, password });
+
         if (response.success) {
             // 1. 返回数据
             const { token, refresh_token, username } = response.data;

@@ -7,6 +7,7 @@
         <li><div><router-link to="/all"><i class="fas fa-list"></i> 所有</router-link></div></li>
         <li class="menu-break"><hr></li>
         <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i> 发布</router-link></div></li>
+        <li id="user-about-us"><div><router-link :to="`/team`"><i class="fas fa-address-card"></i> 我们</router-link></div></li>
         <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userName}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
         <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i> 登录</router-link></div></li>
       </ul>
@@ -105,6 +106,13 @@ a {
 #user-item {
   position: absolute;
   bottom: 30px;
+  left: 0;
+  width: 100%;
+}
+
+#user-about-us {
+  position: absolute;
+  bottom: 80px;
   left: 0;
   width: 100%;
 }
