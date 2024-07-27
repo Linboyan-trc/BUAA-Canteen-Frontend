@@ -4,9 +4,9 @@
             <CafeteriaHeader></CafeteriaHeader>
         </header>
         <body>
-            <div class="dishes-preview">
-                <div v-for="dish in dishes" :key="dish.id">
-                    <Preview :name="'dish'" :preview="dish" />
+            <div class="cafeterias-preview">
+                <div v-for="cafeteria in cafeterias" :key="cafeteria.id">
+                    <Preview :name="'cafeteria'" :preview="cafeteria" />
                 </div>
             </div>
         </body>
@@ -17,7 +17,7 @@
 import { ref, onMounted } from 'vue'
 import Preview from '@/components/Preview.vue';
 import CafeteriaHeader from '@/components/CafeteriaHeader.vue'
-import { getAllDishes } from '@/api';
+import { getAllCafeterias } from '@/api';
 
 export default {
     name: 'All',
@@ -26,22 +26,22 @@ export default {
         Preview
     },
     setup() {
-        const dishes = ref([])
+        const cafeterias = ref([])
         
         onMounted(() => {
             fetchAllDishes()
         })
         const fetchAllDishes = async() => {
             try {
-                const response = await getAllDishes()
-                dishes.value = response.data
+                const response = await getAllCafeterias()
+                cafeterias.value = response.data
             } catch (error) {
-                console.error('获取所有菜肴数据失败:', error)
+                console.error('获取所有食堂数据失败:', error)
             }
         }
 
         return {
-            dishes
+            cafeterias
         }
     }
 }
