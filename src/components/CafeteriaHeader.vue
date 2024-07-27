@@ -5,7 +5,7 @@
             <li v-for="cafeteria in cafeterias">
                 <router-link :to="`/cafeteria/${cafeteria.id}`"
                     :class="{ 'active': selectedCafeteria === cafeteria.id }">
-                    {{ cafeteria.name }}食堂
+                    {{ cafeteria.name }}
                 </router-link>
             </li>
         </ul>
@@ -18,6 +18,11 @@ import { onMounted, ref } from 'vue'
 
 export default {
     name: 'CafeteriaHeader',
+    data() {
+        return {
+            
+        }
+    },
     props: {
         selectedCafeteria: Number
     },
@@ -25,11 +30,14 @@ export default {
         const cafeterias = ref([]);
         onMounted(async () => {
             const res = await getAllCafeterias();
-            cafeterias.value = res.data;
+            console.log(res);
+            cafeterias.value = res.data.cafeterias_info;
         })
+        const cnt = cafeterias.value.length
 
         return {
-            cafeterias
+            cafeterias,
+            cnt
         }
     }
 }
@@ -56,6 +64,9 @@ ul {
 li {
     display: inline-block;
     margin-right: 0px;
+    width: 20%;
+    font-size:18px;
+    text-align: center;
 }
 
 a {
@@ -65,6 +76,7 @@ a {
 
 .active {
     background-color: #4274b9;
+    color:white;
 }
 
 @media (hover: hover) {
