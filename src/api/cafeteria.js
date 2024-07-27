@@ -2,51 +2,28 @@ import http from "@/utils/http";
 
 // 获取所有食堂的信息
 export const getAllCafeterias = () => {
-    // return http({
-    //     url: '/cafeteria/get-all-cafeterias',
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     }
-    // })
-    return {
-        "data": [
-            {
-                "id":1,
-                "name": "学院路新北",
-                "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
-                "collectCount": 10,	
-            },
-            {
-                "id":2,
-                "name": "学院路合一",
-                "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
-                "collectCount": 20,
-            }
-        ]
-    }
+    return http({
+        url: '/cafeteria/get-all-cafeterias',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
 }
 
 //获取某食堂的信息
 export const getCafeteria = ({cafeteriaId}) => {
-    // return http({
-    //     url: '/cafeteria/get-cafeteria',
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     data: {
-    //         cafeteriaId
-    //     }
-    // })
-    return {
-        "data": {
-            "id":2,
-            "name": "学院路新北",
-            "img": 'https://img0.baidu.com/it/u=1413542175,232563950&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=333',
-            "collectCount": 10,	
+    console.log(`现在食堂id是是是是${cafeteriaId}`)
+    return http({
+        url: '/cafeteria/get-cafeteria',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        params: {
+            cafeteriaId: Number(cafeteriaId)
         }
-    }
+    })
 }
 
 // 获取某食堂的全部柜台

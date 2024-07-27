@@ -15,23 +15,26 @@ export const login = ({email, password}) => {
     })
 }
 
-export const getUserActionInfo = () => {
-    // return http({
-    //     url: 'user/get-info/',
-    //     method: 'GET',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    // })
-    return {
-        "data": {
-            "collectDishesId": [1, 3],
-            "collectCountersId": [2, 3],
-            "collectCafeteriasId": [1],
-            "ateId": [1, 2, 3]
-        }
-    }
+export const getUserInfo = () => {
+    return http({
+        url: 'user/get-info',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
 }
+
+export const getUserActionInfo = () => {
+    return http({
+        url: 'user/get-user-action-info',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+}
+
 export const refreshAccessToken = (refreshToken) => {
   return http.post('/user/refresh-token', {}, {
     headers: {
@@ -58,15 +61,15 @@ export const register = ({email, username, password}) => {
 }
 
 //登出
-export const logout = ({}) => {
+export const logout = () => {
     return http({
         url: 'user/logout/',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-    })
-}
+    });
+};
 
 //注销账号
 export const deleteAccount = ({}) => {
@@ -82,7 +85,7 @@ export const deleteAccount = ({}) => {
 //更新用户信息（文本）
 export const updateUserInfo = ({username, email, gender, introduction, student_id}) => {
     return http({
-        url: '/user/change-info/',
+        url: '/user/change-info',
         method: 'PUT',
         data: {
             username: username,
@@ -91,14 +94,14 @@ export const updateUserInfo = ({username, email, gender, introduction, student_i
             introduction: introduction,
             student_id: student_id
         }
-    })
+    });
 }
 
 //更新用户头像
 export const updateUserAvatar = ({avatar}) => {
     return http({
-        url: '/user/change-avatar/',
-        method: 'PUT',
+        url: '/user/change-avatar',
+        method: 'POST',
         data: {
             avatar: avatar
         }
