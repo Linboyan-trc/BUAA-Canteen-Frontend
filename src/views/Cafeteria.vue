@@ -82,7 +82,6 @@ export default {
         )
       } catch (error) {
         console.error('收藏食堂失败:', error);
-        ElMessage.error('收藏食堂失败');
       }
     };
 
@@ -97,7 +96,7 @@ export default {
           }
         )
       } catch (error) {
-        ElMessage.error('取消收藏食堂失败');
+        console.error('取消收藏食堂失败:', error);
       }
     };
 

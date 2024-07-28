@@ -4,6 +4,11 @@
     <div class="team-header">
       <img src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/aboutus.png" alt="team-bg" class="team-bg" />
     </div>
+    <img class="tbmx" src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/tbmx.png">
+    <div class="special">
+      <img src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/xc-ava.jpg">
+      <img src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/whaoe.jpg">
+    </div>
     <div class="team-members">
       <a :href="member.github" target="_blank" class="team-member" v-for="member in teamMembers" :key="member.id" :style="{ backgroundImage: `url(${member.bgImage})` }">
         <div class="overlay"></div>
@@ -11,6 +16,7 @@
         <h2>{{ member.name }}</h2>
         <p>{{ member.description1 }}</p>
         <p>{{ member.description2 }}</p>
+        <p>{{ member.description3 }}</p>
       </a>
     </div>
   </div>
@@ -27,6 +33,7 @@ export default {
         name: '🌈',
         description1: '后端开发',
         description2: '部分前端样式设计',
+        description3: 'API测试',
         avatar: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/yyb-ava.jpg',
         bgImage: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/yyb-ava.jpg',
         github: 'https://github.com/yyybbbyyyb'
@@ -36,6 +43,7 @@ export default {
         name: '鱼籽饭',
         description1: '整体前端框架设计与开发',
         description2: '初始数据集收集和整理',
+        description3: 'API设计',
         avatar: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/fzy-ava.jpg',
         bgImage: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/fzy-ava.jpg',
         github: 'https://github.com/zz-orb'
@@ -43,8 +51,9 @@ export default {
       {
         id: 3,
         name: 'Toryn',
-        description1: 'API测试与服务器部署',
+        description1: 'API测试',
         description2: '部分前端样式设计',
+        description3: '服务器部署',
         avatar: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/yrj-ava.jpg',
         bgImage: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/yrj-ava.jpg',
         github: 'https://github.com/Linboyan-trc'
@@ -52,8 +61,9 @@ export default {
       {
         id: 4,
         name: '梧桉',
-        description1: '整体前端框架设计与开发',
-        description2: '初始数据集收集和整理',
+        description1: 'API设计',
+        description2: '整体前端框架设计与开发',
+        description3: '初始数据集收集和整理',
         avatar: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/fzw-ava.jpg',
         bgImage: 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/fzw-ava.jpg',
         github: 'https://github.com/slkfoiw'
@@ -90,11 +100,32 @@ export default {
 }
 
 .team-header {
-  height: 30vh;
+  height: 25vh;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tbmx {
+  width: 90%;
+  height: 5%;
+  object-fit: contain;
+}
+
+.special {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.special img {
+  height: 8vh;
+  width: 8vh;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 20px;
 }
 
 .team-bg {
@@ -104,7 +135,7 @@ export default {
 }
 
 .team-members {
-  height: 70vh;
+  height: 65vh;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 使用 CSS Grid */
   gap: 20px;

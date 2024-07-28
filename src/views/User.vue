@@ -109,7 +109,7 @@
            v-else>
         <div class="dishes-preview">
           <div v-for="post in userPost" :key="post.id">
-            <Preview :name="'dish'" :preview="collect"/>
+            <Preview :name="'dish'" :preview="post"/>
           </div>
         </div>
       </div>
@@ -123,16 +123,16 @@ import Preview from "@/components/Preview.vue";
 import {queryUserPost} from "@/api";
 import EditUserInfoModal from '@/components/EditUserInfoModal.vue';
 import ChangePasswordModal from '@/components/ChangePasswordModal.vue';
-import {useUserStore, } from "@/store/user";
+import {useUserStore} from "@/store/user";
 
 // 加载用户信息
 const userStore = useUserStore();
 const userInfo = ref(userStore.userInfo);
-const userAte = ref(userStore.userAte);
-const userCollectDishes = ref(userStore.userCollectDishes);
-const userCollectCounters = ref(userStore.userCollectCounters);
-const userCollectCafeterias = ref(userStore.userCollectCafeterias);
-const userPost = ref(userStore.userUpload);
+const userAte = ref([]);
+const userCollectDishes = ref([]);
+const userCollectCounters = ref([]);
+const userCollectCafeterias = ref([]);
+const userPost = ref([]);
 
 const getUserInfo = async () => {
   document.title = userInfo.value.username + '的小蓝书';
@@ -180,46 +180,46 @@ const load = async () => {
   if (types === '我的帖子') {
     const offset = userPost.value.length;
     const post = await queryUserPost({user_id, types, offset});
-    if (post.info.length === 0) {
+    if (post.data.info.length === 0) {
       disabled.value = true;
     } else {
-      userPost.value = [...userPost.value, ...post.info];
+      userPost.value = [...userPost.value, ...post.data.info];
       disabled.value = false;
     }
   } else if (types === '吃过') {
     const offset = userAte.value.length;
     const ate = await queryUserPost({user_id, types, offset});
-    if (ate.info.length === 0) {
+    if (ate.data.info.length === 0) {
       disabled.value = true;
     } else {
-      userAte.value = [...userAte.value, ...ate.info];
+      userAte.value = [...userAte.value, ...ate.data.info];
       disabled.value = false;
     }
   } else if (types === '收藏的菜肴') {
     const offset = userCollectDishes.value.length;
     const collect = await queryUserPost({user_id, types, offset});
-    if (collect.info.length === 0) {
+    if (collect.data.info.length === 0) {
       disabled.value = true;
     } else {
-      userCollectDishes.value = [...userCollectDishes.value, ...collect.info];
+      userCollectDishes.value = [...userCollectDishes.value, ...collect.data.info];
       disabled.value = false;
     }
   } else if (types === '收藏的柜台') {
     const offset = userCollectCounters.value.length;
     const collect = await queryUserPost({user_id, types, offset});
-    if (collect.info.length === 0) {
+    if (collect.data.info.length === 0) {
       disabled.value = true;
     } else {
-      userCollectCounters.value = [...userCollectCounters.value, ...collect.info];
+      userCollectCounters.value = [...userCollectCounters.value, ...collect.data.info];
       disabled.value = false;
     }
   } else if (types === '收藏的食堂') {
     const offset = userCollectCafeterias.value.length;
     const collect = await queryUserPost({user_id, types, offset});
-    if (collect.info.length === 0) {
+    if (collect.data.info.length === 0) {
       disabled.value = true;
     } else {
-      userCollectCafeterias.value = [...userCollectCafeterias.value, ...collect.info];
+      userCollectCafeterias.value = [...userCollectCafeterias.value, ...collect.data.info];
       disabled.value = false;
     }
   }

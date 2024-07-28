@@ -38,7 +38,7 @@ export const getUserActionInfo = () => {
 export const refreshAccessToken = (refreshToken) => {
   return http.post('/user/refresh-token', {}, {
     headers: {
-      Authorization: `Bearer ${refreshToken.refresh_token}`,
+      Authorization: `Bearer ` + refreshToken.refreshToken,
     }
   });
 };

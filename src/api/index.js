@@ -45,7 +45,6 @@ export const doCollectCounter = ({ id }) => {
 
 // 用户收藏的食堂
 export const doCollectCafeteria = ({ id }) => {
-    console.log(id)
     return http({
         url: 'user/collect-cafeteria',
         method: 'POST',
@@ -55,7 +54,6 @@ export const doCollectCafeteria = ({ id }) => {
 
 //用户取消收藏帖子
 export const cancelCollectDish = ({ id }) => {
-    console.log(id)
     return http({
         url: 'user/uncollect-post',
         method: 'DELETE',
@@ -169,43 +167,43 @@ export const controlUserCollectOrLike = ({ post_id, operator, type }) => {
 
 //查询用户收藏或吃过
 export const queryUserPost = ({user_id, types, offset}) => {
-    if (types == '收藏的菜肴') {
+    if (types === '收藏的菜肴') {
         return http({
             url: '/user/get-collect-dishes-list',
             method: 'GET',
-            data: {
+            params: {
                 offset
             }
         })
-    } else if (types == '收藏的柜台') {
+    } else if (types === '收藏的柜台') {
         return http({
             url: '/user/get-collect-counters-list',
             method: 'GET',
-            data: {
+            params: {
                 offset
             }
         })
-    } else if (types == '收藏的食堂') {
+    } else if (types === '收藏的食堂') {
         return http({
             url: '/user/get-collect-cafeterias-list',
             method: 'GET',
-            data: {
+            params: {
                 offset
             }
         })
-    } else if (types == '吃过') {
+    } else if (types === '吃过') {
         return http({
             url: '/user/get-ate-list',
             method: 'GET',
-            data: {
+            params: {
                 offset
             }
         })
-    } else if (types == '我的帖子') {
+    } else if (types === '我的帖子') {
         return http({
             url: '/user/get-post-list',
             method: 'GET',
-            data: {
+            params: {
                 offset
             }
         })

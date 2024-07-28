@@ -13,6 +13,7 @@ export const useUserStore = defineStore('user', () => {
     const userUpload = ref([]);
     const headersObj = ref({})
     const token = ref('');
+    const isRefreshing = ref(false);
 
     const userRegister = async ({ email, username, password }) => {
         await register({ email, username, password });
@@ -27,8 +28,7 @@ export const useUserStore = defineStore('user', () => {
 
             // 2. 设置token
             setToken(token);
-            console.log(refresh_token);
-            Cookies.set('refreshToken', refresh_token, { expires: 7 });
+            Cookies.set('myRefreshToken', refresh_token);
 
             // 3. 获取用户个人信息
             await updateUserBaseInfo();
@@ -40,11 +40,6 @@ export const useUserStore = defineStore('user', () => {
             userCollectCounters.value = resp.data.collectCountersId;
             userCollectCafeterias.value = resp.data.collectCafeteriasId;
             userUpload.value = resp.data.uploadPostId;
-            console.log(`用户登录后获取的食物信息ateId:${resp.data.ateId}`);
-            console.log(`用户登录后获取的食物信息collectDishesId:${resp.data.collectDishesId}`);
-            console.log(`用户登录后获取的食物信息collectCountersId:${resp.data.collectCountersId}`);
-            console.log(`用户登录后获取的食物信息collectCafeteriasId:${resp.data.collectCafeteriasId}`);
-            console.log(`用户登录后获取的食物信息uploadPostId:${resp.data.uploadPostId}`);
             return username;
         } else {
             return null;
@@ -116,18 +111,7 @@ export const useUserStore = defineStore('user', () => {
             await logout();
 
             // 清理用户信息和相关状态
-            userInfo.value = {};
-            userCollectDishes.value = [];
-            userCollectCounters.value = [];
-            userCollectCafeterias.value = [];
-            userAte.value = [];
-            userUpload.value = [];
-            token.value = '';
-            headersObj.value = {};
-
-            // 清理本地存储和 cookie
-            localStorage.removeItem('token');
-            document.cookie = `refresh_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+            refreshLocal();
 
             // 返回登出成功信息
             return { info: "成功退出登录" };
@@ -143,7 +127,21 @@ export const useUserStore = defineStore('user', () => {
         }
     };
 
-    
+    const refreshLocal = () => {
+        userInfo.value = {};
+        userCollectDishes.value = [];
+        userCollectCounters.value = [];
+        userCollectCafeterias.value = [];
+        userAte.value = [];
+        userUpload.value = [];
+        token.value = '';
+        headersObj.value = {};
+
+        // 清理本地存储和 cookie
+        localStorage.removeItem('token');
+        Cookies.remove('myRefreshToken');
+    }
+
     const changeInfo = ({username, email, gender, introduction, avatar}) => {
         userInfo.value.username = username;
         userInfo.value.email = email;
@@ -155,9 +153,17 @@ export const useUserStore = defineStore('user', () => {
 
     const refreshAccessTokenHandler = async () => {
         try {
-            const refreshToken = Cookies.get('refreshToken');
-            const response = await refreshAccessToken({ refresh_token: refreshToken }); // 传递 refresh_token 到请求体中
+            const refreshToken = Cookies.get('myRefreshToken');
+            isRefreshing.value = true;
+            const response = await refreshAccessToken({ refreshToken: refreshToken }); // 传递 refresh_token 到请求体中
             setToken(response.data.token);
+            if (userInfo.value.username == null) {
+                await updateUserBaseInfo();
+            }
+            ElMessage({
+                type: 'success',
+                message: userInfo.value.username + `欢迎回来`,
+            });
         } catch (error) {
             console.error('刷新token失败:', error);
         }
@@ -173,6 +179,7 @@ export const useUserStore = defineStore('user', () => {
         userInfo,
         userLogin,
         userLogout,
+        refreshLocal,
         userRegister,
         updateUserBaseInfo,
         extendUserInfo,

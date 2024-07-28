@@ -109,8 +109,6 @@ const submitForm = async () => {
             return;
         }
 
-        console.log("hhhhh")
-        console.log(formData.value.avatar);
 
         // 更新用户头像（如果用户上传了新头像）
         if (formData.value.avatar) {
@@ -139,8 +137,6 @@ const submitForm = async () => {
             );
             return;
           }
-
-          console.log(formData.value.avatar)
 
           const avatarResponse = await updateUserAvatar(formData.value.avatar);
 
