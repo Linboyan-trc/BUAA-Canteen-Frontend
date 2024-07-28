@@ -27,18 +27,22 @@ export default {
     const afterDoComment = (comment) => Detail.afterDoComment(comment);
 
     const closeDetail = () => {
+      console.log(detail.value);
       router.back();
     };
 
     const deleteDetail = async () => {
-      console.log("Delete detail:", detail.value.user.id);
-      console.log("User id:", userId.value);
-      console.log("userInfor:", userStore.userInfo);
       try {
-        const response = await postDelete({ id })
+        const response = await postDelete({ id: detail.value.id });
         const res = response.data
-        ElMessage({ type: 'success', message: res.success })
-        router.push('/home');
+        ElMessage(
+          {
+            message: res.data.info,
+            type: 'success',
+            duration: 2000
+          }
+        )
+        await router.push('/home');
       } catch (error) {
         ElMessage.error('删除帖子失败');
         console.error("Failed to delete post:", error);
@@ -59,7 +63,7 @@ export default {
         <Close />
       </el-icon>
     </div>
-    <el-button v-if="detailPublishUserId === userStore.userInfo.id" type="danger" @click="deleteDetail" class="delete-button">
+    <el-button v-if="detailPublishUserId === userStore.userInfo.userId" type="danger" @click="deleteDetail" class="delete-button">
       删除帖子
     </el-button>
   </div>
@@ -76,6 +80,7 @@ export default {
   border-radius: 0.8rem;
   width: 1200px;
   height: 600px;
+  z-index: 1000;
 }
 
 .close-button {
@@ -89,6 +94,7 @@ export default {
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   font-size: 2.5rem;
+  z-index: 1000;
 }
 
 .close-button:hover {
@@ -108,5 +114,6 @@ export default {
   font-weight: bold;
   background-color: #4274b9;
   border-color: #4274b9;
+  z-index: 1000;
 }
 </style>

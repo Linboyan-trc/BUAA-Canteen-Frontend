@@ -91,7 +91,10 @@ export default defineComponent({
         const res = response.data;
         ElMessage({ type: 'success', message: res.info });
       }
+      content.value = '';
       comments.value = [];
+      emit('afterDoComment');
+
       loadComments();
     };
 

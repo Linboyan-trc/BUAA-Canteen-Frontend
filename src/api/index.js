@@ -236,7 +236,7 @@ export const uploadPost = (data) => {
 
 export const postDelete = ({ id }) => {
     return http({
-        url: '/post/delete/',
+        url: 'post/delete',
         method: 'POST',
         data: {
             id

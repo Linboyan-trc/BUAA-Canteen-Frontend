@@ -16,8 +16,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faUtensils } from '@fortawesome/free-solid-svg-icons';
 
-axios.defaults.baseURL = import.meta.env.VUE_APP_API_BASE_URL || 'http://localhost:8000/api';
-
 const app = createApp(App)
 
 for (const name in ElIcons) {
