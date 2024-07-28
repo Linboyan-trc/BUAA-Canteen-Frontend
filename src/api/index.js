@@ -8,7 +8,7 @@ export { login, getUserActionInfo, refreshAccessToken, register, logout, deleteA
 // 主评
 export const doComment = ({ data }) => {
     return http({
-        url: ' comment/main',
+        url: 'comment/main',
         method: 'POST',
         data: data
     })

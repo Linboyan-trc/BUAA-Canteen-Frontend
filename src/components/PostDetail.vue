@@ -4,7 +4,6 @@ import { defineComponent, onMounted, ref, defineEmits } from "vue";
 import { doComment, doReplyComment, doCollectDish, cancelCollectDish, doAte, cancelAte, loadReplies, getComment } from "@/api/index";
 import { ElMessage, ElButton, ElInput } from "element-plus";
 import { useUserStore } from "@/store/user";
-import { getCurrentTime } from "@/utils/getTime";
 import infiniteScroll from 'vue-infinite-scroll'; // Import the infinite-scroll directive
 
 export default defineComponent({
@@ -74,17 +73,6 @@ export default defineComponent({
     const commentInput = ref(null);
 
     const sendComment = async (post, to) => {
-      const info = [
-        {
-          id: 0,
-          user: userStore.userInfo,
-          content: content.value,
-          createTime: getCurrentTime(),
-          replyCount: 0,
-          replies: []
-        }
-      ];
-
       if (to === 0 || to === '0') {
         const data = {
           post_id: post.id,
@@ -93,8 +81,6 @@ export default defineComponent({
         const response = await doComment({ data });
         const res = response.data;
         ElMessage({ type: 'success', message: res.info });
-        info[0].id = res.id;
-        comments.value = [...comments.value, ...info];
       } else {
         const data = {
           post_id: post.id,
@@ -104,12 +90,9 @@ export default defineComponent({
         const response = await doReplyComment({ data });
         const res = response.data;
         ElMessage({ type: 'success', message: res.info });
-        const comment = comments.value.find(item => item.id === to);
-        comment.replies = [...comment.replies, ...info];
-        clearReply();
       }
-      emit('afterDoComment');
-      content.value = '';
+      comments.value = [];
+      loadComments();
     };
 
     const commentMain = item => {
@@ -119,18 +102,16 @@ export default defineComponent({
     };
 
     const loadReply = async (item) => {
-      // 确保 item.replies 是一个数组
       if (!Array.isArray(item.replies)) {
         item.replies = [];
       }
       const offset = item.replies.length;
       const id = item.id;
-      const response = loadReplies({ id, offset });
+      const response = await loadReplies({ id, offset });
       const res = response.data;
       item.replies = [...item.replies, ...res.info];
       item.replyCount -= res.count;
     };
-
 
     const clearReply = () => {
       commentInput.value.input.placeholder = `说点什么....`;
@@ -139,7 +120,7 @@ export default defineComponent({
 
     const disabled = ref(true);
 
-    const load = async () => {
+    const loadComments = async () => {
       disabled.value = true;
       const offset = comments.value.length;
       const id = props.detail.id;
@@ -153,7 +134,7 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => load());
+    onMounted(() => loadComments());
 
     return {
       comments,
@@ -169,7 +150,7 @@ export default defineComponent({
       loadReply,
       clearReply,
       disabled,
-      load
+      loadComments
     };
   },
   directives: {
@@ -177,6 +158,7 @@ export default defineComponent({
   }
 });
 </script>
+
 
 
 <template>
@@ -219,7 +201,7 @@ export default defineComponent({
               <!-- 卡片内容结束 -->
               <hr />
               <!-- 评论区 -->
-              <div class="comments" v-if="comments" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
+              <div class="comments" v-if="comments" v-infinite-scroll="loadComments" :infinite-scroll-disabled="disabled">
                 <el-empty description="现在还没有评论" v-if="comments.length === 0" />
                 <div v-else class="commentBox">
                   <div class="commentTitle" style="margin-bottom: 5px;">共{{ detail.commentCount }}条评论</div>
@@ -310,6 +292,7 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .content {

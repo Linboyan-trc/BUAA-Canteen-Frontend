@@ -6,7 +6,6 @@ export const controlDetail = () => {
   const detail = ref({});
   const comments = ref([]);
   const content = ref('');
-  const userStore = useUserStore();
 
   const afterDoComment = () => {
     detail.value.commentCount += 1;
@@ -15,7 +14,6 @@ export const controlDetail = () => {
   const getDetail = async (id) => {
     const response = await postDetail({id});
     detail.value = response.data;
-    console.log(detail.value);
     document.title = detail.value.title;
   };
 

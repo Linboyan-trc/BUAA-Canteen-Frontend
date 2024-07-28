@@ -6,6 +6,7 @@ import { controlDetail } from "@/store/controlDetail";
 import { useUserStore } from "@/store/user";
 import { Close } from '@element-plus/icons-vue';
 import { postDelete } from '@/api/index';
+import { ElMessage } from 'element-plus';
 
 export default {
   name: "Detail",
@@ -36,7 +37,6 @@ export default {
       try {
         const response = await postDelete({ id })
         const res = response.data
-        console.log("Delete post response:", response);
         ElMessage({ type: 'success', message: res.success })
         router.push('/home');
       } catch (error) {
