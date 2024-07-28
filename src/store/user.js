@@ -71,7 +71,10 @@ export const useUserStore = defineStore('user', () => {
             userCollectCounters.value = [...userCollectCounters.value, id];
         } else if (type === 'cafeteria') {
             userCollectCafeterias.value = [...userCollectCafeterias.value, id];
-        } else {
+        } else if (type === 'upload') {
+            userUpload.value = [...userUpload.value, id];
+        }
+        else {
             console.log("extendUserInfo失败: 没有这个类型")
         }
     };
@@ -97,6 +100,13 @@ export const useUserStore = defineStore('user', () => {
             if (index !== -1) {
                 userCollectCafeterias.value.splice(index, 1);
             }
+        } else if (type === 'upload') {
+            const index = userUpload.value.indexOf(id);
+            if (index !== -1) {
+                userUpload.value.splice(index, 1);
+            }
+        } else {
+            console.log("removeUserInfo失败: 没有这个类型")
         }
     };
 

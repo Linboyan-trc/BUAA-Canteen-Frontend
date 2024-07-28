@@ -34,10 +34,9 @@ export default {
     const deleteDetail = async () => {
       try {
         const response = await postDelete({ id: detail.value.id });
-        const res = response.data
         ElMessage(
           {
-            message: res.data.info,
+            message: response.data.info,
             type: 'success',
             duration: 2000
           }

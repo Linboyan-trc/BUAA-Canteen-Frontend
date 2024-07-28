@@ -8,10 +8,10 @@
       <div class="subHeader">
         <h2>食堂名：{{ cafeteria.name }}</h2>
         <div v-if="!hasCollectedCafeteria">
-          <button class="userBtn" @click="doCollectCafeteria({cafeteriaId})">收藏该食堂</button>
+          <button class="userBtn" @click="collectCafeteria(cafeteriaId)">收藏该食堂</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="cancelCollectCafeteria({cafeteriaId})">取消收藏</button>
+          <button class="userBtn" @click="noCollectCafeteria(cafeteriaId)">取消收藏</button>
         </div>
       </div>
     </header>
@@ -33,6 +33,7 @@ import Preview from '@/components/Preview.vue';
 import { useRoute } from 'vue-router';
 import { getCafeteria, getCountersOf, doCollectCafeteria, cancelCollectCafeteria } from '@/api';
 import { useUserStore } from '@/store/user';
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'Cafeteria',
@@ -69,11 +70,44 @@ export default {
       fetchCafeteriaData(newId);
     });
 
+    const collectCafeteria = async (id) => {
+      try {
+        await doCollectCafeteria({ id: id });
+        userStore.extendUserInfo('cafeteria', id);
+        ElMessage(
+          {
+            message: '收藏食堂成功',
+            type: 'success'
+          }
+        )
+      } catch (error) {
+        console.error('收藏食堂失败:', error);
+        ElMessage.error('收藏食堂失败');
+      }
+    };
+
+    const noCollectCafeteria = async (id) => {
+      try {
+        await cancelCollectCafeteria({ id: id });
+        userStore.removeUserInfo('cafeteria', id);
+        ElMessage(
+          {
+            message: '取消收藏食堂成功',
+            type: 'success'
+          }
+        )
+      } catch (error) {
+        ElMessage.error('取消收藏食堂失败');
+      }
+    };
+
     return {
       cafeteria,
       counters,
       cafeteriaId,
-      hasCollectedCafeteria
+      hasCollectedCafeteria,
+      collectCafeteria,
+      noCollectCafeteria
     };
   }
 };

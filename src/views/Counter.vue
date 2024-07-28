@@ -5,10 +5,10 @@
       <div class="subHeader">
         <h2>柜台名：{{ counter.name }}</h2>
         <div v-if="!hasCollectedCounter">
-          <button class="userBtn" @click="doCollectCounter({counterId})">收藏该柜台</button>
+          <button class="userBtn" @click="collectCounter(counterId)">收藏该柜台</button>
         </div>
         <div v-else>
-          <button class="userBtn" @click="cancelCollectCounter({counterId})">取消收藏</button>
+          <button class="userBtn" @click="noCollectCounter(counterId)">取消收藏</button>
         </div>
       </div>
     </header>
@@ -30,6 +30,7 @@ import CafeteriaHeader from '@/components/CafeteriaHeader.vue';
 import Preview from '@/components/Preview.vue';
 import { getCounter, getDishes, doCollectCounter, cancelCollectCounter } from '@/api';
 import { useUserStore } from '@/store/user';
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'Counter',
@@ -75,12 +76,44 @@ export default {
       fetchDishesData(newId);
     });
 
+    const collectCounter = async (id) => {
+      try {
+        await doCollectCounter({id: id});
+        userStore.extendUserInfo('counter', id);
+        ElMessage(
+          {
+            message: '收藏柜台成功',
+            type: 'success'
+          }
+        )
+      } catch (error) {
+        console.error('收藏柜台失败:', error);
+      }
+    };
+
+    const noCollectCounter = async (id) => {
+      try {
+        await cancelCollectCounter({id: id});
+        userStore.removeUserInfo('counter', id);
+        ElMessage(
+          {
+            message: '取消收藏柜台成功',
+            type: 'success'
+          }
+        )
+      } catch (error) {
+        console.error('取消收藏柜台失败:', error);
+      }
+    };
+
     return {
       counter,
       dishes,
       cafeteriaId,
       counterId,
-      hasCollectedCounter
+      hasCollectedCounter,
+      collectCounter,
+      noCollectCounter
     };
   },
 };

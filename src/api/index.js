@@ -25,23 +25,19 @@ export const doReplyComment = ({ data }) => {
 
 // 用户收藏帖子
 export const doCollectDish = ({ id }) => {
-    // return http({
-    //     url: 'user/collect-post/',
-    //     method: 'POST',
-    //     data: {id}
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": "成功添加收藏"
+    return http({
+        url: 'user/collect-post',
+        method: 'POST',
+        data: {
+            'post_id': id
         }
-    }
+    })
 }
 
 // 用户收藏的柜台
 export const doCollectCounter = ({ id }) => {
     return http({
-        url: 'user/collect-counter/',
+        url: 'user/collect-counter',
         method: 'POST',
         data: { id }
     })
@@ -49,8 +45,9 @@ export const doCollectCounter = ({ id }) => {
 
 // 用户收藏的食堂
 export const doCollectCafeteria = ({ id }) => {
+    console.log(id)
     return http({
-        url: 'user/collect-cafeteria/',
+        url: 'user/collect-cafeteria',
         method: 'POST',
         data: { id }
     })
@@ -58,23 +55,20 @@ export const doCollectCafeteria = ({ id }) => {
 
 //用户取消收藏帖子
 export const cancelCollectDish = ({ id }) => {
-    // return http({
-    //     url: 'user/uncollect-post/',
-    //     method: 'DELETE',
-    //     data: {id}
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": "成功取消收藏"
+    console.log(id)
+    return http({
+        url: 'user/uncollect-post',
+        method: 'DELETE',
+        data: {
+            'post_id': id
         }
-    }
+    })
 }
 
 //用户取消收藏的柜台
 export const cancelCollectCounter = ({ id }) => {
     return http({
-        url: 'user/uncollect-counter/',
+        url: 'user/uncollect-counter',
         method: 'DELETE',
         data: { id }
     })
@@ -83,7 +77,7 @@ export const cancelCollectCounter = ({ id }) => {
 //用户取消收藏的食堂
 export const cancelCollectCafeteria = ({ id }) => {
     return http({
-        url: 'user/uncollect-cafeteria/',
+        url: 'user/uncollect-cafeteria',
         method: 'DELETE',
         data: { id }
     })
@@ -91,32 +85,24 @@ export const cancelCollectCafeteria = ({ id }) => {
 
 //用户吃过菜品
 export const doAte = ({ id }) => {
-    // return http({
-    //     url: 'user/ate/',
-    //     method: 'POST',
-    //     data: {id}
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": "成功添加吃过"
+    return http({
+        url: 'user/ate',
+        method: 'POST',
+        data: {
+            'post_id': id
         }
-    }
+    })
 }
 
 //用户取消吃过菜品
 export const cancelAte = ({ id }) => {
-    // return http({
-    //     url: 'user/no-ate/',
-    //     method: 'DELETE',
-    //     data: {id}
-    // })
-    return {
-        "success": true,
-        "data": {
-            "info": "成功取消吃过"
+    return http({
+        url: 'user/no-ate',
+        method: 'DELETE',
+        data: {
+            'post_id': id
         }
-    }
+    })
 }
 
 export const getComment = ({ id, offset }) => {

@@ -10,11 +10,11 @@
                     <img :src="dish.user.avatar" alt="用户头像" class="user-avatar" />
                     <span class="user-name">{{ dish.user.username }}</span>
                 </div>
-                <div class="dish-collectCount">
-                    <span>{{ dish.collectCount }} 收藏</span>
-                </div>
                 <div class="dish-ateCount">
                     <span>{{ dish.ateCount }} 吃过</span>
+                </div>
+                <div class="dish-collectCount">
+                    <span>{{ dish.collectCount }} 收藏</span>
                 </div>
             </div>
         </div>

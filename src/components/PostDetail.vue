@@ -41,7 +41,7 @@ export default defineComponent({
 
       if (type === 'ate') {
         const operator = checkEat(dish_id);
-        const response = operator ? await cancelAte(dish_id) : await doAte(dish_id);
+        const response = operator ? await cancelAte({id: dish_id}) : await doAte({id: dish_id});
         const res = response.data;
         if (operator) {
           userStore.removeUserInfo(type, dish_id);
@@ -54,7 +54,7 @@ export default defineComponent({
         }
       } else if (type === 'collect') {
         const operator = checkCollect(dish_id);
-        const response = operator ? await cancelCollectDish(dish_id) : await doCollectDish(dish_id);
+        const response = operator ? await cancelCollectDish({id: dish_id}) : await doCollectDish({id: dish_id});
         const res = response.data;
         if (operator) {
           detail.collectCount--;
