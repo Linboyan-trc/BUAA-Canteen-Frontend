@@ -1,6 +1,6 @@
 <script>
 import { useRouter } from "vue-router";
-import { useUserStore } from "@/store/user.js";
+import { useUserStore} from "@/store/user.js";
 import { computed, onBeforeMount, ref } from "vue";
 import { Back, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
@@ -8,6 +8,7 @@ import { getCurrentTime } from "@/utils/getTime";
 import { uploadPost } from "@/api";
 import { getAllCafeterias, getCountersOf } from "@/api/cafeteria";
 import PostDetail from "@/components/PostDetail.vue";
+import { onMounted } from "vue";
 
 export default {
   name: "Upload",
@@ -19,12 +20,16 @@ export default {
   setup() {
     const router = useRouter()
     const userStore = useUserStore()
+
+     onMounted(() => {
+       console.log(userStore.headers);
+    });
     const checkLogin = () => {
       if (!userStore.userInfo.username) {
         ElMessage({
           message: '请先登录',
-          type: 'warning', // 提示类型可以是 'success', 'warning', 'info', 'error'
-          duration: 2000, // 提示消息显示的时间，单位是毫秒
+          type: 'warning',
+          duration: 2000,
         });
         router.replace('/login')
       }
@@ -61,10 +66,9 @@ export default {
     const onError = async (error) => {
       ElMessage({
         type: 'warning',
-        message: '图片上传失败'
+        message: '图片上传失败',
+        duration: 3000
       })
-      const userStore = useUserStore();
-      await userStore.userLogout()
       await router.replace('/')
     }
 
@@ -88,9 +92,7 @@ export default {
 
     // 图片上传前处理
     const beforeUpload = (rawFile) => {
-      Post.value = {
-        id: PostId.value
-      }
+      Post.value.id = PostId.value
     }
 
     // 执行上传
@@ -132,10 +134,14 @@ export default {
         dish_name: dishName.value,
         dish_price: dishPrice.value,
       }
-      const response = await uploadPost(data)
-      const res = response.data;
-      PostId.value = res.info
-      upload.value.submit()
+      try {
+        const response = await uploadPost(data);
+        PostId.value = response.data.id
+        upload.value.submit()
+      } catch (error) {
+        ElMessage.error('发布失败:', error);
+        return;
+      }
       ElMessage({ type: 'success', message: '发布成功，3秒后跳转到主页' })
       setTimeout(() => {
         router.replace('/')
@@ -155,6 +161,7 @@ export default {
 
     // 根据食堂ID获取所有窗口信息
     const fetchCounters = async (id) => {
+      selectedCounter.value = null;
       try {
         const response = await getCountersOf({ cafeteriaId: id });
         counters.value = response.data.info;
@@ -265,10 +272,21 @@ export default {
       <div class="leftArea">
         <h1 style="text-align: center">上传图片</h1>
         <div class="img-container">
-          <el-upload v-model:file-list="fileList" action="http://localhost:8000/post/upload/images" class="preview"
-            ref="upload" list-type="picture-card" multiple :headers="userStore.headersObj" :limit="9"
-            :on-preview="handlePictureCardPreview" :on-change="handleChange" :auto-upload="false"
-            :on-exceed="handleExceed" :data="Post" :before-upload="beforeUpload" :on-error="onError">
+          <el-upload
+              v-model:file-list="fileList"
+              action="http://localhost:8000/post/upload/images"
+              class="preview"
+              ref="upload"
+              list-type="picture-card" multiple
+              :headers="userStore.headers"
+              :limit="9"
+              :on-preview="handlePictureCardPreview"
+              :on-change="handleChange"
+              :auto-upload="false"
+              :on-exceed="handleExceed"
+              :data="Post"
+              :before-upload="beforeUpload"
+              :on-error="onError">
             <el-icon>
               <Plus />
             </el-icon>
@@ -295,7 +313,7 @@ export default {
           <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text"
             style="margin-top: 20px;width: 80%;margin-left: 50px;" />
           
-          <el-input v-model="dishName" maxlength="50" placeholder="请输入菜品名称" show-word-limit type="text"
+          <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text"
             style="margin-top: 20px;width: 80%;margin-left: 50px;" />
           
           <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice" 

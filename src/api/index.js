@@ -214,7 +214,13 @@ export const uploadPost = (data) => {
     return http({
         url: 'post/upload/info',
         method: 'POST',
-        data: data
+        data: {
+            'counter_id': data.counter_id,
+            'dish_name': data.dish_name,
+            'dish_price': data.dish_price,
+            'post_title': data.title,
+            'post_content': data.content,
+        }
     })
 }
 

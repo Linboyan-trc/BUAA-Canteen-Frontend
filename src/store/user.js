@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import {login, register, refreshAccessToken, logout, getUserInfo, getUserActionInfo} from "@/api/user.js";
 import { ElMessage } from 'element-plus';
 import Cookies from 'js-cookie';
@@ -11,9 +11,7 @@ export const useUserStore = defineStore('user', () => {
     const userCollectCafeterias = ref([]);
     const userAte = ref([]);
     const userUpload = ref([]);
-    const headersObj = ref({})
     const token = ref('');
-    const isRefreshing = ref(false);
 
     const userRegister = async ({ email, username, password }) => {
         await register({ email, username, password });
@@ -135,7 +133,6 @@ export const useUserStore = defineStore('user', () => {
         userAte.value = [];
         userUpload.value = [];
         token.value = '';
-        headersObj.value = {};
 
         // 清理本地存储和 cookie
         localStorage.removeItem('token');
@@ -154,7 +151,6 @@ export const useUserStore = defineStore('user', () => {
     const refreshAccessTokenHandler = async () => {
         try {
             const refreshToken = Cookies.get('myRefreshToken');
-            isRefreshing.value = true;
             const response = await refreshAccessToken({ refreshToken: refreshToken }); // 传递 refresh_token 到请求体中
             setToken(response.data.token);
             if (userInfo.value.username == null) {
@@ -169,9 +165,14 @@ export const useUserStore = defineStore('user', () => {
         }
     };
 
+    const headers = computed(() => {
+      return {
+        Authorization: `Bearer ${token.value}`,
+      };
+    });
+
     const setToken = (newToken) => {
         token.value = newToken;
-        headersObj.value = { Authorization: `Bearer ${newToken}` };
         localStorage.setItem('token', newToken);
     };
     
@@ -190,12 +191,12 @@ export const useUserStore = defineStore('user', () => {
         userCollectCafeterias,
         userAte,
         userUpload,
-        headersObj,
 
         // 以下是登陆认证等功能函数
         token,
         refreshAccessTokenHandler,
-        setToken
+        setToken,
+        headers,
     };
 
 }, {
