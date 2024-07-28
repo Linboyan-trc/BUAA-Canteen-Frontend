@@ -228,7 +228,7 @@ export const queryUserPost = ({user_id, types, offset}) => {
 
 export const uploadPost = (data) => {
     return http({
-        url: 'post/upload/info/',
+        url: 'post/upload/info',
         method: 'POST',
         data: data
     })

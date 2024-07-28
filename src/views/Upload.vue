@@ -182,7 +182,7 @@ export default {
       <div class="leftArea">
         <h1 style="text-align: center">上传图片</h1>
         <div class="img-container">
-          <el-upload v-model:file-list="fileList" action="http://localhost:8000/post/upload/images/" class="preview" ref="upload"
+          <el-upload v-model:file-list="fileList" action="http://localhost:8000/post/upload/images" class="preview" ref="upload"
             list-type="picture-card" multiple :headers="userStore.headersObj" :limit="9"
             :on-preview="handlePictureCardPreview" :on-change="handleChange" :auto-upload="false"
             :on-exceed="handleExceed" :data="Post" :before-upload="beforeUpload" :on-error="onError">

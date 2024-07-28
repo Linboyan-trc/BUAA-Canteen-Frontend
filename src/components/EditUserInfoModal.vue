@@ -91,7 +91,7 @@ const changeAvatar = () => {
 }
 
 const submitForm = async () => {
-    try {
+  try {
         // 更新用户信息（文本）
         const userInfoResponse = await updateUserInfo({
             username: formData.value.username,
@@ -109,20 +109,49 @@ const submitForm = async () => {
             return;
         }
 
+        console.log("hhhhh")
+        console.log(formData.value.avatar);
+
         // 更新用户头像（如果用户上传了新头像）
         if (formData.value.avatar) {
-            const formDataAvatar = new FormData();
-            formDataAvatar.append('avatar', formData.value.avatar);
-            const avatarResponse = await updateUserAvatar(formDataAvatar);
+          const allowedTypes = ['image/jpeg', 'image/png']; // 可接受的图片类型
+          const maxSize = 2; // 最大文件大小，单位：MB
+          const file = formData.value.avatar;
 
-            if (!avatarResponse.success) {
-                ElMessage({
-                    message: '更新头像失败，请稍后重试。',
-                    type: 'error',
-                    duration: 2000
-                });
-                return;
-            }
+          if (!allowedTypes.includes(file.type)) {
+            ElMessage(
+              {
+                message: '请上传正确的图片文件!',
+                type: 'warning',
+                duration: 2000
+              }
+            );
+            return;
+          }
+
+          if (file.size / 1024 / 1024 > maxSize) {
+            ElMessage(
+              {
+                message: `文件大小最多${maxSize}MB!`,
+                type: 'warning',
+                duration: 2000
+              }
+            );
+            return;
+          }
+
+          console.log(formData.value.avatar)
+
+          const avatarResponse = await updateUserAvatar(formData.value.avatar);
+
+          if (!avatarResponse.success) {
+            ElMessage({
+              message: '更新头像失败，请稍后重试。',
+                type: 'error',
+                duration: 2000
+            });
+            return;
+          }
         }
 
         ElMessage({
@@ -137,7 +166,7 @@ const submitForm = async () => {
     } catch (error) {
         console.error('更新失败:', error);
         ElMessage({
-            message: '更新失败: 请检查用户名格式，或者用户名或邮箱已存在',
+            message: '更新失败：请检查用户名格式，或者用户名或邮箱已存在',
             type: 'error',
             duration: 2000
         });

@@ -97,15 +97,19 @@ export const updateUserInfo = ({username, email, gender, introduction}) => {
 }
 
 //更新用户头像
-export const updateUserAvatar = ({avatar}) => {
+export const updateUserAvatar = (avatar) => {
+    const formData = new FormData();
+    formData.append('avatar', avatar);
+
     return http({
         url: '/user/change-avatar',
         method: 'POST',
-        data: {
-            avatar: avatar
+        data: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data'
         }
-    })
-}
+    });
+};
 
 //更新用户密码
 export const updateUserPassword = ({oldPassword, newPassword}) => {

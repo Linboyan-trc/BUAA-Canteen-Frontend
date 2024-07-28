@@ -25,12 +25,13 @@
 
 <script>
 import { defineComponent } from 'vue';
-import DishPreview from './preview/DishPreview.vue';
-import CounterPreview from './preview/CounterPreview.vue';
-import CafeteriaPreview from './preview/CafeteriaPreview.vue';
+import DishPreview from "@/components/preview/DishPreview.vue";
+import CounterPreview from "@/components/preview/CounterPreview.vue";
+import CafeteriaPreview from "@/components/preview/CafeteriaPreview.vue";
 
 export default defineComponent({
     name: 'Preview',
+  components: {CafeteriaPreview, CounterPreview, DishPreview},
     props: {
         name: {
             type: String,
