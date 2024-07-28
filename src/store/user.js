@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', () => {
         await register({ email, username, password });
     };
 
-    const userLogin = async ( email, password ) => {
+    const userLogin = async (email, password) => {
         const response = await login({ email, password });
 
         if (response.success) {

@@ -6,6 +6,7 @@ import { Back, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { getCurrentTime } from "@/utils/getTime";
 import { uploadPost } from "@/api";
+import { getAllCafeterias, getCountersOf } from "@/api/cafeteria";
 import PostDetail from "@/components/PostDetail.vue";
 
 export default {
@@ -29,7 +30,10 @@ export default {
       }
     }
 
-    onBeforeMount(() => checkLogin())
+    onBeforeMount(() => {
+      checkLogin()
+      fetchCafeterias()
+    })
 
     const fileList = ref([])
     const fileListUrl = computed(() => fileList.value.map(item => item.url))
@@ -40,6 +44,12 @@ export default {
     const postData = ref({})
     const Post = ref({})
     const PostId = ref(0)
+    const cafeterias = ref([]);
+    const counters = ref([]);
+    const selectedCafeteria = ref(null);
+    const selectedCounter = ref(null);
+    const dishName = ref('');
+    const dishPrice = ref('');
 
     const handlePictureCardPreview = (uploadFile) => {
       dialogImageUrl.value = uploadFile.url
@@ -97,10 +107,30 @@ export default {
         )
         return
       }
+      if (!selectedCafeteria.value) {
+        ElMessage.warning('请选择食堂');
+        return;
+      }
+      if (!selectedCounter.value) {
+        ElMessage.warning('请选择窗口');
+        return;
+      }
+      if (dishName.value === '') {
+        ElMessage.warning('请输入菜品名称');
+        return;
+      }
+      if (dishPrice.value === '') {
+        ElMessage.warning('请输入菜品价格');
+        return;
+      }
       const data = {
         title: title.value,
         content: content.value,
         user_id: userStore.userInfo.id,
+        cafeteria_id: selectedCafeteria.value,
+        counter_id: selectedCounter.value,
+        dish_name: dishName.value,
+        dish_price: dishPrice.value,
       }
       const response = await uploadPost(data)
       const res = response.data;
@@ -112,6 +142,26 @@ export default {
       }, 3000)
 
     }
+
+    // 获取所有食堂信息
+    const fetchCafeterias = async () => {
+      try {
+        const response = await getAllCafeterias();
+        cafeterias.value = response.data.info;
+      } catch (error) {
+        ElMessage.error('获取食堂信息失败');
+      }
+    };
+
+    // 根据食堂ID获取所有窗口信息
+    const fetchCounters = async (id) => {
+      try {
+        const response = await getCountersOf({ cafeteriaId: id });
+        counters.value = response.data.info;
+      } catch (error) {
+        ElMessage.error('获取柜台数据失败:', error);
+      }
+    };
 
     // 超过最大上传图片数处理
     const handleExceed = () => {
@@ -138,16 +188,41 @@ export default {
         )
         return
       }
+      if (!selectedCafeteria.value) {
+        ElMessage.warning('请选择食堂');
+        return;
+      }
+      if (!selectedCounter.value) {
+        ElMessage.warning('请选择窗口');
+        return;
+      }
+      if (dishName.value === '') {
+        ElMessage.warning('请输入菜品名称');
+        return;
+      }
+      if (dishPrice.value === '') {
+        ElMessage.warning('请输入菜品价格');
+        return;
+      }
       postData.value = {
         id: 1,
         title: title.value,
         content: content.value,
         user: userStore.userInfo,
         imgs: fileListUrl.value,
-        createTime: getCurrentTime()
+        createTime: getCurrentTime(),
+        dish_name: dishName.value,
+        dish_price: dishPrice.value,
       }
       show.value = true
     }
+    const validatePrice = (value) => {
+    const regex = /^\d*\.?\d*$/;
+    if (!regex.test(value)) {
+      ElMessage.warning('请输入有效的价格');
+      dishPrice.value = dishPrice.value.slice(0, -1);
+    }
+  }
     const empty = []
     return {
       fileList,
@@ -170,7 +245,15 @@ export default {
       close,
       MakePrev,
       empty,
-      userStore
+      userStore,
+      cafeterias,
+      counters,
+      selectedCafeteria,
+      selectedCounter,
+      fetchCounters,
+      dishName,
+      dishPrice,
+      validatePrice
     }
   }
 };
@@ -182,8 +265,8 @@ export default {
       <div class="leftArea">
         <h1 style="text-align: center">上传图片</h1>
         <div class="img-container">
-          <el-upload v-model:file-list="fileList" action="http://localhost:8000/post/upload/images" class="preview" ref="upload"
-            list-type="picture-card" multiple :headers="userStore.headersObj" :limit="9"
+          <el-upload v-model:file-list="fileList" action="http://localhost:8000/post/upload/images" class="preview"
+            ref="upload" list-type="picture-card" multiple :headers="userStore.headersObj" :limit="9"
             :on-preview="handlePictureCardPreview" :on-change="handleChange" :auto-upload="false"
             :on-exceed="handleExceed" :data="Post" :before-upload="beforeUpload" :on-error="onError">
             <el-icon>
@@ -197,8 +280,27 @@ export default {
       <div class="rightArea">
         <h1 style="text-align: center">内容区</h1>
         <div class="content-container">
+          <el-select v-model="selectedCafeteria" placeholder="请选择食堂"
+            style="margin-top: 20px;width: 80%;margin-left: 50px;" @change="fetchCounters">
+            <el-option v-for="cafeteria in cafeterias" :key="cafeteria.id" :label="cafeteria.name"
+              :value="cafeteria.id"></el-option>
+          </el-select>
+
+          <el-select v-model="selectedCounter" placeholder="请选择窗口"
+            style="margin-top: 20px;width: 80%;margin-left: 50px;">
+            <el-option v-for="counter in counters" :key="counter.id" :label="counter.name"
+              :value="counter.id"></el-option>
+          </el-select>
+
           <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text"
             style="margin-top: 20px;width: 80%;margin-left: 50px;" />
+          
+          <el-input v-model="dishName" maxlength="50" placeholder="请输入菜品名称" show-word-limit type="text"
+            style="margin-top: 20px;width: 80%;margin-left: 50px;" />
+          
+          <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice" 
+            style="margin-top: 20px;width: 80%;margin-left: 50px;" />
+          
           <div style="margin: 50px 0"></div>
           <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea"
             style="width: 80%;margin-left: 50px;" autosize />
@@ -211,7 +313,6 @@ export default {
     <el-button class="touchButton" style="color:white;" round color="#4274b9" size="large"
       @click="MakePrev">生成预览</el-button>
   </el-row>
-
 
   <el-dialog v-model="dialogVisible">
     <img :src="dialogImageUrl" alt="Preview Image" />
