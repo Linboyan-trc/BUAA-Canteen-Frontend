@@ -174,7 +174,6 @@ export default {
 
 <style scoped>
 .bg {
-  background: #f0f2f5;
   background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
   min-height: 100%;
   background-repeat: no-repeat;

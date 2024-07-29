@@ -5,7 +5,7 @@ import Sidebar from '@/components/Sidebar.vue'
 <template>
   <div class="container">
     <Sidebar />
-    <main class="bg">
+    <main>
       <router-view />
     </main>
   </div>
@@ -28,12 +28,5 @@ main {
   position: relative;
   z-index: 0;
 }
-.bg {
-  background: #f0f2f5;
-  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
-  min-height: 100%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
+
 </style>

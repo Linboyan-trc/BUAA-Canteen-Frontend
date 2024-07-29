@@ -1,14 +1,15 @@
 <script>
 import { useRouter } from "vue-router";
 import { useUserStore} from "@/store/user.js";
-import { computed, onBeforeMount, ref } from "vue";
+import {computed, onBeforeMount, onMounted, ref} from "vue";
 import { Back, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { getCurrentTime } from "@/utils/getTime";
 import { uploadPost } from "@/api";
 import { getAllCafeterias, getCountersOf } from "@/api/cafeteria";
 import PostDetail from "@/components/PostDetail.vue";
-import { onMounted } from "vue";
+import 'particles.js';
+
 
 export default {
   name: "Upload",
@@ -36,6 +37,17 @@ export default {
       checkLogin()
       fetchCafeterias()
     })
+
+    onMounted(() => {
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+        particlesJS.load('particles-js', '/particles.json', function () {
+          console.log('particles.js loaded - callback');
+        });
+      };
+      document.body.appendChild(script);
+    });
 
     const fileList = ref([])
     const fileListUrl = computed(() => fileList.value.map(item => item.url))
@@ -264,74 +276,77 @@ export default {
 </script>
 
 <template>
-  <el-row :gutter="0">
-    <el-col :span="500">
-      <div class="leftArea">
-        <h1 style="text-align: center">上传图片</h1>
-        <div class="img-container">
-          <el-upload
-              v-model:file-list="fileList"
-              action="http://localhost:8000/post/upload/images"
-              class="preview"
-              ref="upload"
-              list-type="picture-card" multiple
-              :headers="userStore.headers"
-              :limit="9"
-              :on-preview="handlePictureCardPreview"
-              :on-change="handleChange"
-              :auto-upload="false"
-              :on-exceed="handleExceed"
-              :data="Post"
-              :before-upload="beforeUpload"
-              :on-error="onError">
-            <el-icon>
-              <Plus />
-            </el-icon>
-          </el-upload>
+  <div class="bg">
+    <el-row :gutter="0" class="content-row">
+      <el-col :span="12">
+        <div class="leftArea">
+          <h1 style="text-align: center">上传图片</h1>
+          <div class="img-container">
+            <el-upload
+                v-model:file-list="fileList"
+                action="http://localhost:8000/post/upload/images"
+                class="preview"
+                ref="upload"
+                list-type="picture-card" multiple
+                :headers="userStore.headers"
+                :limit="9"
+                :on-preview="handlePictureCardPreview"
+                :on-change="handleChange"
+                :auto-upload="false"
+                :on-exceed="handleExceed"
+                :data="Post"
+                :before-upload="beforeUpload"
+                :on-error="onError">
+              <el-icon>
+                <Plus />
+              </el-icon>
+            </el-upload>
+          </div>
         </div>
-      </div>
-    </el-col>
-    <el-col :span="500">
-      <div class="rightArea">
-        <h1 style="text-align: center">内容区</h1>
-        <div class="content-container">
-          <el-select v-model="selectedCafeteria" placeholder="请选择食堂"
-            style="margin-top: 20px;width: 80%;margin-left: 50px;" @change="fetchCounters">
-            <el-option v-for="cafeteria in cafeterias" :key="cafeteria.id" :label="cafeteria.name"
-              :value="cafeteria.id"></el-option>
-          </el-select>
+      </el-col>
+      <el-col :span="12">
+        <div class="rightArea">
+          <h1 style="text-align: center">内容区</h1>
+          <div class="content-container">
+            <el-select v-model="selectedCafeteria" placeholder="请选择食堂"
+              class="select" @change="fetchCounters">
+              <el-option v-for="cafeteria in cafeterias" :key="cafeteria.id" :label="cafeteria.name"
+                :value="cafeteria.id"></el-option>
+            </el-select>
 
-          <el-select v-model="selectedCounter" placeholder="请选择窗口"
-            style="margin-top: 20px;width: 80%;margin-left: 50px;">
-            <el-option v-for="counter in counters" :key="counter.id" :label="counter.name"
-              :value="counter.id"></el-option>
-          </el-select>
+            <el-select v-model="selectedCounter" placeholder="请选择窗口"
+              class="select">
+              <el-option v-for="counter in counters" :key="counter.id" :label="counter.name"
+                :value="counter.id"></el-option>
+            </el-select>
 
-          <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text"
-            style="margin-top: 20px;width: 80%;margin-left: 50px;" />
-          
-          <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text"
-            style="margin-top: 20px;width: 80%;margin-left: 50px;" />
-          
-          <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice" 
-            style="margin-top: 20px;width: 80%;margin-left: 50px;" />
-          
-          <div style="margin: 50px 0"></div>
-          <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea"
-            style="width: 80%;margin-left: 50px;" autosize />
+            <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text"
+              class="input" />
+
+            <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text"
+              class="input" />
+
+            <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice"
+              class="input" />
+
+            <div style="margin: 20px 0"></div>
+            <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea"
+              class="textarea" autosize />
+          </div>
         </div>
-      </div>
-    </el-col>
-  </el-row>
-  <el-row :gutter="0">
-    <el-button class="touchButton" style="color:white;" round color="#4274b9" size="large"
-      @click="doUploads">发布推文</el-button>
-    <el-button class="touchButton" style="color:white;" round color="#4274b9" size="large"
-      @click="MakePrev">生成预览</el-button>
-  </el-row>
-  <el-dialog v-model="dialogVisible">
-    <img :src="dialogImageUrl" alt="Preview Image" />
-  </el-dialog>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" class="button-row">
+      <el-button class="touchButton" round color="#4274b9" size="large"
+        @click="doUploads">发布推文</el-button>
+      <el-button class="touchButton" round color="#4274b9" size="large"
+        @click="MakePrev">生成预览</el-button>
+    </el-row>
+    <el-dialog v-model="dialogVisible">
+      <img :src="dialogImageUrl" alt="Preview Image" />
+    </el-dialog>
+    <div id="particles-js"></div>
+  </div>
 
   <div class="overlay" v-if="show">
     <button class="backPage" @click="close">
@@ -343,35 +358,71 @@ export default {
   </div>
 </template>
 
+
 <style scoped>
-.leftArea {
-  margin-left: 40px;
-  width: 515px;
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
-.rightArea {
-  margin-left: 40px;
-  width: 515px;
+.bg {
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.img-container {
+.content-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+}
+
+.leftArea, .rightArea {
+  margin: 25px;
+  flex: 1;
+}
+
+.img-container, .content-container {
   border-radius: 20px;
   border: #2c3e50 1px solid;
-  width: 515px;
-  height: 500px;
-  overflow: scroll;
+  width: 100%;
+  height: 400px;
+  overflow: auto;
 }
 
-.content-container {
-  border-radius: 20px;
-  border: #2c3e50 1px solid;
-  width: 515px;
-  height: 500px;
-  overflow: scroll;
+.imgpre {
+  width: 70%;
+  height: 70%;
 }
 
-.preview {
-  margin: 15px;
+.select, .input, .textarea {
+  margin-top: 20px;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 80%;
+}
+
+.touchButton {
+  margin: 0 10px;
+  color: white;
 }
 
 .overlay {
@@ -381,15 +432,14 @@ export default {
   width: 100%;
   height: 100%;
   background-color: white;
-  /* 设置透明度的背景色 */
   z-index: 9999;
-  /* 设置一个较大的z-index值，确保图层位于其他内容之上 */
 }
 
 .backPage {
   position: fixed;
   top: 5%;
   left: 3%;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
@@ -400,8 +450,5 @@ export default {
   transition: all .3s;
 }
 
-.touchButton {
-  margin-left: 40px;
-  margin-top: 20px;
-}
+
 </style>

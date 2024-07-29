@@ -158,4 +158,17 @@ export default {
     opacity: 1;
     visibility: visible;
 }
+
+
+.bg {
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 </style>
