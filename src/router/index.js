@@ -10,6 +10,7 @@ import Team from '@/views/Team.vue';
 import Detail from '@/views/Detail.vue';
 import Upload from '@/views/Upload.vue';
 import store from '@/store';
+import AI from '@/views/AI.vue';
 
 const routes = [
   {
@@ -82,6 +83,11 @@ const routes = [
     path: '/upload',
     name: 'Upload',
     component: Upload
+  },
+  {
+    path: '/ai',
+    name: 'AI',
+    component: AI
   }
 ];
 

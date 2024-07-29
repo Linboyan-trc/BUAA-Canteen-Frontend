@@ -21,9 +21,6 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
 
-     onMounted(() => {
-       console.log(userStore.headers);
-    });
     const checkLogin = () => {
       if (!userStore.userInfo.username) {
         ElMessage({

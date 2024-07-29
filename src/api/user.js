@@ -122,3 +122,13 @@ export const updateUserPassword = ({oldPassword, newPassword}) => {
         }
     })
 }
+
+export const ai_chat = ({message}) => {
+     return http({
+         url: '/user/ai-chat',
+         method: 'POST',
+         data: {
+             message: message
+         }
+     })
+}

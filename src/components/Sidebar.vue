@@ -3,13 +3,14 @@
     <aside class = "sidebar">
       <img alt="buaa emoji" class="logo" src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-bg-no.svg" width="80" height="80" />
       <ul>
-        <li><div><router-link to="/home"><i class="fas fa-home"></i> 首页</router-link></div></li>
-        <li><div><router-link to="/all"><i class="fas fa-list"></i> 所有</router-link></div></li>
+        <li><div><router-link to="/home"><i class="fas fa-home"></i><span>首页</span></router-link></div></li>
+        <li><div><router-link to="/all"><i class="fas fa-list"></i><span>所有</span></router-link></div></li>
         <li class="menu-break"><hr></li>
-        <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i> 发布</router-link></div></li>
-        <li id="user-about-us"><div><router-link :to="`/team`"><i class="fas fa-address-card"></i> 我们</router-link></div></li>
-        <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userName}`"><i class="fas fa-user"></i> 我的</router-link></div></li>
-        <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i> 登录</router-link></div></li>
+        <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i><span>发布</span></router-link></div></li>
+        <li><div><router-link to="/ai"><i class="fas fa-robot"></i><span>诶哎</span></router-link></div></li>
+        <li id="user-about-us"><div><router-link :to="`/team`"><i class="fas fa-address-card"></i><span>我们</span></router-link></div></li>
+        <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userName}`"><i class="fas fa-user"></i><span>我的</span></router-link></div></li>
+        <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i><span>登陆</span></router-link></div></li>
       </ul>
     </aside>
   </div>
@@ -83,9 +84,9 @@ li>div {
 }
 
 main {
-  margin-left: 200px; 
+  margin-left: 200px;
   /* 设置左边距，使其不被侧边栏遮挡 */
-  flex-grow: 1; 
+  flex-grow: 1;
   /* 使主内容区域占据剩余空间 */
   /* padding: 20px; */
   /* 添加内边距，使内容不紧贴边缘 */
@@ -98,9 +99,21 @@ a {
   font-size: 18px;
 }
 
+.fas {
+  margin-left: 20px;
+  margin-right: 10px;
+  font-size: 20px;
+  width: 24px; /* 固定图标宽度 */
+}
+
+span {
+  margin-left: 5px;
+}
+
 .logo {
   display: block;
-  margin: 1.5rem 0 1rem 1.5rem;
+  margin: 20px auto;
+
 }
 
 #user-item {
@@ -129,9 +142,9 @@ a {
   }
 
   main {
-  margin-left: 120px; 
+  margin-left: 120px;
   /* 设置左边距，使其不被侧边栏遮挡 */
-  flex-grow: 1; 
+  flex-grow: 1;
   /* 使主内容区域占据剩余空间 */
   }
 }
