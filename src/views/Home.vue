@@ -1,5 +1,5 @@
 <template>
-    <div class="app-container">
+    <div class="app-container bg">
         <div class="search-container">
             <input type="text" v-model="searchQuery" placeholder="搜索菜品..." />
             <button @click="fetchPosts">搜索</button>
@@ -19,6 +19,7 @@
             <i class="fas fa-arrow-up"></i>
             <span class="tooltip">回到顶部</span>
         </div>
+        <div id="particles-js"></div>
     </div>
 </template>
 
@@ -60,6 +61,14 @@ export default {
 
         onMounted(() => {
             fetchPosts();
+            const script = document.createElement('script');
+            script.src = '/src/utils/particles.js';
+            script.onload = () => {
+                particlesJS.load('particles-js', '/particles.json', function () {
+                    console.log('particles.js loaded - callback');
+                });
+            };
+            document.body.appendChild(script);
         });
 
         return {
@@ -80,14 +89,19 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
+    align-items: center; 
 }
 
 .search-container {
     display: flex;
-    width: 80%;
+    width: 100%;
+    max-width: 900px; 
     margin-top: 20px;
     margin-bottom: 20px;
     align-self: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000; /* 设置较高的z-index值，使搜索栏位于其他内容之上 */
 }
 
 .search-container input {
@@ -170,5 +184,14 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 </style>

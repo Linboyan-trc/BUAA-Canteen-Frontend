@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container bg">
     <div class="content">
       <h1>问问 AI 吃什么</h1>
       <div class="chat-box">
@@ -13,6 +13,7 @@
       <div v-if="loading" class="loading-spinner"></div>
       <button v-if="llmResponse" @click="searchPosts">使用回复搜索帖子</button>
     </div>
+    <div id="particles-js"></div>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { ai_chat } from '@/api/user.js';
 import axios from 'axios';
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/user.js";
+import { onMounted } from 'vue';
 
 export default {
   name: 'LLMChat',
@@ -85,6 +87,17 @@ export default {
       }
     };
 
+    onMounted(() => {
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+      particlesJS.load('particles-js', '/particles.json', function () {
+        console.log('particles.js loaded - callback');
+      });
+      };
+      document.body.appendChild(script);
+    });
+
     return {
       userInput,
       llmResponse,
@@ -99,6 +112,27 @@ export default {
 
 
 <style scoped>
+.bg {
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
 body, html {
   height: 100%;
   margin: 0;

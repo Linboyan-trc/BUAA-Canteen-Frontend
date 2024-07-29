@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg">
     <header v-if="showHeader">
       <CafeteriaHeader :selectedCafeteria="selectedCafeteriaId"></CafeteriaHeader>
     </header>
@@ -16,6 +16,7 @@
         <Preview :name="'dish'" :preview="dish" />
       </div>
     </div>
+    <div id="particles-js"></div>
   </div>
 </template>
 
@@ -58,6 +59,14 @@ export default {
 
     onMounted(() => {
       fetchAllCafeterias();
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+      particlesJS.load('particles-js', '/particles.json', function () {
+      console.log('particles.js loaded - callback');
+      });
+      };
+      document.body.appendChild(script);
     });
 
     return {
@@ -108,5 +117,26 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.bg {
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 </style>
