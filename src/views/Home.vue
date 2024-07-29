@@ -1,8 +1,12 @@
 <template>
-    <div class="app-container bg">
+    <div class="app-container">
         <div class="search-container">
             <input type="text" v-model="searchQuery" placeholder="搜索菜品..." />
             <button @click="fetchPosts">搜索</button>
+        </div>
+
+        <div class="mode-image-container">
+            <img :src="modeImageSrc" alt="Mode Image" />
         </div>
 
         <div class="recommendations-container">
@@ -19,14 +23,16 @@
             <i class="fas fa-arrow-up"></i>
             <span class="tooltip">回到顶部</span>
         </div>
-        <div id="particles-js"></div>
+      <div id="particles-js"></div>
     </div>
 </template>
 
+
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { queryPost, queryPostBySearch } from '@/api';
 import Preview from '@/components/Preview.vue';
+import 'particles.js';
 
 export default {
     name: 'Home',
@@ -36,14 +42,17 @@ export default {
     setup() {
         const searchQuery = ref('');
         const posts = ref([]);
+        const isSearchMode = ref(false);
 
         const fetchPosts = async () => {
             try {
                 let response;
                 if (searchQuery.value) {
                     response = await queryPostBySearch({ offset: 0, query: searchQuery.value });
+                    isSearchMode.value = true;
                 } else {
                     response = await queryPost({ offset: 0 });
+                    isSearchMode.value = false;
                 }
                 posts.value = response.data.posts;
             } catch (error) {
@@ -52,7 +61,8 @@ export default {
         };
 
         const refreshPage = () => {
-            window.location.reload();
+            searchQuery.value = '';
+            fetchPosts();
         };
 
         const scrollToTop = () => {
@@ -61,14 +71,22 @@ export default {
 
         onMounted(() => {
             fetchPosts();
-            const script = document.createElement('script');
-            script.src = '/src/utils/particles.js';
-            script.onload = () => {
-                particlesJS.load('particles-js', '/particles.json', function () {
-                    console.log('particles.js loaded - callback');
-                });
-            };
-            document.body.appendChild(script);
+        });
+
+         onMounted(() => {
+        const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+        particlesJS.load('particles-js', '/particles.json', function () {
+          console.log('particles.js loaded - callback');
+        });
+      };
+      document.body.appendChild(script);
+    });
+
+        const modeImageSrc = computed(() => {
+            return isSearchMode.value ? 'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/search.png' :
+                'https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/recommemd.png';
         });
 
         return {
@@ -76,11 +94,14 @@ export default {
             posts,
             fetchPosts,
             refreshPage,
-            scrollToTop
+            scrollToTop,
+            isSearchMode,
+            modeImageSrc
         };
     }
 }
 </script>
+
 
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';
@@ -89,19 +110,28 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
-    align-items: center; 
+   min-height: 100%;
+   background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+}
+
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
 }
 
 .search-container {
     display: flex;
-    width: 100%;
-    max-width: 900px; 
+    width: 80%;
     margin-top: 20px;
     margin-bottom: 20px;
     align-self: center;
-    position: fixed;
-    top: 0;
-    z-index: 1000; /* 设置较高的z-index值，使搜索栏位于其他内容之上 */
 }
 
 .search-container input {
@@ -125,6 +155,20 @@ export default {
 
 .search-container button:hover {
     background-color: #0056b3;
+}
+
+.mode-image-container {
+    display: flex;
+    width: 30%;
+    height: 30%;
+    justify-content: center;
+    align-self: center;
+    margin-bottom: 20px;
+}
+
+.mode-image-container img {
+    max-width: 100%;
+    height: auto;
 }
 
 .icon-button {
@@ -172,26 +216,5 @@ export default {
     opacity: 1;
     visibility: visible;
 }
-
-
-.bg {
-  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
-  min-height: 100vh;
-  background-repeat: no-repeat;
-  background-position: 50%;
-  background-size: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-#particles-js {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-}
 </style>
+

@@ -84,7 +84,7 @@ export default {
     // 图片上传变化处理
     const handleChange = (uploadFile, uploadFiles) => {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']; // 可接受的图片类型
-      const maxSize = 2; // 最大文件大小，单位：MB
+      const maxSize = 5; // 最大文件大小，单位：MB
       if (!allowedTypes.includes(uploadFile.raw.type)) {
         ElMessage.error('请上传正确的图片文件!');
         upload.value.handleRemove(uploadFile);
@@ -356,30 +356,11 @@ export default {
     </button>
     <post-detail :detail="postData" :comments="empty" :review="true" />
   </div>
+
 </template>
 
 
 <style scoped>
-#particles-js {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-}
-
-.bg {
-  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
-  min-height: 100vh;
-  background-repeat: no-repeat;
-  background-position: 50%;
-  background-size: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 
 .content-row {
   display: flex;
@@ -401,10 +382,6 @@ export default {
   overflow: auto;
 }
 
-.imgpre {
-  width: 70%;
-  height: 70%;
-}
 
 .select, .input, .textarea {
   margin-top: 20px;
@@ -425,30 +402,55 @@ export default {
   color: white;
 }
 
+
 .overlay {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: white;
+  left: 10%;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 9999;
 }
 
 .backPage {
-  position: fixed;
-  top: 5%;
-  left: 3%;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
   border: 1px solid var(--color-border);
   cursor: pointer;
   transition: all .3s;
+  z-index: 9999;
 }
 
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
 
+.bg {
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: -1;
+}
 </style>

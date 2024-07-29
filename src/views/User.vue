@@ -1,119 +1,122 @@
 <!-- User.vue -->
 <template>
-  <div id="logout">
-    <ConfirmModal :exeName="'退出登录'"/>
-  </div>
-  <div class="userInfo" v-if="userInfo">
-    <el-row :gutter="10">
-      <el-col :span="12" style="width: 200px;">
-        <el-avatar :size="200" :src="userInfo.avatar"></el-avatar>
-      </el-col>
-      <el-col :span="12" style="width: 250px!important;">
-        <h2>
-          {{ userInfo.username }}
-          <span v-if="userInfo.gender === 'female'" class="gender-icon"><i class="fas fa-female"></i></span>
-          <span v-if="userInfo.gender === 'male'" class="gender-icon"><i class="fas fa-male"></i></span>
-          <span v-if="userInfo.gender === 'null'" class="gender-icon"><i class="fas fa-genderless"></i></span>
-        </h2>
-        <p class="in-one"><strong>邮箱：</strong>{{ userInfo.email }}</p>
-        <p class="in-one"><strong>个性签名：</strong>{{ userInfo.introduction }}</p>
-      </el-col>
-    </el-row>
-  </div>
-  <div class="editUserInfo">
-    <button @click="showEditModal = true" class="userBtn">编辑用户信息</button>
-    <EditUserInfoModal
-        :userInfo="userInfo"
-        :showModal="showEditModal"
-        @update:showModal="showEditModal = $event"
-        @doUpdate="doUpdate"
-    />
-    <button @click="showChangePasswordModal = true" class="userBtn">修改密码</button>
-    <ChangePasswordModal
-        :showModal="showChangePasswordModal"
-        @update:showModal="showChangePasswordModal = $event"
-    />
-  </div>
-  <div class="checkBox" @change="Toggle">
-    <el-radio-group v-model="radio" size="large" class="radio-group">
-      <el-radio-button class="radio" label="吃过" :value="'吃过'" name="ate"/>
-      <el-radio-button class="radio" label="收藏的菜肴" :value="'收藏的菜肴'" name="collectDishs"/>
-      <el-radio-button class="radio" label="收藏的食堂" :value="'收藏的食堂'" name="collectCafeterias"/>
-      <el-radio-button class="radio" label="收藏的柜台" :value="'收藏的柜台'" name="collectCounters"/>
-      <el-radio-button class="radio" label="我的帖子" :value="'我的帖子'" name="post"/>
-    </el-radio-group>
-  </div>
-  <div style="margin-top: 30px;" v-if="userInfo">
-    <div v-if="radio === '收藏的菜肴'">
-      <div v-if="userCollectDishes?.length === 0">
-        <el-empty description="现在还没有收藏菜肴..."/>
+  <div class="bg">
+    <div id="logout">
+      <ConfirmModal :exeName="'退出登录'"/>
+    </div>
+    <div class="userInfo" v-if="userInfo">
+      <el-row :gutter="10">
+        <el-col :span="12" style="width: 200px;">
+          <el-avatar :size="200" :src="userInfo.avatar"></el-avatar>
+        </el-col>
+        <el-col :span="12" style="width: 250px!important;">
+          <h2>
+            {{ userInfo.username }}
+            <span v-if="userInfo.gender === 'female'" class="gender-icon"><i class="fas fa-female"></i></span>
+            <span v-if="userInfo.gender === 'male'" class="gender-icon"><i class="fas fa-male"></i></span>
+            <span v-if="userInfo.gender === 'null'" class="gender-icon"><i class="fas fa-genderless"></i></span>
+          </h2>
+          <p class="in-one"><strong>邮箱：</strong>{{ userInfo.email }}</p>
+          <p class="in-one"><strong>个性签名：</strong>{{ userInfo.introduction }}</p>
+        </el-col>
+      </el-row>
+    </div>
+    <div class="editUserInfo">
+      <button @click="showEditModal = true" class="userBtn">编辑用户信息</button>
+      <EditUserInfoModal
+          :userInfo="userInfo"
+          :showModal="showEditModal"
+          @update:showModal="showEditModal = $event"
+          @doUpdate="doUpdate"
+      />
+      <button @click="showChangePasswordModal = true" class="userBtn">修改密码</button>
+      <ChangePasswordModal
+          :showModal="showChangePasswordModal"
+          @update:showModal="showChangePasswordModal = $event"
+      />
+    </div>
+    <div class="checkBox" @change="Toggle">
+      <el-radio-group v-model="radio" size="large" class="radio-group">
+        <el-radio-button class="radio" label="吃过" :value="'吃过'" name="ate"/>
+        <el-radio-button class="radio" label="收藏的菜肴" :value="'收藏的菜肴'" name="collectDishs"/>
+        <el-radio-button class="radio" label="收藏的食堂" :value="'收藏的食堂'" name="collectCafeterias"/>
+        <el-radio-button class="radio" label="收藏的柜台" :value="'收藏的柜台'" name="collectCounters"/>
+        <el-radio-button class="radio" label="我的帖子" :value="'我的帖子'" name="post"/>
+      </el-radio-group>
+    </div>
+    <div style="margin-top: 30px;" v-if="userInfo">
+      <div v-if="radio === '收藏的菜肴'">
+        <div v-if="userCollectDishes?.length === 0">
+          <el-empty description="现在还没有收藏菜肴..."/>
+        </div>
+        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+             :infinite-scroll-distance="100"
+             v-else>
+          <div class="dishes-preview">
+            <div v-for="collect in userCollectDishes" :key="collect.id">
+              <Preview :name="'dish'" :preview="collect"/>
+            </div>
+          </div>
+        </div>
       </div>
-      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
-           :infinite-scroll-distance="100"
-           v-else>
-        <div class="dishes-preview">
-          <div v-for="collect in userCollectDishes" :key="collect.id">
-            <Preview :name="'dish'" :preview="collect"/>
+      <div v-else-if="radio === '收藏的柜台'">
+        <div v-if="userCollectCounters?.length === 0">
+          <el-empty description="现在还没有收藏柜台..."/>
+        </div>
+        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+             :infinite-scroll-distance="100"
+             v-else>
+          <div class="counters-preview">
+            <div v-for="collect in userCollectCounters" :key="collect.id">
+              <Preview :name="'counter'" :preview="collect"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="radio === '收藏的食堂'">
+        <div v-if="userCollectCafeterias?.length === 0">
+          <el-empty description="现在还没有收藏食堂..."/>
+        </div>
+        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+             :infinite-scroll-distance="100"
+             v-else>
+          <div class="cafeterias-preview">
+            <div v-for="collect in userCollectCafeterias" :key="collect.id">
+              <Preview :name="'cafeteria'" :preview="collect"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="radio === '吃过'">
+        <div v-if="userAte?.length === 0">
+          <el-empty description="现在还没有吃过..."/>
+        </div>
+        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+             :infinite-scroll-distance="100"
+             v-else>
+          <div class="dishes-preview">
+            <div v-for="dish in userAte" :key="dish.id">
+              <Preview :name="'dish'" :preview="dish"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="radio === '我的帖子'">
+        <div v-if="userPost?.length === 0">
+          <el-empty description="现在还没有我的帖子..."/>
+        </div>
+        <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
+             :infinite-scroll-distance="100"
+             v-else>
+          <div class="dishes-preview">
+            <div v-for="post in userPost" :key="post.id">
+              <Preview :name="'dish'" :preview="post"/>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div v-else-if="radio === '收藏的柜台'">
-      <div v-if="userCollectCounters?.length === 0">
-        <el-empty description="现在还没有收藏柜台..."/>
-      </div>
-      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
-           :infinite-scroll-distance="100"
-           v-else>
-        <div class="counters-preview">
-          <div v-for="collect in userCollectCounters" :key="collect.id">
-            <Preview :name="'counter'" :preview="collect"/>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-else-if="radio === '收藏的食堂'">
-      <div v-if="userCollectCafeterias?.length === 0">
-        <el-empty description="现在还没有收藏食堂..."/>
-      </div>
-      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
-           :infinite-scroll-distance="100"
-           v-else>
-        <div class="cafeterias-preview">
-          <div v-for="collect in userCollectCafeterias" :key="collect.id">
-            <Preview :name="'cafeteria'" :preview="collect"/>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-else-if="radio === '吃过'">
-      <div v-if="userAte?.length === 0">
-        <el-empty description="现在还没有吃过..."/>
-      </div>
-      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
-           :infinite-scroll-distance="100"
-           v-else>
-        <div class="dishes-preview">
-          <div v-for="dish in userAte" :key="dish.id">
-            <Preview :name="'dish'" :preview="dish"/>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-else-if="radio === '我的帖子'">
-      <div v-if="userPost?.length === 0">
-        <el-empty description="现在还没有我的帖子..."/>
-      </div>
-      <div v-infinite-scroll="load" :infinite-scroll-disabled="disabled" :infinite-scroll-delay="200"
-           :infinite-scroll-distance="100"
-           v-else>
-        <div class="dishes-preview">
-          <div v-for="post in userPost" :key="post.id">
-            <Preview :name="'dish'" :preview="post"/>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="particles-js"></div>
   </div>
 </template>
 
@@ -124,6 +127,7 @@ import {queryUserPost} from "@/api";
 import EditUserInfoModal from '@/components/EditUserInfoModal.vue';
 import ChangePasswordModal from '@/components/ChangePasswordModal.vue';
 import {useUserStore} from "@/store/user";
+import 'particles.js';
 
 // 加载用户信息
 const userStore = useUserStore();
@@ -231,9 +235,38 @@ onMounted(async () => {
   await Toggle();
 });
 
+    onMounted(() => {
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+        particlesJS.load('particles-js', '/particles.json', function () {
+          console.log('particles.js loaded - callback');
+        });
+      };
+      document.body.appendChild(script);
+    });
+
+
 </script>
 
 <style scoped>
+.bg {
+  min-height: 100%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 100%;
+  position: relative;
+}
+
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1000;
+}
+
 #logout {
   margin-top: 10px;
   margin-right: 10px;

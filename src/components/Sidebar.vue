@@ -67,7 +67,7 @@ header {
     /* overflow: auto; */
     background-color: #125188;
     /* padding-left: 2px; */
-    z-index: 500;
+    z-index: 1;
 }
 
 ul {

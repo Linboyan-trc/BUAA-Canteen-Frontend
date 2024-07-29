@@ -120,7 +120,6 @@ export default {
 }
 
 .bg {
-  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
   min-height: 100vh;
   background-repeat: no-repeat;
   background-position: 50%;

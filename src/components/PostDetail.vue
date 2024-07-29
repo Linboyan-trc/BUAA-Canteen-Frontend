@@ -192,14 +192,14 @@ export default defineComponent({
             <!-- 卡片头部结束 -->
             <div class="main-content">
               <!-- 卡片内容 -->
-              <el-row style="margin-top: 20px;">
+              <el-row >
                 <h2>{{ detail.title }}</h2>
               </el-row>
               <el-row>
                 <div class="content">{{ detail.content }}</div>
               </el-row>
               <el-row>
-                <time class="time">{{ detail.createTime }}</time>
+                <time class="time" style="margin-top: 10px;">{{ detail.createTime }}</time>
               </el-row>
               <!-- 卡片内容结束 -->
               <hr />
@@ -250,7 +250,7 @@ export default defineComponent({
                 </div>
               </div>
             </div>
-            <el-divider />
+            <el-divider :style="{ margin: '20px 0px' }"/>
           </div>
           <div class="bottomArea">
             <div class="buttonArea">
@@ -324,8 +324,6 @@ export default defineComponent({
 
 .box {
   position: absolute;
-  /* left: 200px;
-  top: 40px; */
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -345,19 +343,6 @@ export default defineComponent({
   margin-left: 15px;
 }
 
-.focusOn {
-  position: absolute;
-  right: 10px;
-  padding: 0.6rem 0.8rem;
-  color: white;
-  background-color: red;
-  border: 0;
-  border-radius: 0.8rem;
-}
-
-.focusOn:hover {
-  background-color: #fd5656;
-}
 
 .image {
   width: 600px;

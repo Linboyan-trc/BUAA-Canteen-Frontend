@@ -1,42 +1,51 @@
 <template>
-  <div class="container bg">
+  <div class="container bg" :class="{ 'slide-out': isRedirecting }">
     <div class="content">
       <h1>问问 AI 吃什么</h1>
-      <div class="chat-box">
+      <div class="chat-box" ref="chatBox">
         <div v-for="message in messages" :key="message.id" class="message">
-          <div v-if="message.type === 'user'" class="user-message">{{ message.text }}</div>
-          <div v-else class="ai-message">{{ message.text }}</div>
+          <div v-if="message.type === 'user'" class="user-message">
+            <span>{{ message.text }}</span>
+            <img :src="userStore.userInfo.avatar" alt="User Avatar" class="avatar right-avatar">
+          </div>
+          <div v-else class="ai-message">
+            <img src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-admin.svg" alt="AI Avatar" class="avatar left-avatar">
+            <span>{{ message.text }}</span>
+          </div>
         </div>
       </div>
-      <textarea v-model="userInput" placeholder="输入你的问题" @keydown.enter.prevent="askLLM"></textarea>
-      <button @click="askLLM" :disabled="loading">询问 AI</button>
-      <div v-if="loading" class="loading-spinner"></div>
-      <button v-if="llmResponse" @click="searchPosts">使用回复搜索帖子</button>
+      <div class="input-container">
+        <textarea v-model="userInput" placeholder="给AI发消息" @keydown.enter.prevent="askLLM"></textarea>
+        <button @click="askLLM" :disabled="loading">询问 AI</button>
+      </div>
+      <div v-if="isRedirecting" class="loading-overlay">
+        <div class="loading-content">
+          <img src="https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/logo-admin.svg" class="bird-logo" alt="小鸟">
+          <div class="loading-text">诶哎正在生成……</div>
+        </div>
+      </div>
     </div>
     <div id="particles-js"></div>
   </div>
 </template>
 
-
-
 <script>
 import { useRouter } from "vue-router";
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, onMounted } from 'vue';
 import { ai_chat } from '@/api/user.js';
-import axios from 'axios';
 import { ElMessage } from "element-plus";
 import { useUserStore } from "@/store/user.js";
-import { onMounted } from 'vue';
 
 export default {
   name: 'LLMChat',
   setup() {
     const router = useRouter();
     const userInput = ref('');
-    const llmResponse = ref('');
     const loading = ref(false);
     const messages = ref([]);
     const userStore = useUserStore();
+    const chatBox = ref(null);
+    const isRedirecting = ref(false); // 新增
 
     const checkLogin = () => {
       if (!userStore.userInfo.username) {
@@ -53,14 +62,37 @@ export default {
       checkLogin();
     });
 
+    onMounted(() => {
+      // 初始AI消息
+      messages.value.push({ id: Date.now(), type: 'ai', text: '问问AI吃点神马' });
+
+      // 加载particles.js效果
+      const script = document.createElement('script');
+      script.src = '/src/utils/particles.js';
+      script.onload = () => {
+        particlesJS.load('particles-js', '/particles.json', function () {
+          console.log('particles.js loaded - callback');
+        });
+      };
+      document.body.appendChild(script);
+    });
+
+    const scrollToBottom = () => {
+      if (chatBox.value) {
+        chatBox.value.scrollTop = chatBox.value.scrollHeight;
+      }
+    };
+
     const askLLM = async () => {
       if (!userInput.value.trim()) return;
       messages.value.push({ id: Date.now(), type: 'user', text: userInput.value });
+      scrollToBottom(); // 添加用户消息后滚动到底部
       loading.value = true;
+      isRedirecting.value = true; // 启动动画
       try {
         const response = await ai_chat({ message: userInput.value });
-        llmResponse.value = response.data.message;
-        messages.value.push({ id: Date.now(), type: 'ai', text: response.data.message });
+        messages.value.push({ id: Date.now(), type: 'ai', text: response.data.message});
+        scrollToBottom(); // 添加AI消息后滚动到底部
       } catch (error) {
         console.error('Error asking LLM:', error);
         ElMessage({
@@ -69,47 +101,26 @@ export default {
           duration: 2000,
         });
       } finally {
-        loading.value = false;
-        userInput.value = '';
+        setTimeout(() => {
+          isRedirecting.value = false; // 结束动画
+          loading.value = false;
+          userInput.value = '';
+        }, 300); // 动画持续1秒
       }
     };
-
-    const searchPosts = async () => {
-      try {
-        const response = await axios.get('/post/search', {
-          params: {
-            query: llmResponse.value,
-          },
-        });
-        console.log('搜索结果:', response.data.posts);
-      } catch (error) {
-        console.error('Error searching posts:', error);
-      }
-    };
-
-    onMounted(() => {
-      const script = document.createElement('script');
-      script.src = '/src/utils/particles.js';
-      script.onload = () => {
-      particlesJS.load('particles-js', '/particles.json', function () {
-        console.log('particles.js loaded - callback');
-      });
-      };
-      document.body.appendChild(script);
-    });
 
     return {
       userInput,
-      llmResponse,
       askLLM,
-      searchPosts,
       loading,
       messages,
+      chatBox,
+      userStore,
+      isRedirecting // 新增
     };
   },
 };
 </script>
-
 
 <style scoped>
 .bg {
@@ -123,6 +134,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 
 #particles-js {
   position: fixed;
@@ -161,7 +173,8 @@ h1 {
 }
 
 .chat-box {
-  max-height: 300px;
+  height: 400px; /* 固定高度 */
+  max-height: 400px;
   overflow-y: auto;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -170,34 +183,66 @@ h1 {
 }
 
 .message {
+  display: flex;
+  align-items: center;
   margin-bottom: 10px;
 }
 
+.user-message, .ai-message {
+  display: flex;
+  align-items: center;
+}
+
 .user-message {
+  justify-content: flex-end;
   text-align: right;
   color: blue;
+  margin-left: auto;
 }
 
 .ai-message {
+  justify-content: flex-start;
   text-align: left;
   color: green;
 }
 
-textarea {
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.right-avatar {
+  margin-left: 10px;
+}
+
+.left-avatar {
+  margin-right: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
   width: 100%;
-  height: 50px;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
+}
+
+textarea {
+  width: 85%;
+  height: 40px;
+  border-radius: 20px;
   border: 1px solid #ccc;
   resize: none; /* 禁止拉伸 */
+  font-size: 16px;
+  padding: 7px 20px;
+  box-sizing: border-box;
 }
 
 button {
-  margin-right: 10px;
-  padding: 10px 20px;
+  width: 100px;
+  height: 40px;
+  margin-left: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   background-color: #007BFF;
   color: white;
   cursor: pointer;
@@ -212,28 +257,42 @@ button:hover:enabled {
   background-color: #0056b3;
 }
 
-.loading-spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border-left-color: #007BFF;
-  animation: spin 1s ease infinite;
-  margin: 0 auto;
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 1000;
+  animation: fadeIn 1s forwards;
 }
 
-@keyframes spin {
+@keyframes fadeIn {
   0% {
-    transform: rotate(0deg);
+    opacity: 0;
   }
   100% {
-    transform: rotate(360deg);
+    opacity: 1;
   }
 }
 
-p {
-  margin-top: 10px;
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bird-logo {
+  width: 100px;
+}
+
+.loading-text {
+  margin-top: 20px;
+  font-size: 24px;
+  color: #333;
 }
 </style>
-
-
