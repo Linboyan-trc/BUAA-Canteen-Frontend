@@ -43,7 +43,9 @@ export const useUserStore = defineStore('user', () => {
             return null;
         }
     }
-
+    userInfo.value.userId = 123;
+    userInfo.value.username = 123;
+    userInfo.value.email = '123@qq.com';
     const updateUserBaseInfo = async () => {
         const res = await getUserInfo();
 

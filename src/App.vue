@@ -3,15 +3,19 @@ import Sidebar from '@/components/Sidebar.vue'
 </script>
 
 <template>
-  <div>
-    <Sidebar></Sidebar>
-    <main>
+  <div class="container">
+    <Sidebar />
+    <main class="bg">
       <router-view />
     </main>
   </div>
 </template>
 
 <style scoped>
+.container {
+  display: flex;
+  min-height: 100vh; /* 确保容器高度至少为视口高度 */
+}
 
 main {
   flex-grow: 1;
@@ -21,5 +25,15 @@ main {
   justify-content: center; /* 垂直居中对齐 */
   align-items: center; /* 水平居中对齐 */
   box-sizing: border-box; /* 确保padding不会导致高度超标 */
+  position: relative;
+  z-index: 0;
+}
+.bg {
+  background: #f0f2f5;
+  background-image: url('https://buaaxiaolanshu.oss-cn-beijing.aliyuncs.com/static/bg-login.svg');
+  min-height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 </style>

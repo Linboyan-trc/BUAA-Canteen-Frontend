@@ -325,13 +325,13 @@ export default {
         </div>
       </div>
     </el-col>
+  </el-row>
+  <el-row :gutter="0">
     <el-button class="touchButton" style="color:white;" round color="#4274b9" size="large"
       @click="doUploads">发布推文</el-button>
-    <br>
     <el-button class="touchButton" style="color:white;" round color="#4274b9" size="large"
       @click="MakePrev">生成预览</el-button>
   </el-row>
-
   <el-dialog v-model="dialogVisible">
     <img :src="dialogImageUrl" alt="Preview Image" />
   </el-dialog>
