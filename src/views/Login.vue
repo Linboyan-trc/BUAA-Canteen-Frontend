@@ -53,12 +53,12 @@
 
 <script>
 /* global particlesJS */
-import {useUserStore} from '@/store/user';
 import {ref, onMounted} from 'vue';
 import {useRouter} from 'vue-router';
-import {Message, Lock} from '@element-plus/icons-vue';
 import 'particles.js';
 import { ElMessage } from 'element-plus';
+import {Message, Lock} from '@element-plus/icons-vue';
+import {useUserStore} from '@/store/user';
 
 export default {
   name: 'Login',

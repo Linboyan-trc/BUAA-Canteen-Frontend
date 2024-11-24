@@ -13,21 +13,15 @@ import store from '@/store';
 import AI from '@/views/AI.vue';
 
 const routes = [
+  // 1. 首页
   {
     path: '/',
     name: 'ORIGIN',
     component: Home
   },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/team',
-    name: 'Team',
-    component: Team
-  },
+  // 2. 所有
+  // 3. 帖子
+  // 4. 我的
   {
     path: '/cafeteria',
     name: 'AllCafeteria',
@@ -84,11 +78,6 @@ const routes = [
     name: 'Upload',
     component: Upload
   },
-  {
-    path: '/ai',
-    name: 'AI',
-    component: AI
-  }
 ];
 
 const router = createRouter({

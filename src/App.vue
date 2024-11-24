@@ -4,8 +4,11 @@ import Sidebar from '@/components/Sidebar.vue'
 
 <template>
   <div class="container">
+    <!-- 1. 侧边栏 -->
     <Sidebar />
+    <!-- 2. 主视图 -->
     <main>
+      <!-- 2.1 动态渲染与当前路由匹配的组件 -->
       <router-view />
     </main>
   </div>

@@ -67,3 +67,17 @@ export const getDishes = ({counterId}) => {
     })
 }
 
+//仅获得菜肴id
+export const getDishesNoPosts = ({counterId}) => {
+    return http({
+        url: '/cafeteria/counter/get-dishes-no-posts',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        params: {
+            counterId: Number(counterId)
+        }
+    })
+}
+

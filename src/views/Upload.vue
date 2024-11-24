@@ -6,7 +6,7 @@ import { Back, Plus } from '@element-plus/icons-vue'
 import { ElMessage } from "element-plus";
 import { getCurrentTime } from "@/utils/getTime";
 import { uploadPost } from "@/api";
-import { getAllCafeterias, getCountersOf } from "@/api/cafeteria";
+import { getAllCafeterias, getCountersOf, getDishes, getDishesNoPosts } from "@/api/cafeteria";
 import PostDetail from "@/components/PostDetail.vue";
 import 'particles.js';
 
@@ -51,6 +51,7 @@ export default {
 
     const fileList = ref([])
     const fileListUrl = computed(() => fileList.value.map(item => item.url))
+
     const title = ref('')
     const content = ref('')
     const dialogImageUrl = ref('')
@@ -58,10 +59,14 @@ export default {
     const postData = ref({})
     const Post = ref({})
     const PostId = ref(0)
+
     const cafeterias = ref([]);
     const counters = ref([]);
+    const dishes = ref([]);
     const selectedCafeteria = ref(null);
     const selectedCounter = ref(null);
+    const selectedDish = ref(null);
+
     const dishName = ref('');
     const dishPrice = ref('');
 
@@ -126,20 +131,30 @@ export default {
         ElMessage.warning('请选择窗口');
         return;
       }
-      if (dishName.value === '') {
-        ElMessage.warning('请输入菜品名称');
-        return;
+
+      if(userStore.userInfo.isSuperuser) {
+        if (dishName.value === '') {
+          ElMessage.warning('请输入菜品名称');
+          return;
+        }
+        if (dishPrice.value === '') {
+          ElMessage.warning('请输入菜品价格');
+          return;
+        }
+      } else {
+        if (!selectedDish.value === '') {
+          ElMessage.warning('请选择菜品');
+          return;
+        }
       }
-      if (dishPrice.value === '') {
-        ElMessage.warning('请输入菜品价格');
-        return;
-      }
+
       const data = {
         title: title.value,
         content: content.value,
         user_id: userStore.userInfo.id,
         cafeteria_id: selectedCafeteria.value,
         counter_id: selectedCounter.value,
+        dish_id: selectedDish.value,
         dish_name: dishName.value,
         dish_price: dishPrice.value,
       }
@@ -178,6 +193,17 @@ export default {
         ElMessage.error('获取柜台数据失败:', error);
       }
     };
+
+    // 根据窗口ID获取所有菜品信息
+    const fetchDishes = async (id) => {
+      selectedDish.value = null;
+      try {
+        const response = await getDishesNoPosts({ counterId: id });
+        dishes.value = response.data.info;
+      } catch (error) {
+        ElMessage.error('获取菜品数据失败:', error);
+      }
+    }
 
     // 超过最大上传图片数处理
     const handleExceed = () => {
@@ -233,16 +259,17 @@ export default {
       show.value = true
     }
     const validatePrice = (value) => {
-    const regex = /^\d*\.?\d*$/;
-    if (!regex.test(value)) {
-      ElMessage.warning('请输入有效的价格');
-      dishPrice.value = dishPrice.value.slice(0, -1);
+      const regex = /^\d*\.?\d*$/;
+      if (!regex.test(value)) {
+        ElMessage.warning('请输入有效的价格');
+        dishPrice.value = dishPrice.value.slice(0, -1);
+      }
     }
-  }
     const empty = []
     return {
       fileList,
       fileListUrl,
+
       title,
       content,
       dialogImageUrl,
@@ -250,6 +277,7 @@ export default {
       postData,
       Post,
       PostId,
+
       handlePictureCardPreview,
       handleChange,
       onError,
@@ -261,12 +289,18 @@ export default {
       close,
       MakePrev,
       empty,
+
       userStore,
       cafeterias,
       counters,
+      dishes,
       selectedCafeteria,
       selectedCounter,
+      selectedDish,
+
       fetchCounters,
+      fetchDishes,
+
       dishName,
       dishPrice,
       validatePrice
@@ -308,30 +342,37 @@ export default {
         <div class="rightArea">
           <h1 style="text-align: center">内容区</h1>
           <div class="content-container">
-            <el-select v-model="selectedCafeteria" placeholder="请选择食堂"
-              class="select" @change="fetchCounters">
-              <el-option v-for="cafeteria in cafeterias" :key="cafeteria.id" :label="cafeteria.name"
-                :value="cafeteria.id"></el-option>
+            <!-- 1.1 el-option展示所有cafeterias, 然后:value = cafeteria.id -->
+            <!-- 1.2 :value会传递给el-selcet, 作为参数id传入fetchCounters函数，获取指定食堂的所有柜台信息 -->
+            <el-select v-model="selectedCafeteria" placeholder="请选择食堂" class="select" @change="fetchCounters">
+              <el-option v-for="cafeteria in cafeterias" :key="cafeteria.id" :label="cafeteria.name" :value="cafeteria.id"></el-option>
+            </el-select>
+            <!-- 1.1 el-option展示所有counters, 然后:value = counter.id -->
+            <!-- 1.2 :value会传递给el-selcet, 作为参数id传入fetchDishes函数，获取指定食堂的所有柜台信息 -->
+            <el-select v-model="selectedCounter" placeholder="请选择窗口" class="select" @change="fetchDishes">
+              <el-option v-for="counter in counters" :key="counter.id" :label="counter.name" :value="counter.id"></el-option>
             </el-select>
 
-            <el-select v-model="selectedCounter" placeholder="请选择窗口"
-              class="select">
-              <el-option v-for="counter in counters" :key="counter.id" :label="counter.name"
-                :value="counter.id"></el-option>
-            </el-select>
+            <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text" class="input" />
 
-            <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text"
-              class="input" />
+            <!-- 1.1 超级用户 -->
+            <div v-if="userStore.userInfo.isSuperuser">
+              <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text" class="input" />
+            </div>
+            <!-- 1.2 普通用户 -->
+            <div v-else>
+              <el-select v-model="selectedDish" placeholder="请选择菜品名称" class="select" >
+                <el-option v-for="dish in dishes" :key="dish.id" :label="dish.name" :value="dish.id"></el-option>
+              </el-select>
+            </div>
 
-            <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text"
-              class="input" />
-
-            <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice"
-              class="input" />
+            <!-- 2. 超级用户 -->
+            <div v-if="userStore.userInfo.isSuperuser">
+              <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice" class="input" />
+            </div>
 
             <div style="margin: 20px 0"></div>
-            <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea"
-              class="textarea" autosize />
+            <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea" class="textarea" autosize />
           </div>
         </div>
       </el-col>

@@ -216,6 +216,7 @@ export const uploadPost = (data) => {
         method: 'POST',
         data: {
             'counter_id': data.counter_id,
+            'dish_id':data.dish_id,
             'dish_name': data.dish_name,
             'dish_price': data.dish_price,
             'post_title': data.title,
