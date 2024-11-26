@@ -9,7 +9,7 @@
         <li class="menu-break"><hr></li>
         <li><div><router-link to="/upload"><i class="fas fa-pencil-alt"></i><span>发布</span></router-link></div></li>
         <li id="user-item" v-if="!show"><div><router-link :to="`/user/${userName}`"><i class="fas fa-user"></i><span>我的</span></router-link></div></li>
-        <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i><span>登陆</span></router-link></div></li>
+        <li id="user-item" v-if="show"><div><router-link :to="`/login`"><i class="fas fa-sign-in-alt"></i><span>登录</span></router-link></div></li>
       </ul>
     </aside>
   </div>

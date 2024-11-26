@@ -4,7 +4,7 @@
             <img :src="cafeteria.img" alt="窗口图片" />
         </div>
         <div class="cafeteria-text">
-            <p>{{ cafeteria.name }}食堂</p>
+            <p>{{ cafeteria.name }}</p>
             <div class="cafeteria-collectCount">
                 <span>{{ cafeteria.collectCount }} 收藏</span>
             </div>

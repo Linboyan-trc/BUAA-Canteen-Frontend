@@ -5,6 +5,55 @@ export { getAllCafeterias, getCafeteria, getCountersOf, getCounter, getDishes } 
 //获取用户登录注册相关api
 export { login, getUserActionInfo, refreshAccessToken, register, logout, deleteAccount, updateUserAvatar, updateUserInfo, updateUserPassword } from './user';
 
+//////////////////////////////////////// 1. post ////////////////////////////////////////
+// 1. 帖子
+// 1. /post/detail
+// 1. /post/upload/info
+// 1. /post/upload/images -> 直接在el-upload元素中使用了
+// 1. /post/delete
+// 1. /post/all
+export const postDetail = ({ id }) => {
+    return http({
+        url: '/post/detail',
+        method: 'GET',
+        params: {
+            id: id
+        }
+    })
+}
+
+export const uploadPost = (data) => {
+    return http({
+        url: 'post/upload/info',
+        method: 'POST',
+        data: {
+            'counter_id': data.counter_id,
+            'dish_id':data.dish_id,
+            'dish_name': data.dish_name,
+            'dish_price': data.dish_price,
+            'post_title': data.title,
+            'post_content': data.content,
+        }
+    })
+}
+
+export const postDelete = ({ id }) => {
+    return http({
+        url: 'post/delete',
+        method: 'POST',
+        data: {
+            id
+        }
+    })
+}
+
+export const allPosts = () => {
+    return http({
+        url: 'post/all',
+        method: 'GET',
+    })
+}
+//////////////////////////////////////////////////////////////////////////////////////////
 // 主评
 export const doComment = ({ data }) => {
     return http({
@@ -126,16 +175,6 @@ export const loadReplies = ({ id, offset }) => {
 }
 
 // 帖子详情
-export const postDetail = ({ id }) => {
-    return http({
-        url: '/post/detail',
-        method: 'GET',
-        params: {
-            id: id
-        }
-    })
-}
-
 export const queryPost = ({ offset }) => {
     return http({
         url: '/post/recommend',
@@ -208,29 +247,4 @@ export const queryUserPost = ({user_id, types, offset}) => {
             }
         })
     }
-}
-
-export const uploadPost = (data) => {
-    return http({
-        url: 'post/upload/info',
-        method: 'POST',
-        data: {
-            'counter_id': data.counter_id,
-            'dish_id':data.dish_id,
-            'dish_name': data.dish_name,
-            'dish_price': data.dish_price,
-            'post_title': data.title,
-            'post_content': data.content,
-        }
-    })
-}
-
-export const postDelete = ({ id }) => {
-    return http({
-        url: 'post/delete',
-        method: 'POST',
-        data: {
-            id
-        }
-    })
 }

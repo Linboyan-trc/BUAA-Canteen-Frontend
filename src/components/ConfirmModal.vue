@@ -49,7 +49,7 @@ export default {
 
         showModal.value = false;
 
-        router.push('/home'); // 添加这一行
+        router.push('/'); // 添加这一行
     };
 
     return {

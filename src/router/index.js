@@ -3,14 +3,13 @@ import Home from '@/views/Home.vue';
 import All from '@/views/All.vue';
 import Cafeteria from '@/views/Cafeteria.vue';
 import Counter from '@/views/Counter.vue';
+import Detail from '@/views/Detail.vue';
+import AllPosts from '@/views/AllPosts.vue'
+import Upload from '@/views/Upload.vue';
 import Register from '@/views/Register.vue';
 import Login from '@/views/Login.vue';
 import User from '@/views/User.vue';
-import Team from '@/views/Team.vue';
-import Detail from '@/views/Detail.vue';
-import Upload from '@/views/Upload.vue';
 import store from '@/store';
-import AI from '@/views/AI.vue';
 
 const routes = [
   // 1. 首页
@@ -20,13 +19,10 @@ const routes = [
     component: Home
   },
   // 2. 所有
-  // 3. 帖子
-  // 4. 我的
-  {
-    path: '/cafeteria',
-    name: 'AllCafeteria',
-    component: All
-  },
+  // 2.1 所有食堂
+  // 2.2 某个食堂所有窗口
+  // 2.3 某个窗口所有菜品
+  // 2.4 单个菜品
   {
     path: '/all',
     name: 'All',
@@ -45,17 +41,24 @@ const routes = [
     props: true
   },
   {
-    path: '/counter/:counterId',
-    name: 'Counter',
-    component: Counter,
-    props: true
-  },
-  {
     path: '/dish/:dishId',
     name: 'DishDetail',
     component: Detail,
     props: true
   },
+  // 3. 帖子
+  {
+    path: '/posts',
+    name: 'AllPosts',
+    component: AllPosts,
+  },
+  // 4. 发布
+  {
+    path: '/upload',
+    name: 'Upload',
+    component: Upload
+  },
+  // 5. 登录
   {
     path: '/register',
     name: 'Register',
@@ -66,17 +69,13 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  // 6. 我的
   {
     path: '/user/:userId',
     name: 'User',
     component: User,
     // meta: { requiresAuth: true }
     props: true
-  },
-  {
-    path: '/upload',
-    name: 'Upload',
-    component: Upload
   },
 ];
 

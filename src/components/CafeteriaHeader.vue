@@ -3,7 +3,7 @@
   <div>
     <h3>所有食堂</h3>
     <ul>
-      <li v-for="cafeteria in cafeterias" :key="cafeteria.id">
+      <li v-for="cafeteria in cafeterias" :key="cafeteria.id" :style="{ width: `${100 / cafeterias.length}%` }">
         <router-link
           :to="`/cafeteria/${cafeteria.id}`"
           :class="{ 'active': selectedCafeteria === cafeteria.id }">
@@ -42,7 +42,7 @@ export default {
 h3 {
   margin: 0;
   padding: 10px;
-  background-color: #4274b9;
+  background-color: #2167a4;
   color: white;
   text-align: center;
 }
@@ -58,7 +58,6 @@ ul {
 li {
   display: inline-block;
   margin-right: 0px;
-  width: 20%;
   font-size: 18px;
   text-align: center;
 }

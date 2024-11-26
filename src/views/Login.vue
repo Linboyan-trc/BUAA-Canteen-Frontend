@@ -114,7 +114,7 @@ export default {
 
         // 等待1秒后重定向到首页
         setTimeout(async () => {
-          await router.replace('/home'); // 重定向到 /home 页面
+          await router.replace('/'); // 重定向到 /home 页面
         }, 500);
 
       } catch (error) {

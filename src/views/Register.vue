@@ -106,12 +106,12 @@ export default {
         return;
       }
 
-      const usernameRegex = /^[a-zA-Z0-9_]{5,15}$/;
+      const usernameRegex = /^[a-zA-Z0-9_\-\u4e00-\u9fa5]{5,15}$/;
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
       if (!usernameRegex.test(username.value)) {
         ElMessage({
-          message: '用户名必须是5-15个字符，只能包含字母、数字和下划线。',
+          message: '用户名必须是5-15个字符，只能包含字母、数字、下划线、连字符和汉字。',
           type: 'error',
           duration: 1000,
         });

@@ -1,8 +1,6 @@
 <template>
   <div class="bg">
-    <header v-if="showHeader">
-      <CafeteriaHeader :selectedCafeteria="selectedCafeteriaId"></CafeteriaHeader>
-    </header>
+    <!-- 1. 没有选择食堂的时候 -->
     <div v-if="!showHeader" class="cafeteria-preview-container">
       <h3>所有食堂</h3>
       <div class="cafeteria-previews">
@@ -11,6 +9,10 @@
         </div>
       </div>
     </div>
+    <!-- 2. 选择了食堂的时候 -->
+    <header v-if="showHeader">
+      <CafeteriaHeader :selectedCafeteria="selectedCafeteriaId"></CafeteriaHeader>
+    </header>
     <div v-if="showHeader" class="dishes-preview">
       <div v-for="dish in dishes" :key="dish.id">
         <Preview :name="'dish'" :preview="dish" />
@@ -80,7 +82,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .cafeteria-preview-container {
   text-align: center;
@@ -89,7 +90,7 @@ export default {
 .cafeteria-preview-container h3 {
   margin: 0;
   padding: 10px;
-  background-color: #4274b9;
+  background-color: #2167a4;
   color: white;
   text-align: center;
 }
