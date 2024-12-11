@@ -130,14 +130,14 @@ export default {
       isRedirecting.value = true;
       setTimeout(() => {
         window.location.href = 'http://localhost:8000/admin/';
-      }, 1000); // 1秒钟的过渡动画
+      }, 500); // 1秒钟的过渡动画
     };
 
     const goToRegister = () => {
       isRegistering.value = true;
       setTimeout(() => {
         router.push('/register');
-      }, 1000); // 1秒钟的过渡动画
+      }, 500); // 1秒钟的过渡动画
     };
 
     onMounted(() => {
