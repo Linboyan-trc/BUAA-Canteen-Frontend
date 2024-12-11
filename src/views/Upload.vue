@@ -166,10 +166,10 @@ export default {
         ElMessage.error('发布失败:', error);
         return;
       }
-      ElMessage({ type: 'success', message: '发布成功，3秒后跳转到主页' })
+      ElMessage({ type: 'success', message: '发布成功，即将跳转到主页' })
       setTimeout(() => {
         router.replace('/')
-      }, 3000)
+      }, 500)
 
     }
 
@@ -353,8 +353,6 @@ export default {
               <el-option v-for="counter in counters" :key="counter.id" :label="counter.name" :value="counter.id"></el-option>
             </el-select>
 
-            <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text" class="input" />
-
             <!-- 1.1 超级用户 -->
             <div v-if="userStore.userInfo.isSuperuser">
               <el-input v-model="dishName" maxlength="20" placeholder="请输入菜品名称" show-word-limit type="text" class="input" />
@@ -370,6 +368,8 @@ export default {
             <div v-if="userStore.userInfo.isSuperuser">
               <el-input v-model="dishPrice" type="number" placeholder="请输入菜品价格" @input="validatePrice" class="input" />
             </div>
+
+            <el-input v-model="title" maxlength="20" placeholder="请输入标题" show-word-limit type="text" class="input" />
 
             <div style="margin: 20px 0"></div>
             <el-input v-model="content" maxlength="3000" placeholder="请输入内容" show-word-limit type="textarea" class="textarea" autosize />
