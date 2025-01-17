@@ -1,38 +1,15 @@
-# buaa-cafeterias
-src/api里有很多地方把原本调用后端api的地方注释掉换成返回测试数据了，正式使用时记得替换掉
+# BUAA-Canteen-Frontend
+### 项目说明
+- 此项目为BUAA数据库课程大作业前端代码
 
-侧边栏登录和注册按钮只在未登录时显示，"我的"按钮只在登录后显示，前端模拟登录可以调整src/store/user.js里//temp下的代码
+### 安装依赖
 
-### 一些额外安装的库
-```sh
-npm install unplugin-auto-import
-npm install unplugin-vue-components
-npm install -D sass
-npm install vue-infinite-scroll
-```
-不全，可以根据控制台运行的报错提示安装相应的库
+- `npm install`
 
-## Recommended IDE Setup
+### 运行
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- `npm run dev`
 
-## Customize configuration
+### 打包
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-```sh
-npm run build
-```
+- `npm run build`
